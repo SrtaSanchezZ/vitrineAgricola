@@ -16,4 +16,16 @@ conexao.getConnection((erro) => {
     console.log('Conexão realizada com sucesso!');
 })
 
+exports.execute = (sql, parametros = []) => {
+    return new Promise((resolve, reject) => {
+        conexao.query(sql, parametros, (error, result, fields) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result)
+            }
+        });
+    })
+}
+
 exports.conexao = conexao;

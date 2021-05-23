@@ -3,6 +3,9 @@ const app = express();
 const morgan = require('morgan');
 const bodyParse = require('body-parser');
 const cors = require('cors');
+const rotaUsuario = require('./routes/usuarios');
+
+app.use('/usuario', rotaUsuario);
 
 app.use(cors()); //ponte de requisições
 app.use(morgan('dev'));
