@@ -1,0 +1,9 @@
+{
+  "name": "front",
+  "version": "1.0.0",
+  "description": "Interface de interação do cliente com o serviço (back-end)",
+  "main": "index.js",
+  "repository": "https://github.com/SrtaSanchezZ/vitrineAgricola.git",
+  "author": "SrtaSanchezZ <talita.b.sanchez@unoeste.edu.br>",
+  "license": "MIT"
+}

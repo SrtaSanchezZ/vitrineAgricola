@@ -1,0 +1,11 @@
+{
+    "env":{
+        "MYSQL_USER": "vitrineagricola",
+        "MYSQL_PASSWORD": "Suce$$0o",
+        "MYSQL_DATABASE": "vitrineagricola",
+        "MYSQL_HOST": "den1.mysql4.gear.host",
+        "MYSQL_PORT": 3306,
+
+        "JWT_KEY" : "sRt@5aNcH3zZ"
+    }
+}
