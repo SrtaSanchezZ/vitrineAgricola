@@ -3,9 +3,9 @@ const app = express();
 const morgan = require('morgan');
 const bodyParse = require('body-parser');
 const cors = require('cors');
-const rotaUsuario = require('./routes/usuarios');
 
-app.use('/usuario', rotaUsuario);
+const rotaUsuario = require('./routes/usuarios');
+const rotaAcesso = require('./routes/acesso');
 
 app.use(cors()); //ponte de requisições
 app.use(morgan('dev'));
@@ -26,6 +26,9 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+app.use('/usuario', rotaUsuario);
+app.use('/acesso', rotaAcesso);
 
 //quando não encontrar nenhuma rota vai entrar aqui
 app.use((req, res, next) => {

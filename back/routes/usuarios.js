@@ -4,7 +4,11 @@ const usuController = require('../controllers/usuarios')
 
 router.get(
     '/',
-    usuController.todosUsuarios
+    usuController.obter
+)
+router.post(
+    '/',
+    usuController.cadastrar
 )
 
 module.exports = router
