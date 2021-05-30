@@ -148,7 +148,7 @@ async function emailResenha(email, token) {
             to: email,
             subject: 'Redefinição de senha',
             html: `<span style="font-family: 'Courier New', Courier; font-size: 14px; background:#000000;">
-                <a href='http://localhost:3001/acesso/${token}' name="token" style="font-size: 18px; color:#ffffff; text-decoration: none; cursor: pointer;" target="_blank">
+                <a href='http://localhost:3000/novasenha/${token}' name="token" style="font-size: 18px; color:#ffffff; text-decoration: none; cursor: pointer;" target="_blank">
                     RESETAR SENHA
                 </a>
             </span>`

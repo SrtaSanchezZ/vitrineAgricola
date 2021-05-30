@@ -26,8 +26,10 @@ const Header = () => {
                 </div>
             </div>
             <div className="hLogin">
-                <CgLogIn style={{width:"20px", height:"auto", marginRight:"10px", marginTop:"5px", marginBottom:"-6px"}} />
-                <span>LOGIN</span>
+                <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/" rel="Login" alt="Login">
+                    <CgLogIn style={{width:"20px", height:"auto", marginRight:"10px", marginTop:"5px", marginBottom:"-6px"}} />
+                    <span>LOGIN</span>
+                </a>
             </div>
         </div>
     );
