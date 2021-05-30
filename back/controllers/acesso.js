@@ -40,7 +40,7 @@ exports.login = async (req, res, next) => {
                             .json({ 
                                 msg: result.msg,
                                 retorno: true,
-                                id: usuario.id,
+                                email: usuario.email,
                                 nome: usuario.nome,
                                 perfil: "master"
                             })
@@ -51,9 +51,9 @@ exports.login = async (req, res, next) => {
                                 .json({ 
                                     msg: result.msg,
                                     retorno: true,
-                                    id: usuario.id,
+                                    email: usuario.email,
                                     nome: usuario.nome,
-                                    perfil: "noticiario"
+                                    perfil: "redator"
                                 })
                         }else{                       
                             if(usuario.perfil === 3){
@@ -62,7 +62,7 @@ exports.login = async (req, res, next) => {
                                     .json({ 
                                         msg: result.msg,
                                         retorno: true,
-                                        id: usuario.id,
+                                        email: usuario.email,
                                         nome: usuario.nome,
                                         perfil: "vendedor"
                                     })    

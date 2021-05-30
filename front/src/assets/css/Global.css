@@ -1,0 +1,237 @@
+@font-face{
+    font-family: 'Roboto-Medium';
+    src: url('../font/Roboto-Medium.ttf') format('truetype');
+    font-style: normal;
+    text-align: center;
+}@font-face{
+    font-family: 'Roboto-Regular';
+    src: url('../font/Roboto-Regular.ttf') format('truetype');
+    font-style: normal;
+    text-align: center;
+}
+body{
+    margin: 0;
+    padding: 0;
+}
+.header{
+    margin-top: -21px;
+    display: flex;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    align-items: center;
+
+    font-family: 'Roboto-Regular';
+    font-style: normal;
+    font-size: 13px;
+    text-align: center;
+    letter-spacing: 1.25px;
+    color: #FFFFFFDE;
+    background-color: #3A5E4E;
+}
+.hLogo{
+    display: inline-block;
+    width: 88px;
+    height: 60px;
+
+    background: url('../img/logo-ETEC-neg.png');
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position-x: 0px;
+    background-position-y: -10px;
+}
+.hMenu{
+    width: 85%;
+    padding-top: 45px;
+    padding-bottom: 4px;
+    align-items: center;
+
+    text-align: center;
+}
+.hMenuBox{
+    width: 108px;
+    display: inline-flex;
+    padding-left: 9px;
+    padding-right: 9px;
+
+    text-align: center;
+}
+.hLogin{
+    text-align: right;
+    cursor: pointer;
+}
+.login{
+    width: 100%;
+    height: 90vh;
+    display: inline-flex;
+}
+.lbanner{
+    width: 75%;
+    height: 92vh;
+    background: url('../img/IMAGEM-LOGIN.png');
+    background-size: 102%;
+    background-repeat: no-repeat;
+    background-position-x: -20px;
+
+    text-align: center;
+}
+.lBoxVest{
+    width: 25%;
+    height: 25%;
+    margin-left: 70%;
+    margin-top: 40%;
+    padding-top: 20px;
+    align-items: center;
+    
+    background-color: #00AA31;
+    border-radius: 4px;
+    opacity: 1;
+    text-align: center;
+}
+.limgVest{
+    width: 70%;
+    height: 45%;
+    
+    background: url('../img/Vestibulinho.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    border: none;
+}
+.btnVest{
+    width: 70%;
+    height: 50px;
+    margin-top: 10px;
+
+    background-color: #00AA31;
+    border-radius: 4px;
+    border-color: #FFFFFF;
+    letter-spacing: 1.25px;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.lform{
+    width: 30%;
+
+    font-family: 'Roboto-Regular';
+    font-style: normal;
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 1.25px;
+}
+.lFormText{
+    width: 160px;
+    display: inline-flex;
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 40px;
+    padding-bottom: 20px;
+
+    text-align: center;
+}
+.lfTextNao{    
+    letter-spacing: 1.25px;
+    color: #21222DBD;
+    text-transform: uppercase;
+    opacity: 1;
+}
+.lfTextSim{    
+    letter-spacing: 1.25px;
+    color: #2E8E61;
+    text-transform: uppercase;
+    opacity: 1;
+}
+.lfUnderTextS{
+    width: 160px;
+    height: 2px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    
+    display: block;
+    background-color: #2E8E61;  
+    opacity: 1;  
+}
+.lfUnderTextN{
+    width: 160px;
+    height: 2px;
+    margin-top: 10px;
+    
+    display: block;
+    background-color: #FCFCFC;  
+    opacity: 1;  
+}
+.lfNsa{
+    display: block;
+    padding-left: 30px;
+    padding-right: 30px;
+
+    text-align: center;
+    align-items: center;
+    font-size: 13px;
+}
+.logoNSA{
+    width: 130px;
+    height: 110px;
+    margin-bottom: 30px;
+
+    background: url('../img/NSA.jpeg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    border: none;
+}
+.btnNSA{
+    width: 50%;
+    height: 50px;
+    margin-top: 40px;
+
+    background-color: #00AA31;
+    border-radius: 4px;
+    border-color: #00AA31;
+    letter-spacing: 1.25px;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.logoCoop{
+    width: 130px;
+    height: 110px;
+    margin-bottom: 30px;
+
+    background: url('../img/logo-colegio.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    border: none;
+}
+.esconde{
+    display: none;
+}
+.inp{
+    width: 90%;
+    padding: 15px;
+    margin-top: 20px;
+
+    font-size: 13px;
+    border: 1px solid var(--primária-2e8e61);
+    border: 1px solid #2E8E61;
+    border-radius: 4px;
+    opacity: 1;
+}
+.inpS{
+    width: 90%;
+    padding: 15px;
+    margin-top: 20px;
+
+    background: url('../img/Icons/visibility_black_24dp.svg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    font-size: 13px;
+    border: 1px solid var(--primária-2e8e61);
+    border: 1px solid #2E8E61;
+    border-radius: 4px;
+    opacity: 1;
+}
+.esquciSenha{    
+    text-align: right;
+    font: normal normal normal 12px/16px Roboto;
+    letter-spacing: 0.4px;
+    color: #000000DE;
+    opacity: 1;
+    cursor: pointer;
+}

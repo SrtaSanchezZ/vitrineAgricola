@@ -111,34 +111,49 @@ exports.cadastrar = async (req, res, next) => {
                 })
     }
 }
-//PATCH rota => /usuarios/id
+//POST rota => /usuarios/:email
 //altera somente a senha do usuário
-exports.altSenha = async (req, res, next) => {
+exports.buscaToken = async (req, res, next) => {
     try {
 
-        result = await usuModel.obterEmail();
+        var usuEmail = req.body.email;
 
-        if (result.retorno) {
+        if (usuEmail.length > 0){
 
-            response = {
-                usuarios: result.retornoBD.map(usu => {
-                    return{        
-                        id: usu.usu_id,
-                        nome: usu.usu_nome,
-                        email: usu.usu_email,
-                        senha: usu.usu_senha,
-                        perfil: usu.usu_perfil
-                    }
-                })
+            result = await usuModel.alterarToken(usEmail);
+
+            if (result.retorno) {
+
+                var token = result.token;
+
+                result = "";
+
+                result = await usuModel.emailResenha(usEmail, token);
+
+                if (result.retorno) {
+
+                    return res
+                        .status(200)
+                        .json({ 
+                            msg: result.msg,
+                            retorno: true
+                        })
+                }else{
+                    return res
+                            .status(500)
+                            .json({  
+                                msg: result.msg,
+                                retorno: false
+                             })
+                }                
+            }else{
+                return res
+                        .status(500)
+                        .json({  
+                            msg: result.msg,
+                            retorno: false
+                         })
             }
-
-            return res
-                    .status(200)
-                    .json({ 
-                        msg: result.msg,
-                        retorno: true,
-                        response 
-                    })
         }else{
             return res
                     .status(500)

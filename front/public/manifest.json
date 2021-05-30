@@ -1,0 +1,25 @@
+{
+  "short_name": "ETEC - Colégio Agrícola",
+  "name": "ETEC - Colégio Agrícola",
+  "icons": [
+    {
+      "src": "log192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "log144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "log124.png",
+      "type": "image/png",
+      "sizes": "124x124"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
