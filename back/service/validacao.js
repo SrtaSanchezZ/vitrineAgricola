@@ -50,3 +50,26 @@ function reSenha(senha, token) {
     return result
 }
 module.exports.reSenha = reSenha
+
+function noticia(titulo, texto, email, perfil) {
+    if(titulo.length > 0 && titulo.length < 80){
+        if(texto.length > 0 && texto.length < 2000){
+            if(email.length < 81 && email.length > 5 && rgxEmail.test(email)){
+                if(perfil == "master" || perfil == "redator"){
+                    result = { msg: "Dados validados com sucesso!", retorno: true } 
+                }else{
+                    result = { msg: "Você não possui permissão para interagir com Notícias.", retorno: false }                    
+                } 
+            }else{
+                result = { msg: "E-mail inválido", retorno: false }                    
+            }                  
+        }else{
+            result = { msg: "Texto inválido", retorno: false }                    
+        }
+    }else{
+        result = { msg: "Titulo inválido", retorno: false }
+    }
+
+    return result
+}
+module.exports.noticia = noticia

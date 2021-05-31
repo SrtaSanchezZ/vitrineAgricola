@@ -6,9 +6,11 @@ const cors = require('cors');
 
 const rotaUsuario = require('./routes/usuarios');
 const rotaAcesso = require('./routes/acesso');
+const rotaNoticia = require('./routes/noticias');
 
 app.use(cors()); //ponte de requisições
 app.use(morgan('dev'));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParse.json()); //entrada de json no body
 app.use(express.json()); //servidor e json
 
@@ -29,6 +31,7 @@ app.use((req, res, next) => {
 
 app.use('/usuario', rotaUsuario);
 app.use('/acesso', rotaAcesso);
+app.use('/noticia', rotaNoticia);
 
 //quando não encontrar nenhuma rota vai entrar aqui
 app.use((req, res, next) => {

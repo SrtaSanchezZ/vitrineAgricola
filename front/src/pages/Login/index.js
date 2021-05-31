@@ -4,7 +4,8 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { Button, Dialog, DialogActions, DialogContent, Box } from '@material-ui/core';
-import Header from '../../components/Header'
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 //#endregion
 const Login = () => {
     //#region Variáveis e Variáveis de Estado
@@ -203,7 +204,7 @@ const Login = () => {
                             NSA (Novo Sistema Acadêmico) é um sistema cadêmico desenvolvido para facilitar o trabalho da área acadêmica das Etecs do Centro Paula Souza. <br/><br/>
                             Para acessar clique no botão abaixo.
                         </p>
-                        <a href="https://nsa.cps.sp.gov.br/" target="_blank"  rel="NSA" alt="NSA">
+                        <a href="https://nsa.cps.sp.gov.br/" target="_blank" rel="NSA" alt="NSA">
                             <input className="btnNSA" type='button' value="ACESSAR NSA" />
                         </a>
                     </div>
@@ -242,6 +243,7 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

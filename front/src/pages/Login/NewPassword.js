@@ -4,7 +4,8 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { Button, Dialog, DialogActions, DialogContent, Box } from '@material-ui/core';
-import Header from '../../components/Header'
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 //#endregion
 const NewPassword = () => {
     //#region Variáveis e Variáveis de Estado
@@ -132,7 +133,8 @@ const NewPassword = () => {
 
                     </div>
                 </div>
-            </div>
+            </div>            
+            <Footer />
         </div>
     );
 }

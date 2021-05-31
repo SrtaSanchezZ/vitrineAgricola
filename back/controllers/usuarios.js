@@ -10,8 +10,8 @@ var usuario = {
     perfil: 0
 }
 
-//GET rota => /usuarios
-//retorna todos os usuários
+//GET rota => /noticias
+//retorna todas as noticias
 exports.obter = async (req, res, next) => {
     try {
 
@@ -40,7 +40,7 @@ exports.obter = async (req, res, next) => {
                     })
         }else{
             return res
-                    .status(500)
+                    .status(400)
                     .json({  
                         msg: result.msg,
                         retorno: false
@@ -68,7 +68,7 @@ exports.cadastrar = async (req, res, next) => {
 
         if (result.retorno) {
             return res
-                    .status(500)
+                    .status(400)
                     .json({
                         msg: result.msg,
                         retorno: false
@@ -93,7 +93,7 @@ exports.cadastrar = async (req, res, next) => {
                          })
             }else{
                 return res
-                        .status(500)
+                        .status(400)
                         .json({   
                             msg: result.msg,
                             retorno: false 
@@ -140,7 +140,7 @@ exports.buscaToken = async (req, res, next) => {
                         })
                 }else{
                     return res
-                            .status(500)
+                            .status(400)
                             .json({  
                                 msg: result.msg,
                                 retorno: false
@@ -148,7 +148,7 @@ exports.buscaToken = async (req, res, next) => {
                 }                
             }else{
                 return res
-                        .status(500)
+                        .status(400)
                         .json({  
                             msg: result.msg,
                             retorno: false
@@ -156,7 +156,7 @@ exports.buscaToken = async (req, res, next) => {
             }
         }else{
             return res
-                    .status(500)
+                    .status(400)
                     .json({  
                         msg: result.msg,
                         retorno: false
