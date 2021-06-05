@@ -309,7 +309,7 @@ const Admin = () => {
                             </div>
                         </div>
                     </div>
-                    <div style={{ marginTop:"20%" }}>
+                    <div>
                         <GerenciarUsuarios/>
                     </div>
                 </div>

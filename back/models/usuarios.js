@@ -220,3 +220,16 @@ async function Resenha(senha, email) {
 }
 module.exports.Resenha = Resenha
 
+async function deletar(id) {
+    try {        
+            sql = `DELETE FROM usuarios WHERE usu_id = ?`;
+            retornoBD = await mysql.execute(sql, [id])
+        
+            return result = { retorno: true, msg: "Usuário apagado com sucesso!"}
+        
+    } catch (e) {
+        console.log(e)
+        return result = { retorno: false, msg: "Não foi possível apagar esse usuário.", Erro: e }
+    }
+}
+module.exports.deletar = deletar

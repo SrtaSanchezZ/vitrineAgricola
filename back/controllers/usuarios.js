@@ -173,3 +173,38 @@ exports.buscaToken = async (req, res, next) => {
                 })
     }
 }
+//DELETE rota => /usuarios/:id
+//apaga uma usuario
+exports.deletar = async (req, res, next) => {
+    try {
+
+            var valor = req.params.id;
+            
+            result = await usuModel.deletar(valor);
+
+                if (result.retorno) {
+                    return res
+                        .status(200)
+                        .json({ 
+                            msg: result.msg,
+                            retorno: true
+                        })
+                }else{
+                    return res
+                            .status(400)
+                            .json({  
+                                msg: result.msg,
+                                retorno: false
+                             })
+                }
+    }
+    catch (e) {
+        return res
+                .status(400)
+                .json({ 
+                    msg: "Falha de conexão, revise seu acesso a internet.",
+                    retorno: false, 
+                    response: e 
+                })
+    }
+}

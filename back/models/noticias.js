@@ -73,14 +73,14 @@ async function cadastrar(titulo, texto, imagem, id) {
 }
 module.exports.cadastrar = cadastrar
 
-async function atualizar(id, titulo, texto, idusu, destaque) {
+async function atualizar(noticia) {
     try {        
 
         var data = new Date();
 
             sql = `UPDATE noticias SET not_titulo = ?, not_texto = ?, not_data = ?, not_usu_id = ?, not_destaque = ?
                    WHERE not_id = ?`
-            retornoBD = await mysql.execute(sql, [titulo, texto, data, idusu, destaque, id])
+            retornoBD = await mysql.execute(sql, [noticia.titulo, noticia.texto, data, noticia.idusu, noticia.destaque, noticia.id])
     
             if(retornoBD.affectedRows > 0){
                 result = { retorno: true, msg: "Noticia Atualizada com sucesso!"}
@@ -92,7 +92,21 @@ async function atualizar(id, titulo, texto, idusu, destaque) {
         
     } catch (e) {
         console.log(e)
-        return result = { retorno: false, msg: "Não foi possível cadastrar essa notícia.", Erro: e }
+        return result = { retorno: false, msg: "Não foi possível atualizar essa notícia.", Erro: e }
     }
 }
 module.exports.atualizar = atualizar
+
+async function deletar(id) {
+    try {        
+            sql = `DELETE FROM noticias WHERE not_id = ?`;
+            retornoBD = await mysql.execute(sql, [id])
+        
+            return result = { retorno: true, msg: "Noticia apagada com sucesso!"}
+        
+    } catch (e) {
+        console.log(e)
+        return result = { retorno: false, msg: "Não foi possível apagada essa notícia.", Erro: e }
+    }
+}
+module.exports.deletar = deletar

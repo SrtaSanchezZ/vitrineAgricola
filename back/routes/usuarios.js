@@ -10,5 +10,9 @@ router.post(
     '/',
     usuController.cadastrar
 )
+router.delete(
+    '/:id',
+    usuController.deletar
+)
 
 module.exports = router

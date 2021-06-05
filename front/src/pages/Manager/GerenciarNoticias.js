@@ -200,7 +200,8 @@ const GerenciarNoticias = () => {
                     titulo: tituloE,
                     texto: textoE,
                     perfil: perfil,
-                    email: email
+                    email: email,
+                    destaque: destaque
                 })
                 .then((res) => { 
                     if(res.data.retorno){                                                     
@@ -221,6 +222,23 @@ const GerenciarNoticias = () => {
             handleClickOpenA(msg);   
         }
 
+    };
+    const handleDelete = (id) =>{       
+            axios
+                .delete(`http://`+ back +`/noticia/`+id)
+                .then((res) => { 
+                    if(res.data.retorno){                                                     
+                        msg = res.data.msg
+                        handleClickOpenA(msg);
+                    }else{                                                     
+                        msg = res.data.msg
+                        handleClickOpenA(msg);
+                    }
+                })
+                .catch((res) =>{    
+                    msg = "Não foi possível apagar essa notícia.";
+                    handleClickOpenA(msg);   
+                }) 
     };
 
     useEffect(() => {
@@ -260,7 +278,7 @@ const GerenciarNoticias = () => {
                                         <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#00AA31", color: "#ffffff" }} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.destaque)}>
                                         <EditIcon />
                                         </IconButton>
-                                        <IconButton size="small" style={{ backgroundColor: "#00AA31", color: "#ffffff" }} onClick={() => handleClickOpenA(item.id)} >
+                                        <IconButton size="small" style={{ backgroundColor: "#00AA31", color: "#ffffff" }} onClick={() => handleDelete(item.id)} >
                                         <DeleteIcon />
                                         </IconButton>
                                     </div>

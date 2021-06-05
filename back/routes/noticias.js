@@ -16,5 +16,9 @@ router.put(
     '/:id',
     notController.atualizar
 )
+router.delete(
+    '/:id',
+    notController.deletar
+)
 
 module.exports = router

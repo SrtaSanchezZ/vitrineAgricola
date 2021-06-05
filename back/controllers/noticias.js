@@ -178,11 +178,13 @@ exports.atualizar = async (req, res, next) => {
                         id: req.params.id,
                         titulo: req.body.titulo,
                         texto: req.body.texto,
-                        idusu: id, 
+                        idusu: idusu, 
                         destaque: req.body.destaque
                     }
+
+                    console.log(noticia);
     
-                    result = await notModel.atualizar(noticia.id, noticia.titulo, noticia.texto, noticia.idusu, noticia.destaque);
+                    result = await notModel.atualizar(noticia);
 
                     if(result.retorno){
 
@@ -232,5 +234,40 @@ exports.atualizar = async (req, res, next) => {
                 retorno: false, 
                 response: e 
             })
+    }
+}
+//DELETE rota => /noticias/:id
+//apaga uma noticia
+exports.deletar = async (req, res, next) => {
+    try {
+
+            var valor = req.params.id;
+            
+            result = await notModel.deletar(valor);
+
+                if (result.retorno) {
+                    return res
+                        .status(200)
+                        .json({ 
+                            msg: result.msg,
+                            retorno: true
+                        })
+                }else{
+                    return res
+                            .status(400)
+                            .json({  
+                                msg: result.msg,
+                                retorno: false
+                             })
+                }
+    }
+    catch (e) {
+        return res
+                .status(400)
+                .json({ 
+                    msg: "Falha de conexão, revise seu acesso a internet.",
+                    retorno: false, 
+                    response: e 
+                })
     }
 }
