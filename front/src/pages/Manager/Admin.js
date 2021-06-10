@@ -22,7 +22,7 @@ const Admin = () => {
     //#region Funções e Funções de Estado
     const handleOpen = () => {
         setbPerfil("esconde");
-        setdPerfil("infoPerfil");
+        setdPerfil("hContDir");
     }
     const handleClose = () => {
         setbPerfil("perfilM");
@@ -84,8 +84,8 @@ const Admin = () => {
                 <div className="menup">
                     <input className="itMenuH" onClick={()=>handleStep(1)} type='button' /><br/>
                     <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
-                    <input className="itMenuP" onClick={()=>handleStep(3)} type='button' /><br/>
-                    <input className="itMenuMV" onClick={()=>handleStep(4)} type='button' /><br/>
+                    <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
+                    <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
                     <input className="itMenuDN" onClick={()=>handleStep(5)} type='button' /><br/>
                     <input className="itMenuGN" onClick={()=>handleStep(6)} type='button' /><br/>
                     <input className="itMenuMA" onClick={()=>handleStep(7)} type='button' /><br/>
@@ -254,8 +254,8 @@ const Admin = () => {
                         </div>
                         <div className="hContDir">
                             <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className="hContDir">
-                                <div className={dPerfil}>
+                            <div className={dPerfil}>
+                                <div className="infoPerfil">
                                     <div style={{textAlign:"right", marginTop:"-10px"}}>
                                         <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
                                     </div>

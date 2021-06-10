@@ -97,6 +97,34 @@ body{
     text-align: right;
     font-size: 16px;
 }
+.e404{
+    width: 100%;
+    height: 100vh;
+    background: url('../img/erro404.png') #333775;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    margin-block-start: -0.67em;
+    margin-block-end: -0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+
+    text-align: center; 
+    color: #e4e4eb;
+    font-weight: normal;
+    font-style: normal;
+}
+.eFontB{
+    display: block;
+    padding-top: 3%;
+    margin-left: -40px;
+}
+.eFont{
+    font-size: 64px;
+}
+.eFontN{
+    margin-top: 25%;
+    font-size: 20px;
+}
 .login{
     width: 100%;
     height: 90vh;
@@ -405,7 +433,6 @@ body{
 }
 .hContDir{
     width: 50%;
-    padding-left: 35%;
 
     text-align: right;
 }
@@ -438,7 +465,7 @@ body{
 .noticias{
     display:flex;
     width: 100%;
-    padding-top: 30px;
+    padding-top: 20px;
     font-size: 16px;
 }
 .esquerda{

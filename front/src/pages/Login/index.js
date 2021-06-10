@@ -98,7 +98,6 @@ const Login = () => {
         handleClickOpenA(msg);
       }
     };
-
     const handleSendEmail = () => {
       if (emailR !== "") {
         axios

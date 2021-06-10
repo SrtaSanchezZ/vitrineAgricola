@@ -2,7 +2,7 @@ const mysql = require('../mysql')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
-const val = require('../service/validacao')
+const val = require('../services/validacao')
 
 let result = "";
 let retornoBD = "";

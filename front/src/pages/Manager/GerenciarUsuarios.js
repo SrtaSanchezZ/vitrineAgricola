@@ -164,7 +164,7 @@ const GerenciarUsuarios = () => {
                     <span>Lista de Usuários</span>
                 </div>
                 <div className="direita">
-                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#00AA31", color:"#FFFFFF" }} startIcon={<MdAdd/>}>NOVO USUÁRIO</Button>
+                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#00AA31", color:"#FFFFFF", position:"unset" }} startIcon={<MdAdd/>}>NOVO USUÁRIO</Button>
                 </div>
             </div>
             <div className="noticias">
@@ -187,10 +187,10 @@ const GerenciarUsuarios = () => {
                                     </Box>         
                                     <Box p={1} >
                                     <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#00AA31", color: "#ffffff" }} onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.senha, item.perfil)}>
+                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#00AA31", color: "#ffffff", position:"unset"  }} onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.senha, item.perfil)}>
                                         <EditIcon />
                                         </IconButton>
-                                        <IconButton size="small" style={{ backgroundColor: "#00AA31", color: "#ffffff" }} onClick={() => handleDelete(item.id)} >
+                                        <IconButton size="small" style={{ backgroundColor: "#00AA31", color: "#ffffff", position:"unset"  }} onClick={() => handleDelete(item.id)} >
                                         <DeleteIcon />
                                         </IconButton>
                                     </div>

@@ -252,7 +252,7 @@ const GerenciarNoticias = () => {
                     <span>Lista de Notícias</span>
                 </div>
                 <div className="direita">
-                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#00AA31", color:"#FFFFFF" }} startIcon={<MdAdd/>}>NOVA NOTÍCIA</Button>
+                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#00AA31", color:"#FFFFFF", position:"unset"  }} startIcon={<MdAdd/>}>NOVA NOTÍCIA</Button>
                 </div>
             </div>
             <div className="noticias">
@@ -270,15 +270,15 @@ const GerenciarNoticias = () => {
                                 <Box display="flex" p={1} m={1} css={{ height: "auto", minWidth:"100%", maxWidth: "150%", borderRadius: "5px", backgroundColor: "#b6ffb5" }}>
                                     <Box id="valor" p={1} flexGrow={2} css={{ width: "200px", height: 'auto' }} >
                                         <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.destaque)}>
-                                            <span className="ml-0" style={{ color: "black", fontSize: "120%"}}>{item.titulo}</span>
+                                            <span className="ml-0" style={{ color: "black", fontSize: "90%"}}>{item.titulo}</span>
                                         </li>
                                     </Box>         
                                     <Box p={1} >
                                     <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#00AA31", color: "#ffffff" }} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.destaque)}>
+                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#00AA31", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.destaque)}>
                                         <EditIcon />
                                         </IconButton>
-                                        <IconButton size="small" style={{ backgroundColor: "#00AA31", color: "#ffffff" }} onClick={() => handleDelete(item.id)} >
+                                        <IconButton size="small" style={{ backgroundColor: "#00AA31", color: "#ffffff", position:"unset" }} onClick={() => handleDelete(item.id)} >
                                         <DeleteIcon />
                                         </IconButton>
                                     </div>

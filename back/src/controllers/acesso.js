@@ -1,5 +1,5 @@
-const usuModel = require('../models/usuarios')
-const val = require('../service/validacao')
+const usuModel = require('../../models/usuarios')
+const val = require('../services/validacao')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
