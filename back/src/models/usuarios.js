@@ -1,8 +1,8 @@
-const mysql = require('../mysql')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const nodemailer = require('nodemailer')
-const val = require('../services/validacao')
+const mysql = require('../services/mysql');
+const val = require('../services/utils');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 
 let result = "";
 let retornoBD = "";
@@ -12,8 +12,12 @@ async function obter() {
     try {
         sql = `SELECT * FROM usuarios`
         retornoBD = await mysql.execute(sql);
-
-        return result = { retornoBD, retorno: true, msg: "Relação de usuários."}
+        
+        if(retornoBD.length > 0){
+            return result = { retornoBD, retorno: true, msg: "Relação de usuários."}
+        }else{
+            return result = { retorno: false, msg: "Não há usuários cadastrados." }            
+        }
     } catch (e) {
         return result = { retorno: false, msg: "Não há usuários cadastrados.", Erro: e }
     }
@@ -43,45 +47,19 @@ async function obterEmail(email) {
 }
 module.exports.obterEmail = obterEmail
 
-async function duplicado(email) {
+async function cadastrar(nome, email, senha, perfil) {
     try {
-
-        result = val.email(email);
-
-        if(result.retorno){
-            sql = `SELECT * FROM usuarios WHERE usu_email = ?`
-            retornoBD = await mysql.execute(sql, [email]);
-
-            var dados = retornoBD;
-
-            if(dados.length === 0){
-                return result = { retorno: false, msg: "Este e-mail ainda não possui cadastro."}
-            }else{
-                return result = { retorno: true, msg: "Este e-mail já possui cadastro."}
-            }    
-        }else{    
-            return result = { retorno: result.retorno, msg: result.msg}
-        }
-    } catch (e) {
-        return result = { retorno: false, msg: "Erro para carregar dados, valide sua conexão com a internet.", Erro: e }
-    }
-}
-module.exports.duplicado = duplicado
-
-async function cadastrar(usuario) {
-    try {
-
-        result = val.usuario(usuario.nome, usuario.email, usuario.senha, usuario.perfil);
+        result = val.usuario(nome, email, senha, perfil);
 
         if(result.retorno){
 
-            bcrypt.hash(usuario.senha, 10, async (errBcrypt, hash) =>{
+            bcrypt.hash(senha, 10, async (errBcrypt, hash) =>{
                 if(errBcrypt){
                     return result = { retorno: false, msg: "Não foi possível cadastrar esse usuário, revise a senha." }
                 }else{
 
                     sql = `INSERT INTO usuarios (usu_nome, usu_email, usu_senha, usu_perfil) VALUES (?,?,?,?)`;        
-                    retornoBD = await mysql.execute(sql, [usuario.nome, usuario.email, hash, usuario.perfil]);
+                    retornoBD = await mysql.execute(sql, [nome, email, hash, perfil]);
 
                     if(retornoBD.affectedRows > 0){
                         result = { retorno: true, msg: "Usuário Cadastrado com sucesso!"}
@@ -97,11 +75,62 @@ async function cadastrar(usuario) {
         }else{            
             return result = { retorno: result.retorno, msg: result.msg}
         }
+            
     } catch (e) {
         return result = { retorno: false, msg: "Não foi possível cadastrar esse usuário, revise os dados.", Erro: e }
     }
 }
 module.exports.cadastrar = cadastrar
+
+async function atualizar(nome, email, senha, perfil, id) {
+    try {
+
+        result = val.usuario(nome, email, senha, perfil);
+
+        if(result.retorno){
+
+            bcrypt.hash(senha, 10, async (errBcrypt, hash) =>{
+                if(errBcrypt){
+                    return result = { retorno: false, msg: "Não foi possível atualizar os dados desse usuário, revise e tente novamente." }
+                }else{
+                    
+                    sql = `UPDATE usuarios SET usu_nome = ?, usu_email = ?, usu_senha = ?, usu_perfil = ? WHERE usu_id = ?`;        
+                    retornoBD = await mysql.execute(sql, [nome, email, hash, perfil, id]);
+
+                    if(retornoBD.affectedRows > 0){
+                        result = { retorno: true, msg: "Usuário atualizado com sucesso!"}
+                    }else{
+                        result = { retorno: false, msg: "Não foi possível atualizar os dados desse usuário, revise e tente novamente."}
+                    }
+        
+                } 
+            });
+
+            return result;
+
+        }else{            
+            return result = { retorno: result.retorno, msg: result.msg}
+        }
+            
+    } catch (e) {
+        return result = { retorno: false, msg: "Não foi possível atualizar os dados desse usuário, revise e tente novamente.", Erro: e }
+    }
+}
+module.exports.atualizar = atualizar
+
+async function apagar(id) {
+    try {        
+        sql = `DELETE FROM usuarios WHERE usu_id = ?`;
+        retornoBD = await mysql.execute(sql, [id])
+    
+        return result = { retorno: true, msg: "Usuário apagado com sucesso!"}
+        
+    } catch (e) {
+        console.log(e)
+        return result = { retorno: false, msg: "Não foi possível apagar esse usuário.", Erro: e }
+    }
+}
+module.exports.apagar = apagar
 
 async function alterarToken(email) {
 
@@ -173,7 +202,7 @@ module.exports.emailResenha = emailResenha
 
 async function obterToken(email) {
 
-    result = await val.email(email);
+    result = val.email(email);
 
     if(result.retorno){
         try {
@@ -219,17 +248,3 @@ async function Resenha(senha, email) {
     }
 }
 module.exports.Resenha = Resenha
-
-async function deletar(id) {
-    try {        
-            sql = `DELETE FROM usuarios WHERE usu_id = ?`;
-            retornoBD = await mysql.execute(sql, [id])
-        
-            return result = { retorno: true, msg: "Usuário apagado com sucesso!"}
-        
-    } catch (e) {
-        console.log(e)
-        return result = { retorno: false, msg: "Não foi possível apagar esse usuário.", Erro: e }
-    }
-}
-module.exports.deletar = deletar

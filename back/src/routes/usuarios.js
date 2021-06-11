@@ -1,17 +1,21 @@
 const routes = require("express").Router();
 const usuController = require('../controllers/usuarios');
 
-router.get(
+routes.get(
     '/usuarios',
     usuController.obter
-)
-router.post(
-    '/usuarios',
+);
+routes.post(
+    '/usuarios', 
     usuController.cadastrar
-)
-router.delete(
+);
+routes.put(
     '/usuarios/:id',
-    usuController.deletar
-)
+    usuController.atualizar
+);
+routes.delete(
+    '/usuarios/:id',
+    usuController.apagar
+);
 
-module.exports = router
+module.exports = routes;

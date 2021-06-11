@@ -1,5 +1,5 @@
-const usuModel = require('../../models/usuarios')
-const val = require('../services/validacao')
+const usuModel = require('../models/usuarios')
+const val = require('../services/utils')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
@@ -132,6 +132,7 @@ exports.validaEmail = async (req, res, next) => {
                         .json({ 
                             msg: result.msg,
                             retorno: true
+                            //token: token
                         })
                 }else{
                     return res

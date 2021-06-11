@@ -12,6 +12,7 @@ app.use('/files', express.static(path.resolve(__dirname, 'uploads')));
 app.use(require('./routes/noticias'));
 app.use(require('./routes/produtos'));
 app.use(require('./routes/usuarios'));
+app.use(require('./routes/acesso'));
 
 //quando não encontrar nenhuma rota vai entrar aqui
 app.use((req, res, next) => {

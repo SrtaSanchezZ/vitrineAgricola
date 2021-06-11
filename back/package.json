@@ -1,24 +1,24 @@
 {
   "name": "back",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Serviço back-end para manipulação de dados e regras de negócio entre o front-end e o banco de dados",
   "main": "index.js",
   "repository": "https://github.com/SrtaSanchezZ/vitrineAgricola.git",
   "author": "SrtaSanchezZ <talita.b.sanchez@unoeste.edu.br>",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "mysql": "^2.18.1",
-    "nodemailer": "^6.6.1",
-    "nodemon": "^2.0.7"
+    "nodemailer": "^6.6.1"
   },
-  "scripts": {
-    "start": "nodemon index.js"
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

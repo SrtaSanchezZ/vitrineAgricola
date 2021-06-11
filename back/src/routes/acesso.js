@@ -1,18 +1,17 @@
-const express = require('express')
-const router = express.Router()
+const routes = require("express").Router();
 const aceController = require('../controllers/acesso')
 
-router.post(
-    '/',
+routes.post(
+    '/acesso',
     aceController.login
 )
-router.patch(
-    '/',
+routes.patch(
+    '/acesso',
     aceController.validaEmail
 )
-router.patch(
-    '/:token',
+routes.patch(
+    '/acesso/:token',
     aceController.altSenha
 )
 
-module.exports = router
+module.exports = routes

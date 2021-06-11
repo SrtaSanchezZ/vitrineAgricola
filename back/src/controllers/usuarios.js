@@ -1,17 +1,10 @@
-const usuModel = require('../models/usuarios')
+const usuModel = require('../models/usuarios');
+const val = require('../services/utils');
 
-let result = "";
-let response = "";
-var usuario = {
-    id: 0,
-    nome: "",
-    email: "",
-    senha: "",
-    perfil: 0
-}
+var result = "";
 
-//GET rota => /noticias
-//retorna todas as noticias
+//GET rota => /usuarios
+//obtem todas os usuarios
 exports.obter = async (req, res, next) => {
     try {
 
@@ -58,101 +51,217 @@ exports.obter = async (req, res, next) => {
     }
 }
 //POST rota => /usuarios
-//cadastra um usuário
+//cadastra um usuario
 exports.cadastrar = async (req, res, next) => {
     try {
+        
+        var usuario = {
+            nome: "",
+            email: "",
+            senha: "",
+            perfil: ""
+        }
 
-        const usEmail = req.body.email;
+        usuario = {
+            nome: req.body.nome,
+            email: req.body.email,
+            senha: req.body.senha,
+            perfil: req.body.perfil
+        }
 
-        result = await usuModel.duplicado(usEmail);
+        result = val.usuario(usuario.nome, usuario.email, usuario.senha, usuario.perfil);
 
-        if (result.retorno) {
+        if(result.retorno){
+
+            result = "";
+
+            result = await usuModel.obterEmail(usuario.email);
+
+            if(!result.retorno){ 
+                
+                result = "";
+                    
+                result = await usuModel.cadastrar(usuario.nome, usuario.email, usuario.senha, usuario.perfil);
+
+                if(result.retorno){
+
+                    return res
+                            .status(200)
+                            .json({ 
+                                msg: "Usuário Cadastrado com sucesso!",
+                                retorno: true
+                            })
+                }else{     
+                    return res
+                        .status(400)
+                        .json({ 
+                            msg: result.msg,
+                            retorno: false
+                        })
+                }                
+            }else{                           
+                return res
+                    .status(400)
+                    .json({ 
+                        msg: "Já existe usuário cadastrado com esse e-mail.",
+                        retorno: false
+                    })                
+            }
+        }else{    
+            return res
+                .status(400)
+                .json({ 
+                    msg: result.msg,
+                    retorno: false
+                })
+        }
+        
+
+    } catch (e) {
+        return res
+            .status(400)
+            .json({ 
+                msg: "Falha de conexão, revise seu acesso a internet.",
+                retorno: false, 
+                response: e 
+            })
+    }
+}
+//PUT rota => /usuarios/:id
+//atualiza um usuario
+exports.atualizar = async (req, res, next) => {
+    try {
+        var usuario = {
+            id:"",
+            nome: "",
+            email: "",
+            senha: "",
+            perfil: ""
+        }
+
+        usuario = {
+            id: req.params.id,
+            nome: req.body.nome,
+            senha: req.body.senha,
+            email: req.body.email,
+            perfil: req.body.perfil
+        }
+        
+        result = val.usuario(usuario.nome, usuario.email, usuario.senha, usuario.perfil);
+
+        if(result.retorno){
+            
+            result = "";
+
+            result = await usuModel.obterEmail(usuario.email);
+
+            if(result.retorno){         
+
+                result = "";
+                    
+                result = await usuModel.atualizar(usuario.nome, usuario.email, usuario.senha, usuario.perfil, usuario.id);
+
+                if(result.retorno){
+
+                    return res
+                            .status(200)
+                            .json({ 
+                                msg: "Usuário atualizado com sucesso!",
+                                retorno: true
+                            })
+                }else{     
+                    return res
+                        .status(400)
+                        .json({ 
+                            msg: result.msg,
+                            retorno: false
+                        })
+                }
+            }else{                           
+                return res
+                    .status(400)
+                    .json({ 
+                        msg: "Não existe usuário cadastrado com esse e-mail.",
+                        retorno: false
+                    })                
+            }
+        }else{
             return res
                     .status(400)
                     .json({
                         msg: result.msg,
                         retorno: false
                     })
-        }else{
-
-            usuario = {
-                nome: req.body.nome,
-                email: req.body.email,
-                senha: req.body.senha,
-                perfil: req.body.perfil
-            }
-
-            result = await usuModel.cadastrar(usuario);
-
-            if(result.retorno){
-                return res
-                        .status(200)
-                        .json({ 
-                            msg: "Usuário cadastrado com sucesso!",
-                            retorno: true
-                         })
-            }else{
-                return res
-                        .status(400)
-                        .json({   
-                            msg: result.msg,
-                            retorno: false 
-                        })
-            }
         }
-    }
-    catch (e) {
+ 
+    }catch (e) {
         return res
-                .status(400)
-                .json({ 
-                    msg: "Falha de conexão, revise sua conexão com a internet.",
-                    retorno: false, 
-                    response: e 
-                })
+            .status(400)
+            .json({ 
+                msg: "Falha de conexão, revise seu acesso a internet.",
+                retorno: false, 
+                response: e 
+            })
     }
 }
-//POST rota => /usuarios/:email
-//altera somente a senha do usuário
-exports.buscaToken = async (req, res, next) => {
+//DELETE rota => /usuarios/:id
+//apaga um usuario
+exports.apagar = async (req, res, next) => {
     try {
+        
+        var usuario = {
+            id:"",
+            nome: "",
+            email: "",
+            senha: "",
+            perfil: ""
+        }
 
-        var usuEmail = req.body.email;
+        usuario = {
+            id: req.params.id,
+            nome: req.headers.nome,
+            senha: req.headers.senha,
+            email: req.headers.email,
+            perfil: req.headers.perfil
+        }
+        
+        result = val.usuario(usuario.nome, usuario.email, usuario.senha, usuario.perfil);
 
-        if (usuEmail.length > 0){
+        if (result.retorno) {
+            
+            result = "";
 
-            result = await usuModel.alterarToken(usEmail);
+            result = await usuModel.obterEmail(usuario.email);
 
-            if (result.retorno) {
-
-                var token = result.token;
+            if(result.retorno){         
 
                 result = "";
+                    
+                result = await usuModel.apagar(usuario.id);
 
-                result = await usuModel.emailResenha(usEmail, token);
-
-                if (result.retorno) {
+                if(result.retorno){
 
                     return res
-                        .status(200)
+                            .status(200)
+                            .json({ 
+                                msg: "Usuário apagado com sucesso!",
+                                retorno: true
+                            })
+                }else{     
+                    return res
+                        .status(400)
                         .json({ 
                             msg: result.msg,
-                            retorno: true
-                        })
-                }else{
-                    return res
-                            .status(400)
-                            .json({  
-                                msg: result.msg,
-                                retorno: false
-                             })
-                }                
-            }else{
-                return res
-                        .status(400)
-                        .json({  
-                            msg: result.msg,
                             retorno: false
-                         })
+                        })
+                }
+            }else{                           
+                return res
+                    .status(400)
+                    .json({ 
+                        msg: "Não existe usuário cadastrado com esse e-mail.",
+                        retorno: false
+                    })                
             }
         }else{
             return res
@@ -160,43 +269,8 @@ exports.buscaToken = async (req, res, next) => {
                     .json({  
                         msg: result.msg,
                         retorno: false
-                     })
-        }
-    }
-    catch (e) {
-        return res
-                .status(400)
-                .json({ 
-                    msg: "Falha de conexão, revise seu acesso a internet.",
-                    retorno: false, 
-                    response: e 
-                })
-    }
-}
-//DELETE rota => /usuarios/:id
-//apaga uma usuario
-exports.deletar = async (req, res, next) => {
-    try {
-
-            var valor = req.params.id;
-            
-            result = await usuModel.deletar(valor);
-
-                if (result.retorno) {
-                    return res
-                        .status(200)
-                        .json({ 
-                            msg: result.msg,
-                            retorno: true
                         })
-                }else{
-                    return res
-                            .status(400)
-                            .json({  
-                                msg: result.msg,
-                                retorno: false
-                             })
-                }
+        }  
     }
     catch (e) {
         return res
