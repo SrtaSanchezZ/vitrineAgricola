@@ -67,6 +67,18 @@ exports.cadastrar = async (req, res, next) => {
             imagem: ""
         }
 
+        var perfil = req.body.perfil;      
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+
         produto = {
             nome: req.body.nome,
             descricao: req.body.descricao,
@@ -74,7 +86,7 @@ exports.cadastrar = async (req, res, next) => {
             valor: req.body.valor,
             quantidade: req.body.quantidade,
             email: req.body.email,
-            perfil: req.body.perfil,
+            perfil: perfil,
             imagem: '/files/' + req.file.filename
         }
         
@@ -150,6 +162,18 @@ exports.atualizar = async (req, res, next) => {
             perfil: ""
         }
 
+        var perfil = req.body.perfil;      
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+
         produto = {
             id: req.params.id,
             nome: req.body.nome,
@@ -158,7 +182,7 @@ exports.atualizar = async (req, res, next) => {
             valor: req.body.valor,
             quantidade: req.body.quantidade,
             email: req.body.email,
-            perfil: req.body.perfil
+            perfil: perfil
         }
         
         result = val.produto(produto.nome, produto.descricao, produto.grupo, produto.valor, produto.quantidade, produto.email, produto.perfil);
@@ -234,6 +258,18 @@ exports.apagar = async (req, res, next) => {
             perfil: ""
         }
 
+        var perfil = req.headers.perfil;      
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+
         produto = {
             id: req.params.id,
             nome: "testeeee",
@@ -242,7 +278,7 @@ exports.apagar = async (req, res, next) => {
             valor: 0.00,
             quantidade: 0,
             email: req.headers.email,
-            perfil: req.headers.perfil
+            perfil: perfil
         }
         
         result = val.produto(produto.nome, produto.descricao, produto.grupo, produto.valor, produto.quantidade, produto.email, produto.perfil);

@@ -62,11 +62,23 @@ exports.cadastrar = async (req, res, next) => {
             perfil: ""
         }
 
+        var perfil = req.body.perfil;      
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+
         usuario = {
             nome: req.body.nome,
             email: req.body.email,
             senha: req.body.senha,
-            perfil: req.body.perfil
+            perfil: perfil
         }
 
         result = val.usuario(usuario.nome, usuario.email, usuario.senha, usuario.perfil);
@@ -139,12 +151,24 @@ exports.atualizar = async (req, res, next) => {
             perfil: ""
         }
 
+        var perfil = req.body.perfil;      
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+
         usuario = {
             id: req.params.id,
             nome: req.body.nome,
             senha: req.body.senha,
             email: req.body.email,
-            perfil: req.body.perfil
+            perfil: perfil
         }
         
         result = val.usuario(usuario.nome, usuario.email, usuario.senha, usuario.perfil);
@@ -217,12 +241,24 @@ exports.apagar = async (req, res, next) => {
             perfil: ""
         }
 
+        var perfil = req.headers.perfil;      
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+
         usuario = {
             id: req.params.id,
             nome: req.headers.nome,
             senha: req.headers.senha,
             email: req.headers.email,
-            perfil: req.headers.perfil
+            perfil: perfil
         }
         
         result = val.usuario(usuario.nome, usuario.email, usuario.senha, usuario.perfil);

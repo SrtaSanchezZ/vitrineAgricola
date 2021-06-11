@@ -65,14 +65,26 @@ exports.cadastrar = async (req, res, next) => {
             imagem:""
         }
 
+        var perfil = req.body.perfil;      
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+
         noticia = {
             titulo: req.body.titulo,
             texto: req.body.texto,
             email: req.body.email,
-            perfil: req.body.perfil,
+            perfil: perfil,
             imagem: '/files/' + req.file.filename
         }
-        
+
         result = val.noticia(noticia.titulo, noticia.texto, noticia.email, noticia.perfil);
 
         if(result.retorno){
@@ -170,12 +182,24 @@ exports.atualizar = async (req, res, next) => {
             perfil:""
         }
 
+        var perfil = req.body.perfil;      
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+
         noticia = {
             id: req.params.id,
             titulo: req.body.titulo,
             texto: req.body.texto,
             email: req.body.email,
-            perfil: req.body.perfil
+            perfil: perfil
         }
         
         result = val.noticia(noticia.titulo, noticia.texto, noticia.email, noticia.perfil);
@@ -276,12 +300,24 @@ exports.apagar = async (req, res, next) => {
             perfil:""
         }
 
+        var perfil = req.headers.perfil;      
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+
         noticia = {
             id: req.params.id,
             titulo: "teste",
             texto: "testeeee",
             email: req.headers.email,
-            perfil: req.headers.perfil
+            perfil: perfil
         }
         
         result = val.noticia(noticia.titulo, noticia.texto, noticia.email, noticia.perfil);
