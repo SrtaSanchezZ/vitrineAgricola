@@ -19,7 +19,8 @@ const GerenciarNoticias = () => {
     const [alerta, setAlerta] = useState("");
     const [titulo, setTitulo] = useState("");
     const [texto, setTexto] = useState("");
-    const [destaque, setDestaque] = useState("");
+    const [usuario, setUsuario] = useState("");
+    const [data, setData] = useState("");
     const [imagem, setImagem] = useState([]);
     const [id, setId] = useState("");
     const [tituloE, setTituloE] = useState("");
@@ -30,7 +31,7 @@ const GerenciarNoticias = () => {
 
     const ArrNot = (arr) =>
       arr.map((item) => ({ id: item.id, titulo: item.titulo, texto: item.texto,
-                           data: item.data, usuario: item.usuario, destaque: item.destaque }));
+                           data: item.data, usuario: item.usuario, imagem: item.imagem }));
 
     var msg = "";
     var back = "localhost:3001";
@@ -42,20 +43,27 @@ const GerenciarNoticias = () => {
     const handleCloseA = () => {
       setOpenA(false);
       setAlerta("");
+        
+      handleLoad();
     };
     const handleClickOpen = () => {
       setOpen(true);
+
+      setTitulo("");
+      setTexto("");
+      setImagem([]);
     };
     const handleClose = () => {
       setOpen(false);
     };
-    const handleClickOpenE = (id, titulo, texto, destaque) => {
+    const handleClickOpenE = (id, titulo, texto, imagem, usuario, data) => {
       setOpenE(true);
       setId(id);
       setTituloE(titulo);
       setTextoE(texto);
-      setDestaque(destaque);
-      //setImg(imagem);
+      setUsuario(usuario);
+      setImg(imagem);
+      setData(data);
     };
     const handleCloseE = () => {
       setOpenE(false);
@@ -85,29 +93,29 @@ const GerenciarNoticias = () => {
         }
     };
     const renderPhotos = (img) => {
-        if(img !== null && img !== ""){
-        var ima = img;
+        var ima = "http://localhost:3001" + img;
         return <img src={ima} alt="Imagem Notícia" style={{maxWidth:"100px", maxHeight: "100px", borderRadius: "5px"}} />
-        }else{
-        return <img src={semimg} alt="Imagem" style={{maxWidth:"100px", maxHeight: "100px", borderRadius: "5px"}}  />
-        }
 	};
     const handleSubmit = () => {
 
         var noticia = {
           titulo: "",
           texto: "",
+          email: "",
+          perfil: "",
           imagem: []
         }
 
         handleClickOpenL();
 
-        if (titulo !== "" || texto !== ""){
+        if (titulo !== "" && texto !== ""){
             if(imagem.length > 0){
 
                 noticia = {
                     titulo: titulo,
                     texto: texto,
+                    email: email,
+                    perfil: perfil,
                     imagem: imagem[0]
                   }
                 
@@ -116,10 +124,10 @@ const GerenciarNoticias = () => {
                   formData.append('email',email);
                   formData.append('titulo',noticia.titulo);
                   formData.append('texto',noticia.texto);
-                  formData.append('imagem',noticia.imagem);
+                  formData.append('file',noticia.imagem);
 
                 axios
-                    .post(`http://` + back + `/noticia`, formData)
+                    .post(`http://` + back + `/noticias`, formData)
                     .then((res) => {
                         
                         handleCloseL();
@@ -150,13 +158,11 @@ const GerenciarNoticias = () => {
                     formData.append('email',email);
                     formData.append('titulo',noticia.titulo);
                     formData.append('texto',noticia.texto);
-                    formData.append('imagem',noticia.imagem);
+                    formData.append('file',noticia.imagem);
   
                   axios
                       .post(`http://` + back + `/noticia`, formData)
                       .then((res) => {
-  
-                          
                         
                         handleCloseL();
 
@@ -184,7 +190,7 @@ const GerenciarNoticias = () => {
     };
     const handleLoad = () =>{
         axios
-          .get(`http://`+ back +`/noticia`)
+          .get(`http://`+ back +`/noticias`)
           .then((res) => {              
             setInfos(ArrNot(res.data.response.noticias)); 
           }).catch((res) =>{    
@@ -196,12 +202,11 @@ const GerenciarNoticias = () => {
 
         if (tituloE !== "" || textoE !== ""){
             axios
-                .put(`http://`+ back +`/noticia/`+id,{
+                .put(`http://`+ back +`/noticias/`+id,{
                     titulo: tituloE,
                     texto: textoE,
                     perfil: perfil,
-                    email: email,
-                    destaque: destaque
+                    email: email
                 })
                 .then((res) => { 
                     if(res.data.retorno){                                                     
@@ -256,45 +261,55 @@ const GerenciarNoticias = () => {
                 </div>
             </div>
             <div className="noticias">
-                    <Grid item xs={12}>
-                        <div align="center">
-                            <Box display="flex" p={1} m={1} css={{ height: "auto", width: "100%", borderRadius: "5px", backgroundColor: "#00AA31", fontWeight: 'bolder' }}>
-                                <Box p={1} flexGrow={2}>
-                                    <span className="ml-0" style={{ color: "#ffffff", fontSize: "120%", marginLeft:"-130px"}}>TITULO</span>
-                                </Box>
-                            </Box>
-                        </div>
-                        <Box>
-                            {infos.map((item, index) => (
-                                <div align="center">
-                                <Box display="flex" p={1} m={1} css={{ height: "auto", minWidth:"100%", maxWidth: "150%", borderRadius: "5px", backgroundColor: "#b6ffb5" }}>
-                                    <Box id="valor" p={1} flexGrow={2} css={{ width: "200px", height: 'auto' }} >
-                                        <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.destaque)}>
-                                            <span className="ml-0" style={{ color: "black", fontSize: "90%"}}>{item.titulo}</span>
+                <div className="esquerda">
+                    <Grid className="bxLista" item xs={12}>
+                        {infos.map((item, index) => (
+                            <Box display="bloxk">    
+                                <Box display="flex" id={index} p={1} m={1} css={{ height: "auto", width:"90%"}}>
+                                    <Box p={1} flexGrow={2} css={{ width: "200px", height: 'auto' }} >
+                                        <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.imagem, item.usuario, item.data)}>
+                                            <div className="result">{renderPhotos(item.imagem)}</div>
                                         </li>
-                                    </Box>         
-                                    <Box p={1} >
-                                    <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#00AA31", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.destaque)}>
-                                        <EditIcon />
-                                        </IconButton>
-                                        <IconButton size="small" style={{ backgroundColor: "#00AA31", color: "#ffffff", position:"unset" }} onClick={() => handleDelete(item.id)} >
-                                        <DeleteIcon />
-                                        </IconButton>
-                                    </div>
                                     </Box>
-                                </Box>
-                                </div>
-                            ))}
-                        </Box>
+                                    <Box p={1} flexGrow={2} css={{ width: "200px", height: 'auto' }} >
+                                        <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.imagem, item.usuario, item.data)}>
+                                            <div style={{ textAlign:"left",  color: "black", alignItems:'center' }}>
+                                                <span >{item.titulo}</span><br/><br/>
+                                                <span className="labelPre">{item.texto}</span>
+                                            </div>
+                                        </li>
+                                    </Box>          
+                                    <Box p={1} >
+                                        <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
+                                            <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#00AA31", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.imagem, item.usuario, item.data)}>
+                                            <EditIcon />
+                                            </IconButton>
+                                            <IconButton size="small" style={{ backgroundColor: "#00AA31", color: "#ffffff", position:"unset" }} onClick={() => handleDelete(item.id)} >
+                                            <DeleteIcon />
+                                            </IconButton>
+                                        </div>
+                                    </Box>
+                                </Box>                            
+                                <hr/>
+                            </Box>
+                        ))}
                     </Grid>
+                </div>
+                <div className="direita">
+                    <div className="bxLeitura">
+                        <div className="bxLTexto">
+                            <span>Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum</span>
+                        </div>
+                    </div>
+                </div>
             </div>
                        
             <Dialog open={openA} onClose={handleCloseA} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#00AA31" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <AiFillCloseCircle onClick={() => handleCloseA()} style={{ width: '18px', height: 'auto', marginRight: '10px', marginTop: '10px' }} />
+                <Box bgcolor="#2E8E61" color="#ffffff" align="right" style={{ height: '70px' }}>
+                    <span style={{marginLeft:'10px'}}>AVISO!</span>
+                    <AiFillCloseCircle onClick={() => handleCloseA()} style={{ width: '18px', height: 'auto', marginLeft: '65%', marginRight:"20px", marginTop: '25px' }} />
                 </Box>
-                <DialogContent className="Texto" style={{ marginTop: '50px' }}>
+                <DialogContent className="Texto" style={{ marginTop: '10px' }}>
                 <p className="Texto" id="alerta" style={{ color: '#000000', textAlign: 'center', textSizeAdjust: 'auto', fontSize: '120%', fontWeight: 'bolder' }} >
                     {alerta}
                 </p>
@@ -311,27 +326,34 @@ const GerenciarNoticias = () => {
                     <span>NOVA NOTÍCIA</span>
                     <AiFillCloseCircle onClick={() => handleClose()} style={{ width: '18px', height: 'auto', marginLeft: '70%', marginRight:"20px", marginTop: '25px' }} />
                 </Box>
-                <DialogContent className="Texto" style={{ marginTop: '10px' }}>
-                    <div style={{ display:"block" }}>
-                        <input 
-                            className="inp"
-                            type="file" 
-                            name="imagem"
-                            onChange={handleChageImg}
-                        /><br/>
-                        <label htmlFor="file" className="label">
-                            <i className="material-icons">Imagem (até 512KB - 600 x 600), formatos suportados (png, jpg e jpeg)</i>
-                        </label>
-                        <input 
-                            className="inp"
-                            type="text" 
-                            name="titulo"
-                            onChange={handleChange(setTitulo)}
-                            value={titulo}
-                            maxLength="75"
-                            minLength="6"
-                            placeholder="Título (min 6 - max 75)"
-                        />
+                <DialogContent >
+                    <div className="noticias">
+                        <div className="esquerda">
+                            <input 
+                                className="inpImg"
+                                type="file" 
+                                name="imagem"
+                                onChange={handleChageImg}
+                            /><br/>
+                            <label htmlFor="file" className="label">
+                                <i className="material-icons">Imagem (até 512KB - 600 x 600) <br/> Formatos (png, jpg ou jpeg)</i>
+                            </label>
+                        </div>
+                        <div className="direita">
+                            <input 
+                                style={{ marginLeft:'-20px' }} 
+                                className="inp"
+                                type="text" 
+                                name="titulo"
+                                onChange={handleChange(setTitulo)}
+                                value={titulo}
+                                maxLength="75"
+                                minLength="6"
+                                placeholder="Título (min 6 - max 75)"
+                            />
+                        </div>
+                    </div>
+                    <div style={{ display:"block", textAlign:'center' }}>
                         <textarea 
                             className="inp"
                             type="text" 
@@ -402,6 +424,7 @@ const GerenciarNoticias = () => {
                         </Button>
                     </DialogActions>
             </Dialog>
+            
             <Dialog open={openL} aria-labelledby="form-dialog-title">
                 <DialogContent className="Texto">          
                     <CircularProgress />
