@@ -50,21 +50,13 @@ function noticia(titulo, texto, email, perfil) {
 }
 module.exports.noticia = noticia
 
-function produto(nome, descricao, grupo, valor, quantidade, email, perfil) {
+function produto(nome, descricao, grupo, email, perfil) {
     if(nome.length > 0 && nome.length < 80){
         if(descricao.length > 0 && descricao.length < 200){
             if(email.length < 81 && email.length > 5 && rgxEmail.test(email)){
                 if(perfil == 1 || perfil == 3){
-                    if(grupo.length > 0 && grupo.length < 200){ 
-                        if(valor == 0 || valor < 5000){ 
-                            if(quantidade == 0 || quantidade < 5000){                            
-                                result = { msg: "Dados validados com sucesso!", retorno: true } 
-                            }else{
-                                result = { msg: "Informe uma quantidade válida.", retorno: false } 
-                            }                           
-                        }else{
-                            result = { msg: "Informe um valor válido.", retorno: false } 
-                        }
+                    if(grupo.length > 0 && grupo.length < 200){                           
+                        result = { msg: "Dados validados com sucesso!", retorno: true }
                     }else{
                         result = { msg: "Todos produtos deve ser vinculado a um grupo padrão.", retorno: false } 
                     }

@@ -8,7 +8,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import semimg from '../../assets/img/noimg.png';
-
 //#endregion
 const GerenciarNoticias = () => {  
     const [infos, setInfos] = useState([]);
@@ -32,6 +31,14 @@ const GerenciarNoticias = () => {
     const ArrNot = (arr) =>
       arr.map((item) => ({ id: item.id, titulo: item.titulo, texto: item.texto,
                            data: item.data, usuario: item.usuario, imagem: item.imagem }));
+    
+    var noticia = {
+    titulo: "",
+    texto: "",
+    email: "",
+    perfil: "",
+    imagem: []
+    }
 
     var msg = "";
     var back = "localhost:3001";
@@ -97,14 +104,6 @@ const GerenciarNoticias = () => {
         return <img src={ima} alt="Imagem Notícia" style={{maxWidth:"100px", maxHeight: "100px", borderRadius: "5px"}} />
 	};
     const handleSubmit = () => {
-
-        var noticia = {
-          titulo: "",
-          texto: "",
-          email: "",
-          perfil: "",
-          imagem: []
-        }
 
         handleClickOpenL();
 
@@ -228,9 +227,16 @@ const GerenciarNoticias = () => {
         }
 
     };
-    const handleDelete = (id) =>{       
+    const handleDelete = (id, titulo, texto) =>{       
             axios
-                .delete(`http://`+ back +`/noticia/`+id)
+                .delete(`http://`+ back +`/noticias/`+id,{
+                    headers:{
+                        titulo: titulo,
+                        texto: texto,
+                        perfil: perfil,
+                        email: email
+                    }
+                })
                 .then((res) => { 
                     if(res.data.retorno){                                                     
                         msg = res.data.msg
@@ -254,10 +260,9 @@ const GerenciarNoticias = () => {
         <div> 
             <div className="noticias">
                 <div className="esquerda">
-                    <span>Lista de Notícias</span>
                 </div>
                 <div className="direita">
-                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#00AA31", color:"#FFFFFF", position:"unset"  }} startIcon={<MdAdd/>}>NOVA NOTÍCIA</Button>
+                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset"  }} startIcon={<MdAdd/>}>NOVA NOTÍCIA</Button>
                 </div>
             </div>
             <div className="noticias">
@@ -281,10 +286,10 @@ const GerenciarNoticias = () => {
                                     </Box>          
                                     <Box p={1} >
                                         <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                            <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#00AA31", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.imagem, item.usuario, item.data)}>
+                                            <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.imagem, item.usuario, item.data)}>
                                             <EditIcon />
                                             </IconButton>
-                                            <IconButton size="small" style={{ backgroundColor: "#00AA31", color: "#ffffff", position:"unset" }} onClick={() => handleDelete(item.id)} >
+                                            <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleDelete(item.id, item.titulo, item.texto)} >
                                             <DeleteIcon />
                                             </IconButton>
                                         </div>
@@ -298,7 +303,7 @@ const GerenciarNoticias = () => {
                 <div className="direita">
                     <div className="bxLeitura">
                         <div className="bxLTexto">
-                            <span>Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum</span>
+                            <span>Em breve: Campo de Leitura de Notícias</span>
                         </div>
                     </div>
                 </div>
@@ -379,30 +384,28 @@ const GerenciarNoticias = () => {
             <Dialog open={openE} onClose={handleCloseE} aria-labelledby="form-dialog-title">
                 <Box bgcolor="#2E8E61" color="#ffffff" align="right" style={{ height: '70px' }}>
                     <span>EDITAR NOTÍCIA</span>
-                    <AiFillCloseCircle onClick={() => handleCloseE()} style={{ width: '18px', height: 'auto', marginLeft: '70%', marginRight:"20px", marginTop: '25px' }} />
+                    <AiFillCloseCircle onClick={() => handleCloseE()} style={{ width: '18px', height: 'auto', marginLeft: '50%', marginRight:"20px", marginTop: '25px' }} />
                 </Box>
-                <DialogContent className="Texto" style={{ marginTop: '10px' }}>                                                 
-                    <div className="result">{renderPhotos(img)}</div><br/>
-                    <div style={{ display:"block" }}>
-                        <input 
-                            className="inp"
-                            type="file" 
-                            name="imagem"
-                            onChange={handleChageImg}
-                        /><br/>
-                        <label htmlFor="file" className="label">
-                            <i className="material-icons">Imagem (até 512KB - 600 x 600), formatos suportados (png, jpg e jpeg)</i>
-                        </label>
-                        <input 
-                            className="inp"
-                            type="text" 
-                            name="titulo"
-                            onChange={handleChange(setTituloE)}
-                            value={tituloE}
-                            maxLength="75"
-                            minLength="6"
-                            placeholder="Título (min 6 - max 75)"
-                        />
+                <DialogContent>
+                    <div className="noticias">
+                        <div className="esquerda">                                                 
+                            <div className="result">{renderPhotos(img)}</div>
+                        </div>
+                        <div className="direita">
+                            <input 
+                                style={{ marginLeft:'-20px' }} 
+                                className="inp"
+                                type="text" 
+                                name="titulo"
+                                onChange={handleChange(setTituloE)}
+                                value={tituloE}
+                                maxLength="75"
+                                minLength="6"
+                                placeholder="Título (min 6 - max 75)"
+                            />
+                        </div>
+                    </div>
+                    <div style={{ display:"block", textAlign:'center' }}>
                         <textarea 
                             className="inp"
                             type="text" 

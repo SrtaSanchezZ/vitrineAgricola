@@ -60,8 +60,6 @@ exports.cadastrar = async (req, res, next) => {
             nome: "",
             descricao: "",
             grupo: "",
-            valor: "",
-            quantidade: "",
             email: "",
             perfil: "",
             imagem: ""
@@ -83,14 +81,12 @@ exports.cadastrar = async (req, res, next) => {
             nome: req.body.nome,
             descricao: req.body.descricao,
             grupo: req.body.grupo,
-            valor: req.body.valor,
-            quantidade: req.body.quantidade,
             email: req.body.email,
             perfil: perfil,
             imagem: '/files/' + req.file.filename
         }
         
-        result = val.produto(produto.nome, produto.descricao, produto.grupo, produto.valor, produto.quantidade, produto.email, produto.perfil);
+        result = val.produto(produto.nome, produto.descricao, produto.grupo, produto.email, produto.perfil);
 
         if(result.retorno){
 
@@ -102,7 +98,7 @@ exports.cadastrar = async (req, res, next) => {
 
                 result = "";
                     
-                result = await proModel.cadastrar(produto.nome, produto.descricao, produto.grupo, produto.valor, produto.quantidade, produto.imagem);
+                result = await proModel.cadastrar(produto.nome, produto.descricao, produto.grupo, produto.imagem);
 
                 if(result.retorno){
 
@@ -156,8 +152,6 @@ exports.atualizar = async (req, res, next) => {
             nome: "",
             descricao: "",
             grupo: "",
-            valor: "",
-            quantidade: "",
             email: "",
             perfil: ""
         }
@@ -179,13 +173,11 @@ exports.atualizar = async (req, res, next) => {
             nome: req.body.nome,
             descricao: req.body.descricao,
             grupo: req.body.grupo,
-            valor: req.body.valor,
-            quantidade: req.body.quantidade,
             email: req.body.email,
             perfil: perfil
         }
         
-        result = val.produto(produto.nome, produto.descricao, produto.grupo, produto.valor, produto.quantidade, produto.email, produto.perfil);
+        result = val.produto(produto.nome, produto.descricao, produto.grupo, produto.email, produto.perfil);
 
         if(result.retorno){
             
@@ -197,7 +189,7 @@ exports.atualizar = async (req, res, next) => {
 
                 result = "";
                     
-                result = await proModel.atualizar(produto.id, produto.nome, produto.descricao, produto.grupo, produto.valor, produto.quantidade);
+                result = await proModel.atualizar(produto.nome, produto.descricao, produto.grupo, produto.id);
 
                 if(result.retorno){
 
@@ -252,8 +244,6 @@ exports.apagar = async (req, res, next) => {
             nome: "",
             descricao: "",
             grupo: "",
-            valor: "",
-            quantidade: "",
             email: "",
             perfil: ""
         }
@@ -275,13 +265,11 @@ exports.apagar = async (req, res, next) => {
             nome: "testeeee",
             descricao: "testeeee",
             grupo: "testeeee",
-            valor: 0.00,
-            quantidade: 0,
             email: req.headers.email,
             perfil: perfil
         }
         
-        result = val.produto(produto.nome, produto.descricao, produto.grupo, produto.valor, produto.quantidade, produto.email, produto.perfil);
+        result = val.produto(produto.nome, produto.descricao, produto.grupo, produto.email, produto.perfil);
 
         if (result.retorno) {
 

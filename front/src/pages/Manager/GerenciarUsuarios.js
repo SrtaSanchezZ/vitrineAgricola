@@ -40,6 +40,8 @@ const GerenciarUsuarios = () => {
     const handleCloseA = () => {
       setOpenA(false);
       setAlerta("");
+
+      handleLoad();
     };
     const handleClickOpen = () => {
       setOpen(true);
@@ -47,13 +49,12 @@ const GerenciarUsuarios = () => {
     const handleClose = () => {
       setOpen(false);
     };
-    const handleClickOpenE = (id, nome, email, senha, perfil) => {
+    const handleClickOpenE = (id, nome, email) => {
       setOpenE(true);
       setId(id);
       setNomeE(nome);
       setEmailE(email);
-      setSenhaE(senha);
-      setPerfilU(perfil);
+      setSenhaE("");
     };
     const handleCloseE = () => {
       setOpenE(false);
@@ -63,9 +64,9 @@ const GerenciarUsuarios = () => {
 
     const handleSubmit = () => {
 
-        if (nome !== "", emailU !== "", senha !== "", perfilU !== ""){
+        if (nome !== "" && emailU !== "" && senha !== "" && perfilU !== ""){
                 axios
-                    .post(`http://` + back + `/usuario`, {
+                    .post(`http://` + back + `/usuarios`, {
                         nome: nome,
                         email: emailU,
                         senha: senha,
@@ -94,7 +95,7 @@ const GerenciarUsuarios = () => {
     };
     const handleLoad = () =>{
         axios
-          .get(`http://`+ back +`/usuario`)
+          .get(`http://`+ back +`/usuarios`)
           .then((res) => {   
             console.log(res.data);
 
@@ -107,13 +108,13 @@ const GerenciarUsuarios = () => {
     };
     const handleAlter = () =>{       
 
-        if (nomeE !== "", emailE !== "", senhaE !== "", perfil !== ""){
+        if (nomeE !== "" && emailE !== "" && senhaE !== "" && perfilU !== ""){
             axios
-                .put(`http://`+ back +`/usuario/`+id, {
+                .put(`http://`+ back +`/usuarios/`+id, {
                     nome: nomeE,
                     email: emailE,
                     senha: senhaE,
-                    perfil: perfil
+                    perfil: perfilU
                 })
                 .then((res) => { 
                     if(res.data.retorno){                                                     
@@ -135,9 +136,16 @@ const GerenciarUsuarios = () => {
         }
 
     };
-    const handleDelete = (id) =>{       
+    const handleDelete = (id, nome) =>{       
             axios
-                .delete(`http://`+ back +`/noticia/`+id)
+                .delete(`http://`+ back +`/usuarios/`+id,{
+                    headers:{
+                        nome: nome,
+                        senha: "010203",
+                        perfil: perfil,
+                        email: email
+                    }
+                })
                 .then((res) => { 
                     if(res.data.retorno){                                                     
                         msg = res.data.msg
@@ -161,16 +169,15 @@ const GerenciarUsuarios = () => {
         <div> 
             <div className="noticias">
                 <div className="esquerda">
-                    <span>Lista de Usuários</span>
                 </div>
                 <div className="direita">
-                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#00AA31", color:"#FFFFFF", position:"unset" }} startIcon={<MdAdd/>}>NOVO USUÁRIO</Button>
+                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset" }} startIcon={<MdAdd/>}>NOVO USUÁRIO</Button>
                 </div>
             </div>
             <div className="noticias">
                     <Grid item xs={12}>
                         <div align="center">
-                            <Box display="flex" p={1} m={1} css={{ height: "auto", width: "100%", borderRadius: "5px", backgroundColor: "#00AA31", fontWeight: 'bolder' }}>
+                            <Box display="flex" p={1} m={1} css={{ height: "auto", width: "100%", borderRadius: "5px", backgroundColor: "#2E8E61", fontWeight: 'bolder' }}>
                                 <Box p={1} flexGrow={2}>
                                     <span className="ml-0" style={{ color: "#ffffff", fontSize: "120%", marginLeft:"-130px"}}>NOME</span>
                                 </Box>
@@ -181,16 +188,16 @@ const GerenciarUsuarios = () => {
                                 <div align="center">
                                 <Box display="flex" p={1} m={1} css={{ height: "auto", minWidth:"100%", maxWidth: "150%", borderRadius: "5px", backgroundColor: "#b6ffb5" }}>
                                     <Box id="valor" p={1} flexGrow={2} css={{ width: "200px", height: 'auto' }} >
-                                        <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.senha, item.perfil)}>
+                                        <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.senha)}>
                                             <span className="ml-0" style={{ color: "black", fontSize: "120%"}}>{item.nome}</span>
                                         </li>
                                     </Box>         
                                     <Box p={1} >
                                     <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#00AA31", color: "#ffffff", position:"unset"  }} onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.senha, item.perfil)}>
+                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset"  }} onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.senha)}>
                                         <EditIcon />
                                         </IconButton>
-                                        <IconButton size="small" style={{ backgroundColor: "#00AA31", color: "#ffffff", position:"unset"  }} onClick={() => handleDelete(item.id)} >
+                                        <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset"  }} onClick={() => handleDelete(item.id, item.nome)} >
                                         <DeleteIcon />
                                         </IconButton>
                                     </div>
@@ -203,10 +210,11 @@ const GerenciarUsuarios = () => {
             </div>
                        
             <Dialog open={openA} onClose={handleCloseA} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#00AA31" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <AiFillCloseCircle onClick={() => handleCloseA()} style={{ width: '18px', height: 'auto', marginRight: '10px', marginTop: '10px' }} />
+                <Box bgcolor="#2E8E61" color="#ffffff" align="right" style={{ height: '70px' }}>
+                    <span style={{marginLeft:'10px'}}>AVISO!</span>
+                    <AiFillCloseCircle onClick={() => handleCloseA()} style={{ width: '18px', height: 'auto', marginLeft: '65%', marginRight:"20px", marginTop: '25px' }} />
                 </Box>
-                <DialogContent className="Texto" style={{ marginTop: '50px' }}>
+                <DialogContent className="Texto" style={{ marginTop: '10px' }}>
                 <p className="Texto" id="alerta" style={{ color: '#000000', textAlign: 'center', textSizeAdjust: 'auto', fontSize: '120%', fontWeight: 'bolder' }} >
                     {alerta}
                 </p>
@@ -233,7 +241,7 @@ const GerenciarUsuarios = () => {
                             value={nome}
                             maxLength="75"
                             minLength="6"
-                            placeholder="Título (min 6 - max 75)"
+                            placeholder="Nome (min 6 - max 75)"
                         />
                         <input 
                             className="inp"
@@ -241,19 +249,27 @@ const GerenciarUsuarios = () => {
                             name="texto"
                             onChange={handleChange(setEmailU)}
                             value={emailU}
-                            maxLength="75"
-                            minLength="6"
-                            placeholder="Texto (min 6 - max 75)"
+                            maxLength="80"
+                            minLength="5"
+                            placeholder="E-mail (min 5 - max 80)"
                         />
+                        <select name="select" 
+                            className="inp"
+                            onChange={handleChange(setPerfilU)}>
+                          <option value=""> </option>
+                          <option value="master">Master</option>
+                          <option value="vendedor">Vendedor</option>
+                          <option value="redator">Redator</option>
+                        </select>
                         <input 
                             className="inp"
                             type="text" 
                             name="texto"
                             onChange={handleChange(setSenha)}
                             value={senha}
-                            maxLength="75"
-                            minLength="6"
-                            placeholder="Texto (min 6 - max 75)"
+                            maxLength="10"
+                            minLength="5"
+                            placeholder="Senha (min 6 - max 8)"
                         />
                     </div>
                 </DialogContent>
@@ -279,31 +295,39 @@ const GerenciarUsuarios = () => {
                             className="inp"
                             type="text" 
                             name="titulo"
-                            onChange={handleChange(setNome)}
-                            value={nome}
+                            onChange={handleChange(setNomeE)}
+                            value={nomeE}
                             maxLength="75"
                             minLength="6"
-                            placeholder="Título (min 6 - max 75)"
+                            placeholder="Nome (min 6 - max 75)"
                         />
                         <input 
                             className="inp"
                             type="text" 
                             name="texto"
-                            onChange={handleChange(setEmailU)}
-                            value={emailU}
-                            maxLength="75"
-                            minLength="6"
-                            placeholder="Texto (min 6 - max 75)"
+                            onChange={handleChange(setEmailE)}
+                            value={emailE}
+                            maxLength="80"
+                            minLength="5"
+                            placeholder="E-mail (min 5 - max 80)"
                         />
+                        <select name="select" 
+                            className="inp"
+                            onChange={handleChange(setPerfilU)}>
+                          <option value=""> </option>
+                          <option value="master">Master</option>
+                          <option value="vendedor">Vendedor</option>
+                          <option value="redator">Redator</option>
+                        </select>
                         <input 
                             className="inp"
                             type="text" 
                             name="texto"
-                            onChange={handleChange(setSenha)}
-                            value={senha}
-                            maxLength="75"
-                            minLength="6"
-                            placeholder="Texto (min 6 - max 75)"
+                            onChange={handleChange(setSenhaE)}
+                            value={senhaE}
+                            maxLength="10"
+                            minLength="5"
+                            placeholder="Senha (min 5 - max 10)"
                         />
                     </div>
                 </DialogContent>

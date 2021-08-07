@@ -57,8 +57,8 @@ const Admin = () => {
                         </div>
                         <div className="hContDir">
                             <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className="hContDir">
-                                <div className={dPerfil}>
+                            <div className={dPerfil}>
+                                <div className="infoPerfil">
                                     <div style={{textAlign:"right", marginTop:"-10px"}}>
                                         <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
                                     </div>
@@ -96,8 +96,8 @@ const Admin = () => {
                         </div>
                         <div className="hContDir">
                             <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className="hContDir">
-                                <div className={dPerfil}>
+                            <div className={dPerfil}>
+                                <div className="infoPerfil">
                                     <div style={{textAlign:"right", marginTop:"-10px"}}>
                                         <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
                                     </div>
@@ -135,8 +135,8 @@ const Admin = () => {
                         </div>
                         <div className="hContDir">
                             <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className="hContDir">
-                                <div className={dPerfil}>
+                            <div className={dPerfil}>
+                                <div className="infoPerfil">
                                     <div style={{textAlign:"right", marginTop:"-10px"}}>
                                         <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
                                     </div>
@@ -175,8 +175,8 @@ const Admin = () => {
                         </div>
                         <div className="hContDir">
                             <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className="hContDir">
-                                <div className={dPerfil}>
+                            <div className={dPerfil}>
+                                <div className="infoPerfil">
                                     <div style={{textAlign:"right", marginTop:"-10px"}}>
                                         <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
                                     </div>
@@ -190,7 +190,7 @@ const Admin = () => {
                             </div>
                         </div>
                     </div>
-                    <div style={{ marginTop:"20%" }}>
+                    <div >
                         <GerenciarProdutos/>
                     </div>
                 </div>
@@ -214,8 +214,8 @@ const Admin = () => {
                         </div>
                         <div className="hContDir">
                             <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className="hContDir">
-                                <div className={dPerfil}>
+                            <div className={dPerfil}>
+                                <div className="infoPerfil">
                                     <div style={{textAlign:"right", marginTop:"-10px"}}>
                                         <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
                                     </div>
@@ -294,8 +294,8 @@ const Admin = () => {
                         </div>
                         <div className="hContDir">
                             <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className="hContDir">
-                                <div className={dPerfil}>
+                            <div className={dPerfil}>
+                                <div className="infoPerfil">
                                     <div style={{textAlign:"right", marginTop:"-10px"}}>
                                         <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
                                     </div>
