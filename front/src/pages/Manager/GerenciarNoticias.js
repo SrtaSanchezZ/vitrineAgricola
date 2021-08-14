@@ -1,15 +1,15 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Button, Dialog, DialogActions, DialogContent, Box, Grid, IconButton } from '@material-ui/core';
-import { AiFillCloseCircle } from 'react-icons/ai';
+import { Button, Box, Grid, IconButton, TextField } from '@material-ui/core';
 import { MdAdd } from "react-icons/md";
-import CircularProgress from '@material-ui/core/CircularProgress';
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import semimg from '../../assets/img/noimg.png';
+import { DialogAlert, DialogMain, DialogLoading } from '../../components/Dialog';
 //#endregion
-const GerenciarNoticias = () => {  
+const GerenciarNoticias = () => { 
+    //#region Variáveis e Variáveis de Estado 
     const [infos, setInfos] = useState([]);
     const [open, setOpen] = useState(false);
     const [openA, setOpenA] = useState(false);
@@ -42,7 +42,8 @@ const GerenciarNoticias = () => {
 
     var msg = "";
     var back = "localhost:3001";
-
+    //#endregion
+    //#region Funções e Funções de Estado
     const handleClickOpenA = (alerta) => {
       setOpenA(true);
       setAlerta(alerta);
@@ -256,6 +257,7 @@ const GerenciarNoticias = () => {
         handleLoad();
         // eslint-disable-next-line
       }, []);
+    //#endregion
     return(
         <div> 
             <div className="noticias">
@@ -266,7 +268,7 @@ const GerenciarNoticias = () => {
                 </div>
             </div>
             <div className="noticias">
-                <div className="esquerda">
+                <div className="esquerdaN">
                     <Grid className="bxLista" item xs={12}>
                         {infos.map((item, index) => (
                             <Box display="bloxk">    
@@ -300,7 +302,7 @@ const GerenciarNoticias = () => {
                         ))}
                     </Grid>
                 </div>
-                <div className="direita">
+                <div className="direitaN">
                     <div className="bxLeitura">
                         <div className="bxLTexto">
                             <span>Em breve: Campo de Leitura de Notícias</span>
@@ -309,29 +311,12 @@ const GerenciarNoticias = () => {
                 </div>
             </div>
                        
-            <Dialog open={openA} onClose={handleCloseA} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#2E8E61" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <span style={{marginLeft:'10px'}}>AVISO!</span>
-                    <AiFillCloseCircle onClick={() => handleCloseA()} style={{ width: '18px', height: 'auto', marginLeft: '65%', marginRight:"20px", marginTop: '25px' }} />
-                </Box>
-                <DialogContent className="Texto" style={{ marginTop: '10px' }}>
-                <p className="Texto" id="alerta" style={{ color: '#000000', textAlign: 'center', textSizeAdjust: 'auto', fontSize: '120%', fontWeight: 'bolder' }} >
-                    {alerta}
-                </p>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseA} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                        Ok
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#2E8E61" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <span>NOVA NOTÍCIA</span>
-                    <AiFillCloseCircle onClick={() => handleClose()} style={{ width: '18px', height: 'auto', marginLeft: '70%', marginRight:"20px", marginTop: '25px' }} />
-                </Box>
-                <DialogContent >
+            <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>            
+            <DialogMain
+                open={open}
+                close={handleClose}
+                title={"NOVA NOTÍCIA"}
+                info={(<div>
                     <div className="noticias">
                         <div className="esquerda">
                             <input 
@@ -345,48 +330,41 @@ const GerenciarNoticias = () => {
                             </label>
                         </div>
                         <div className="direita">
-                            <input 
-                                style={{ marginLeft:'-20px' }} 
+                            <TextField 
                                 className="inp"
                                 type="text" 
-                                name="titulo"
                                 onChange={handleChange(setTitulo)}
                                 value={titulo}
                                 maxLength="75"
                                 minLength="6"
-                                placeholder="Título (min 6 - max 75)"
-                            />
+                                label="Título (min 6 - max 75)"
+                                variant="outlined"
+                            /><br/><br/>
                         </div>
                     </div>
                     <div style={{ display:"block", textAlign:'center' }}>
-                        <textarea 
+                        <TextField 
                             className="inp"
                             type="text" 
-                            name="texto"
                             onChange={handleChange(setTexto)}
                             value={texto}
                             maxLength="1990"
                             minLength="6"
-                            placeholder="Texto (min 6 - max 1990)"
-                        />
+                            label="Texto (min 6 - max 1990)"
+                            multiline
+                            rows={4}
+                            variant="outlined"
+                        /><br/><br/>
                     </div>
-                </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                            CANCELAR
-                        </Button>
-                        <Button onClick={()=>handleSubmit()} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                            CADASTRAR
-                        </Button>
-                    </DialogActions>
-            </Dialog>
-            
-            <Dialog open={openE} onClose={handleCloseE} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#2E8E61" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <span>EDITAR NOTÍCIA</span>
-                    <AiFillCloseCircle onClick={() => handleCloseE()} style={{ width: '18px', height: 'auto', marginLeft: '50%', marginRight:"20px", marginTop: '25px' }} />
-                </Box>
-                <DialogContent>
+                    </div>)}
+                click={()=>handleSubmit()}
+                label={"CADASTRAR"}
+            />
+            <DialogMain
+                open={openE}
+                close={handleCloseE}
+                title={"EDITAR NOTÍCIA"}
+                info={(<div>
                     <div className="noticias">
                         <div className="esquerda">                                                 
                             <div className="result">{renderPhotos(img)}</div>
@@ -417,22 +395,11 @@ const GerenciarNoticias = () => {
                             placeholder="Texto (min 6 - max 1990)"
                         />
                     </div>
-                </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseE} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                            CANCELAR
-                        </Button>
-                        <Button onClick={()=>handleAlter()} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                            ATUALIZAR
-                        </Button>
-                    </DialogActions>
-            </Dialog>
-            
-            <Dialog open={openL} aria-labelledby="form-dialog-title">
-                <DialogContent className="Texto">          
-                    <CircularProgress />
-                </DialogContent>
-            </Dialog>  
+                    </div>)}
+                click={()=>handleAlter()}
+                label={"ATUALIZAR"}
+            />            
+            <DialogLoading open={openL} />  
         </div>
     );
 }

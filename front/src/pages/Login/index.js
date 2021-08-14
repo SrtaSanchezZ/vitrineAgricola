@@ -2,10 +2,11 @@
 import React, { useState} from "react";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { AiFillCloseCircle } from 'react-icons/ai';
-import { Button, Dialog, DialogActions, DialogContent, Box } from '@material-ui/core';
+import { Box, TextField } from '@material-ui/core';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { ButtonContained } from '../../components/Button';
+import { DialogAlert, DialogMain } from '../../components/Dialog';
 //#endregion
 const Login = () => {
     //#region Variáveis e Variáveis de Estado
@@ -16,7 +17,6 @@ const Login = () => {
     const [most, serMost] = useState("lfNsa");
     const [esco, setEsco] = useState("esconde");
     const [inpE, setinpE] = useState("inp");
-    const [inpS, setinpS] = useState("inpS");
     const [openA, setOpenA] = useState(false);
     const [openE, setOpenE] = useState(false);
     const [alerta, setAlerta] = useState("");
@@ -45,8 +45,7 @@ const Login = () => {
             serMost("esconde");
             setEsco("lfNsa");
         }
-    }
-
+    };
     const handleClickOpenA = (alerta) => {
       setOpenA(true);
       setAlerta(alerta);
@@ -128,52 +127,6 @@ const Login = () => {
     //#endregion
     return(
         <div style={{marginBottom:'0px'}}>
-            
-            <Dialog open={openA} onClose={handleCloseA} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#00AA31" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <AiFillCloseCircle onClick={() => handleCloseA()} style={{ width: '18px', height: 'auto', marginRight: '10px', marginTop: '10px' }} />
-                </Box>
-                <DialogContent className="Texto" style={{ marginTop: '50px' }}>
-                <p className="Texto" id="alerta" style={{ color: '#000000', textAlign: 'center', textSizeAdjust: 'auto', fontSize: '120%', fontWeight: 'bolder' }} >
-                    {alerta}
-                </p>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseA} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                        Ok
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            
-            <Dialog open={openE} onClose={handleCloseE} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#00AA31" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <AiFillCloseCircle onClick={() => handleCloseE()} style={{ width: '18px', height: 'auto', marginRight: '10px', marginTop: '10px' }} />
-                </Box>
-                <DialogContent className="Texto" style={{ marginTop: '50px' }}>
-                    <p className="Texto" id="alerta" style={{ color: '#000000', textAlign: 'center', textSizeAdjust: 'auto', fontSize: '100%', fontWeight: 'bolder' }} >
-                        Para prosseguir com a redefinição da sua senha, por favor informe seu email.
-                    </p><br/>
-                    <input 
-                        className={inpE}
-                        type="email" 
-                        name="email"
-                        onChange={handleChange(setEmailR)}
-                        value={emailR}
-                        maxLength="75"
-                        minLength="6"
-                        placeholder="E-mail"
-                    />
-                </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseE} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                            CANCELAR
-                        </Button>
-                        <Button onClick={()=>handleSendEmail()} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                            ENVIAR
-                        </Button>
-                    </DialogActions>
-            </Dialog>
-
             <Header/>
             <div className="login">
                 <div className="lbanner">
@@ -199,50 +152,75 @@ const Login = () => {
                     </div>
                     <div className={most}>
                         <input className="logoNSA" />
-                        <p>
+                        <p style={{ paddingBottom:'10%' }}>
                             NSA (Novo Sistema Acadêmico) é um sistema cadêmico desenvolvido para facilitar o trabalho da área acadêmica das Etecs do Centro Paula Souza. <br/><br/>
                             Para acessar clique no botão abaixo.
                         </p>
-                        <a href="https://nsa.cps.sp.gov.br/" target="_blank" rel="NSA" alt="NSA">
-                            <input className="btnNSA" type='button' value="ACESSAR NSA" />
+                        <a href="https://nsa.cps.sp.gov.br/" target="_blank" rel="NSA" alt="NSA" style={{ textDecoration:'none' }}>
+                            <ButtonContained>
+                                ACESSAR NSA
+                            </ButtonContained>
                         </a>
-                    </div>
+                    </div> 
                     <div className={esco}>
                         <input className="logoCoop" />
                         <p>
                             Área restrita para acesso administrativo
-                        </p>
-                        <input 
+                        </p><br/>
+                        <TextField 
                             className={inpE}
                             type="email" 
-                            name="email"
                             onChange={handleChange(setEmail)}
                             value={email}
                             maxLength="75"
                             minLength="6"
-                            placeholder="E-mail"
-                        />
-                        
-                        <input 
-                            className={inpS}
+                            label="E-mail"
+                            variant="outlined"
+                        /><br/><br/>
+                        <TextField 
+                            className={inpE}
                             type="password" 
-                            name="senha"
                             onChange={handleChange(setSenha)}
                             value={senha}
                             maxLength="9"
-                            minLength="5"
-                            placeholder="Senha"
+                            minLength="56"
+                            label="Senha"
+                            variant="outlined"
                         /><br/><br/>
-                        <div onClick={()=>handleClickOpenE()} className="esquciSenha">
+                        <div onClick={()=>handleClickOpenE()} className="esquciSenha" style={{ paddingBottom:'10%' }}>
                             <span>Esqueci minha senha.</span>
-                        </div>
-                            
-                        <input onClick={()=>handleSubmit()} className="btnNSA" type='button' value="ENTRAR" />
-
+                        </div>                            
+                        <ButtonContained onClick={()=>handleSubmit()}>
+                            ENTRAR
+                        </ButtonContained>
                     </div>
                 </div>
             </div>
             <Footer />
+            
+            <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>            
+            <DialogMain
+                open={openE}
+                close={handleCloseE}
+                title={"REDEFINIÇÃO DE SENHA"}
+                info={(<Box>
+                        <p className="Texto">
+                            Para prosseguir com a redefinição da sua senha, por favor informe seu email.
+                        </p>
+                        <TextField 
+                            className={inpE}
+                            type="email" 
+                            onChange={handleChange(setEmailR)}
+                            value={emailR}
+                            maxLength="75"
+                            minLength="6"
+                            label="E-mail"
+                            variant="outlined"
+                        />
+                    </Box>)}
+                click={()=>handleSendEmail()}
+                label={"ENVIAR"}
+            />
         </div>
     );
 }

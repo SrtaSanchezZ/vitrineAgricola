@@ -2,15 +2,16 @@
 import React, { useState} from "react";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { AiFillCloseCircle } from 'react-icons/ai';
-import { Button, Dialog, DialogActions, DialogContent, Box } from '@material-ui/core';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { TextField } from '@material-ui/core';
+import { ButtonContained } from '../../components/Button';
+import { DialogAlert } from '../../components/Dialog';
 //#endregion
 const NewPassword = () => {
     //#region Variáveis e Variáveis de Estado
     const [adm, setAdm] = useState("lfTextNao");
-    const [inpS, setinpS] = useState("inpS");
+    const [inpE, setinpE] = useState("inp");
     const [openA, setOpenA] = useState(false);
     const [alerta, setAlerta] = useState("");
     const [most, serMost] = useState("lfNsa");
@@ -70,24 +71,8 @@ const NewPassword = () => {
     };
     //#endregion
     return(
-        <div style={{marginBottom:'0px'}}>
-            
-            <Dialog open={openA} onClose={handleCloseA} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#00AA31" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <AiFillCloseCircle onClick={() => handleCloseA()} style={{ width: '18px', height: 'auto', marginRight: '10px', marginTop: '10px' }} />
-                </Box>
-                <DialogContent className="Texto" style={{ marginTop: '50px' }}>
-                <p className="Texto" id="alerta" style={{ color: '#000000', textAlign: 'center', textSizeAdjust: 'auto', fontSize: '120%', fontWeight: 'bolder' }} >
-                    {alerta}
-                </p>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseA} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                        Ok
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            
+        <div style={{marginBottom:'0px'}}>            
+            <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>            
             <Header/>
             <div className="login">
                 <div className="lbanner">
@@ -106,31 +91,30 @@ const NewPassword = () => {
                         <input className="logoCoop" />
                         <p style={{ fontSize:"16px", color:"#4a555c" }}>
                             Defina sua nova senha
-                        </p>
-                        <input 
-                            className={inpS}
+                        </p><br/><br/>
+                        <TextField 
+                            className={inpE}
                             type="password" 
-                            name="senha"
                             onChange={handleChange(setSenha)}
                             value={senha}
                             maxLength="9"
-                            minLength="5"
-                            placeholder="Senha"
-                        />
-                        
-                        <input 
-                            className={inpS}
+                            minLength="56"
+                            label="Senha"
+                            variant="outlined"
+                        /><br/><br/>
+                        <TextField 
+                            className={inpE}
                             type="password" 
-                            name="senha"
                             onChange={handleChange(setSenhaC)}
                             value={senhaC}
                             maxLength="9"
-                            minLength="5"
-                            placeholder="Confirme a senha"
+                            minLength="56"
+                            label="Confirme a senha"
+                            variant="outlined"
                         /><br/><br/>
-                            
-                        <input onClick={()=>handleSubmit()} className="btnNSA" type='button' value="CONFIRMAR" />
-
+                        <ButtonContained onClick={()=>handleSubmit()}>
+                            CONFIRMAR
+                        </ButtonContained>
                     </div>
                 </div>
             </div>            

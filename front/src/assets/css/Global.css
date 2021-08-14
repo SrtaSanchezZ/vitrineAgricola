@@ -16,7 +16,7 @@ body{
     font-family: 'Roboto-Regular';
 }
 .header{
-    margin-top: -21px;
+    margin-top: -22px;
     display: flex;
     padding-bottom: 10px;
     padding-left: 30px;
@@ -50,12 +50,14 @@ body{
     text-align: center;
 }
 .hMenuBox{
-    width: 108px;
     display: inline-flex;
     padding-left: 9px;
     padding-right: 9px;
-
+}
+.hMenuText{
+    width: 108px;
     text-align: center;
+    cursor: pointer;
 }
 .hLogin{
     text-align: right;
@@ -134,7 +136,7 @@ body{
     width: 70%;
     height: 90vh;
     background: url('../img/IMAGEM-LOGIN.png');
-    background-size: 155vh;
+    background-size: 150vh;
     background-repeat: no-repeat;
     background-position-x: -70px;
 
@@ -271,7 +273,7 @@ body{
     display: none;
 }
 .inp{
-    width: 90%;
+    width: 100%;
     padding: 18px;
     margin-top: 20px;
 
@@ -282,7 +284,7 @@ body{
     opacity: 1;
 }
 .inpS{
-    width: 90%;
+    width: 99%;
     padding: 18px;
     margin-top: 20px;
 
@@ -308,8 +310,11 @@ body{
     background-color: #FCFCFC;
 }
 .menup{
+    height: 100%;
     display: block;
-    padding: 15px;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
 
     color: #FFFFFF;
     background: #3A5E4E 0% 0% no-repeat padding-box;
@@ -465,7 +470,7 @@ body{
 .noticias{
     display:flex;
     width: 100%;
-    padding-top: 20px;
+    padding-top: 10px;
 
     font-size: 16px;
 }
@@ -485,9 +490,25 @@ body{
     text-align: right;
     font-size: 16px;
 }
+.esquerdaN{
+    width: 40%;
+    display:"inline-flex";
+    align-items: center;
+
+    text-align: left;
+    font-size: 16px;
+}
+.direitaN{
+    width: 60%;
+    display:"inline-flex";
+    align-items: center;
+
+    text-align: right;
+    font-size: 16px;
+}
 .bxLista{
     width: 100%;
-    height: 500px;
+    height: 20rem;
     overflow: auto;
     overflow-y: scroll;
 }

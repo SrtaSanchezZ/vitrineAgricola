@@ -10,7 +10,7 @@ const Header = () => {
                     <span className="hMenuText">QUEM SOMOS</span>
                 </div>
                 <div className="hMenuBox">
-                    <span className="hMenuText">ENSINO</span>
+                    <span className="hMenuText">CURSOS</span>
                 </div>
                 <div className="hMenuBox">
                     <span className="hMenuText">GESTÃO</span>

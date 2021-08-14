@@ -47,9 +47,8 @@ const Admin = () => {
                     <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
                     <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
                     <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuDN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(6)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(7)} type='button' /><br/>
+                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
+                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
                 </div>
                 <div className="conteudo">
                     <div className="hConteudo">
@@ -86,9 +85,8 @@ const Admin = () => {
                     <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
                     <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
                     <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuDN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(6)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(7)} type='button' /><br/>
+                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
+                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
                 </div>
                 <div className="conteudo">
                     <div className="hConteudo">
@@ -125,9 +123,8 @@ const Admin = () => {
                     <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
                     <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
                     <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuDN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(6)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(7)} type='button' /><br/>
+                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
+                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
                 </div>
                 <div className="conteudo">
                     <div className="hConteudo">
@@ -164,9 +161,8 @@ const Admin = () => {
                     <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
                     <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
                     <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuDN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(6)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(7)} type='button' /><br/>
+                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
+                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
                 </div>
                 <div className="conteudo">
                     <div className="hConteudo">
@@ -204,48 +200,8 @@ const Admin = () => {
                     <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
                     <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
                     <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuDN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(6)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(7)} type='button' /><br/>
-                </div>
-                <div className="conteudo">
-                    <div className="hConteudo">
-                        <div className="hContEsq">
-                        </div>
-                        <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className={dPerfil}>
-                                <div className="infoPerfil">
-                                    <div style={{textAlign:"right", marginTop:"-10px"}}>
-                                        <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
-                                    </div>
-                                    <img src={perfilManager} alt="Perfil Master" /><br/>
-                                    <span style={{ fontSize:"18px"}}>Perfil {perfil}</span><br/>
-                                    <span style={{ fontSize:"16px"}}>{nome}</span><br/>
-                                    <hr/> 
-                                    <FiLogOut style={{ width:"24px", height:"auto", color:"#3A3E87", marginBottom:"-6px" }}/>
-                                    <input onClick={()=>handleLogout()} className="logout" type='button' value="LOGOUT" /><br/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style={{ marginTop:"20%" }}>
-                        <DestacarNoticia/>
-                    </div>
-                </div>
-            </div>
-        );
-        case 6: 
-        return(
-            <div className="privado">
-                <div className="menup">
-                    <input className="itMenuH" onClick={()=>handleStep(1)} type='button' /><br/>
-                    <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
-                    <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
-                    <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuDN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(6)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(7)} type='button' /><br/>
+                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
+                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
                 </div>
                 <div className="conteudo">
                     <div className="hConteudo">
@@ -275,7 +231,7 @@ const Admin = () => {
                 </div>
             </div>
         );
-        case 7: 
+        case 6: 
         return(
             <div className="privado">
                 <div className="menup">
@@ -283,9 +239,8 @@ const Admin = () => {
                     <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
                     <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
                     <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuDN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(6)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(7)} type='button' /><br/>
+                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
+                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
                 </div>
                 <div className="conteudo">
                     <div className="hConteudo">
