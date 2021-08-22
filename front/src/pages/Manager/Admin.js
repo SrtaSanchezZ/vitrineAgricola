@@ -1,12 +1,11 @@
 //#region Dependências
 import React, { useState} from "react";
 import { useHistory } from 'react-router-dom';
-import { FiLogOut } from "react-icons/fi";
+import { DialogPerfil } from '../../components/Dialog';
 import perfilManager from '../../assets/img/Icons/perfil.png';
 import Reservas from './Reservas';
 import MontarVitrine from './MontarVitrine';
 import GerenciarProdutos from './GerenciarProdutos';
-import DestacarNoticia from './DestacarNoticia';
 import GerenciarUsuarios from './GerenciarUsuarios';
 import GerenciarNoticias from './GerenciarNoticias';
 //#endregion
@@ -14,6 +13,7 @@ const Admin = () => {
     //#region Variáveis e Variáveis de Estado
     const [bPerfil, setbPerfil] = useState("perfilM");
     const [dPerfil, setdPerfil] = useState("esconde");
+    const [open, setOpen] = useState(false);
     const [perfil, setPerfil] = useState(localStorage.getItem("perfil"));
     const [nome, setNome] = useState(localStorage.getItem("nome"));
     const [step, setStep] = useState(1);
@@ -21,12 +21,10 @@ const Admin = () => {
     //#endregion
     //#region Funções e Funções de Estado
     const handleOpen = () => {
-        setbPerfil("esconde");
-        setdPerfil("hContDir");
+        setOpen(true);
     }
     const handleClose = () => {
-        setbPerfil("perfilM");
-        setdPerfil("esconde");
+        setOpen(false);
     }
     const handleLogout = () => {
         localStorage.clear();
@@ -55,20 +53,8 @@ const Admin = () => {
                         <div className="hContEsq">
                         </div>
                         <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className={dPerfil}>
-                                <div className="infoPerfil">
-                                    <div style={{textAlign:"right", marginTop:"-10px"}}>
-                                        <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
-                                    </div>
-                                    <img src={perfilManager} alt="Perfil Master" /><br/>
-                                    <span style={{ fontSize:"18px"}}>Perfil {perfil}</span><br/>
-                                    <span style={{ fontSize:"16px"}}>{nome}</span><br/>
-                                    <hr/> 
-                                    <FiLogOut style={{ width:"24px", height:"auto", color:"#3A3E87", marginBottom:"-6px" }}/>
-                                    <input onClick={()=>handleLogout()} className="logout" type='button' value="LOGOUT" /><br/>
-                                </div>
-                            </div>
+                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
+                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         </div>
                     </div>
                     <div style={{ marginTop:"20%" }}>
@@ -93,20 +79,8 @@ const Admin = () => {
                         <div className="hContEsq">
                         </div>
                         <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className={dPerfil}>
-                                <div className="infoPerfil">
-                                    <div style={{textAlign:"right", marginTop:"-10px"}}>
-                                        <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
-                                    </div>
-                                    <img src={perfilManager} alt="Perfil Master" /><br/>
-                                    <span style={{ fontSize:"18px"}}>Perfil {perfil}</span><br/>
-                                    <span style={{ fontSize:"16px"}}>{nome}</span><br/>
-                                    <hr/> 
-                                    <FiLogOut style={{ width:"24px", height:"auto", color:"#3A3E87", marginBottom:"-6px" }}/>
-                                    <input onClick={()=>handleLogout()} className="logout" type='button' value="LOGOUT" /><br/>
-                                </div>
-                            </div>
+                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
+                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         </div>
                     </div>
                     <div style={{ marginTop:"20%" }}>
@@ -131,20 +105,8 @@ const Admin = () => {
                         <div className="hContEsq">
                         </div>
                         <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className={dPerfil}>
-                                <div className="infoPerfil">
-                                    <div style={{textAlign:"right", marginTop:"-10px"}}>
-                                        <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
-                                    </div>
-                                    <img src={perfilManager} alt="Perfil Master" /><br/>
-                                    <span style={{ fontSize:"18px"}}>Perfil {perfil}</span><br/>
-                                    <span style={{ fontSize:"16px"}}>{nome}</span><br/>
-                                    <hr/> 
-                                    <FiLogOut style={{ width:"24px", height:"auto", color:"#3A3E87", marginBottom:"-6px" }}/>
-                                    <input onClick={()=>handleLogout()} className="logout" type='button' value="LOGOUT" /><br/>
-                                </div>
-                            </div>
+                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
+                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         </div>
                     </div>
                     <div style={{ marginTop:"20%" }}>
@@ -170,20 +132,8 @@ const Admin = () => {
                             <span>Gerenciar Produtos</span>
                         </div>
                         <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className={dPerfil}>
-                                <div className="infoPerfil">
-                                    <div style={{textAlign:"right", marginTop:"-10px"}}>
-                                        <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
-                                    </div>
-                                    <img src={perfilManager} alt="Perfil Master" /><br/>
-                                    <span style={{ fontSize:"18px"}}>Perfil {perfil}</span><br/>
-                                    <span style={{ fontSize:"16px"}}>{nome}</span><br/>
-                                    <hr/> 
-                                    <FiLogOut style={{ width:"24px", height:"auto", color:"#3A3E87", marginBottom:"-6px" }}/>
-                                    <input onClick={()=>handleLogout()} className="logout" type='button' value="LOGOUT" /><br/>
-                                </div>
-                            </div>
+                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
+                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         </div>
                     </div>
                     <div >
@@ -209,20 +159,8 @@ const Admin = () => {
                             <span>Gerenciar Notícias</span>
                         </div>
                         <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className={dPerfil}>
-                                <div className="infoPerfil">
-                                    <div style={{textAlign:"right", marginTop:"-10px"}}>
-                                        <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
-                                    </div>
-                                    <img src={perfilManager} alt="Perfil Master" /><br/>
-                                    <span style={{ fontSize:"18px"}}>Perfil {perfil}</span><br/>
-                                    <span style={{ fontSize:"16px"}}>{nome}</span><br/>
-                                    <hr/> 
-                                    <FiLogOut style={{ width:"24px", height:"auto", color:"#3A3E87", marginBottom:"-6px" }}/>
-                                    <input onClick={()=>handleLogout()} className="logout" type='button' value="LOGOUT" /><br/>
-                                </div>
-                            </div>
+                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
+                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         </div>
                     </div>
                     <div>
@@ -248,20 +186,8 @@ const Admin = () => {
                             <span>Gerenciar Usuários</span>
                         </div>
                         <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className={bPerfil} type='button' />
-                            <div className={dPerfil}>
-                                <div className="infoPerfil">
-                                    <div style={{textAlign:"right", marginTop:"-10px"}}>
-                                        <input onClick={()=>handleClose()} className="fechaM" type='button' value="X" />
-                                    </div>
-                                    <img src={perfilManager} alt="Perfil Master" /><br/>
-                                    <span style={{ fontSize:"18px"}}>Perfil {perfil}</span><br/>
-                                    <span style={{ fontSize:"16px"}}>{nome}</span><br/>
-                                    <hr/> 
-                                    <FiLogOut style={{ width:"24px", height:"auto", color:"#3A3E87", marginBottom:"-6px" }}/>
-                                    <input onClick={()=>handleLogout()} className="logout" type='button' value="LOGOUT" /><br/>
-                                </div>
-                            </div>
+                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
+                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } /> 
                         </div>
                     </div>
                     <div>

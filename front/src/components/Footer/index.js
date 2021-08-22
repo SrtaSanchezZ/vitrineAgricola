@@ -18,13 +18,13 @@ const Footer = () => {
                 </div>
             </div>
             <div className="fRedes">
-                <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="https://api.whatsapp.com/send?phone=5518981961025&fbclid=IwAR1QyguQBa7dyM1WWh3Irh859NVfVJUIy-G5ZajTX_q_mDYXD2wUD95xNX0" target="_blank" alt="WhatsApp">
+                <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="https://api.whatsapp.com/send?phone=5518981961025&fbclid=IwAR1QyguQBa7dyM1WWh3Irh859NVfVJUIy-G5ZajTX_q_mDYXD2wUD95xNX0" rel="noreferrer" target="_blank" alt="WhatsApp">
                     <RiWhatsappLine style={{width:"45px", height:"auto", marginRight:"10px", marginTop:"7px", marginBottom:"-6px"}} />
                 </a>
-                <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="https://www.facebook.com/colegioagricolaprudenteoficial/" target="_blank" alt="Facebook">
+                <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="https://www.facebook.com/colegioagricolaprudenteoficial/" rel="noreferrer" target="_blank" alt="Facebook">
                     <RiFacebookCircleLine style={{width:"47px", height:"auto", marginRight:"10px", marginTop:"2px", marginBottom:"-6px"}} />
                 </a>
-                <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="https://www.instagram.com/colegioagricolaprudenteoficial/" target="_blank" alt="Instagram">
+                <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="https://www.instagram.com/colegioagricolaprudenteoficial/" rel="noreferrer" target="_blank" alt="Instagram">
                     <FaInstagram style={{width:"40px", height:"auto", marginRight:"10px", marginTop:"-3px", marginBottom:"-3px"}} />
                 </a>
             </div>

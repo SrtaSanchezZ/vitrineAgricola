@@ -4,8 +4,7 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { TextField } from '@material-ui/core';
-import { ButtonContained } from '../../components/Button';
+import { TextField, Button } from '@material-ui/core';
 import { DialogAlert } from '../../components/Dialog';
 //#endregion
 const NewPassword = () => {
@@ -78,7 +77,7 @@ const NewPassword = () => {
                 <div className="lbanner">
                     <div className="lBoxVest">
                         <input className="limgVest" />
-                        <a href="https://www.vestibulinhoetec.com.br/home/" target="_blank" rel="Vestibulinho" alt="Vestibulinho">
+                        <a href="https://www.vestibulinhoetec.com.br/home/" rel="noreferrer" target="_blank" alt="Vestibulinho">
                             <input className="btnVest" type='button' value="INSCREVA-SE" />
                         </a>
                     </div>
@@ -112,9 +111,16 @@ const NewPassword = () => {
                             label="Confirme a senha"
                             variant="outlined"
                         /><br/><br/>
-                        <ButtonContained onClick={()=>handleSubmit()}>
+                        <Button
+                            variant="contained"
+                            style={{
+                                backgroundColor:"#3A5E4E",
+                                color:"#FFFFFF",
+                                width:"100%"
+                            }}
+                            onClick={()=>handleSubmit()}>
                             CONFIRMAR
-                        </ButtonContained>
+                        </Button>
                     </div>
                 </div>
             </div>            

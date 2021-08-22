@@ -2,10 +2,9 @@
 import React, { useState} from "react";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { Box, TextField } from '@material-ui/core';
+import { Box, TextField, Button } from '@material-ui/core';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { ButtonContained } from '../../components/Button';
 import { DialogAlert, DialogMain } from '../../components/Dialog';
 //#endregion
 const Login = () => {
@@ -132,7 +131,7 @@ const Login = () => {
                 <div className="lbanner">
                     <div className="lBoxVest">
                         <input className="limgVest" />
-                        <a href="https://www.vestibulinhoetec.com.br/home/" target="_blank" rel="Vestibulinho" alt="Vestibulinho">
+                        <a href="https://www.vestibulinhoetec.com.br/home/" rel="noreferrer" target="_blank" alt="Vestibulinho">
                             <input className="btnVest" type='button' value="INSCREVA-SE" />
                         </a>
                     </div>
@@ -156,10 +155,16 @@ const Login = () => {
                             NSA (Novo Sistema Acadêmico) é um sistema cadêmico desenvolvido para facilitar o trabalho da área acadêmica das Etecs do Centro Paula Souza. <br/><br/>
                             Para acessar clique no botão abaixo.
                         </p>
-                        <a href="https://nsa.cps.sp.gov.br/" target="_blank" rel="NSA" alt="NSA" style={{ textDecoration:'none' }}>
-                            <ButtonContained>
+                        <a href="https://nsa.cps.sp.gov.br/" rel="noreferrer" target="_blank" alt="NSA" style={{ textDecoration:'none' }}>
+                            <Button
+                                variant="contained"
+                                style={{
+                                    backgroundColor:"#3A5E4E",
+                                    color:"#FFFFFF",
+                                    width:"100%"
+                                }}>
                                 ACESSAR NSA
-                            </ButtonContained>
+                            </Button>
                         </a>
                     </div> 
                     <div className={esco}>
@@ -190,9 +195,16 @@ const Login = () => {
                         <div onClick={()=>handleClickOpenE()} className="esquciSenha" style={{ paddingBottom:'10%' }}>
                             <span>Esqueci minha senha.</span>
                         </div>                            
-                        <ButtonContained onClick={()=>handleSubmit()}>
+                        <Button
+                            variant="contained"
+                            style={{
+                                backgroundColor:"#3A5E4E",
+                                color:"#FFFFFF",
+                                width:"100%"
+                            }}
+                            onClick={()=>handleSubmit()}>
                             ENTRAR
-                        </ButtonContained>
+                        </Button>
                     </div>
                 </div>
             </div>
