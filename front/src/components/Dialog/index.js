@@ -68,7 +68,7 @@ export function DialogLoading(props){
 export function DialogPerfil(props){
      return(
         <Dialog open={props.open} onClose={props.close}>
-            <Box color="#2E8E61" align="right" style={{ height: '40px' }}>
+            <Box color="#2E8E61" align="right" style={{ height: '20px' }}>
                 <AiFillCloseCircle onClick={props.close} style={{ width: '18px', height: 'auto', marginRight:"10px", marginTop: '10px' }} />
             </Box>
             <DialogContent className="Texto" style={{ width:'200px', textAlign:"center" }}>

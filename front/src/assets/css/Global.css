@@ -64,7 +64,7 @@ body{
     cursor: pointer;
 }
 .footer{ 
-    margin-bottom: -21px;   
+    margin-bottom: -20px;   
     display: flex;
     padding-bottom: 10px;
     padding-left: 30px;
@@ -83,21 +83,18 @@ body{
     display: inline-block;
 
     text-align: left;
-    font-size: 16px;
 }
 .fDireitos{
     width: 33%;
     display: inline-block;
 
     text-align: center;
-    font-size: 16px;
 }
 .fRedes{
     width: 33%;
     display: inline-block;
 
     text-align: right;
-    font-size: 16px;
 }
 .e404{
     width: 100%;
@@ -129,14 +126,15 @@ body{
 }
 .login{
     width: 100%;
-    height: 90vh;
+    height: 95vh;
     display: inline-flex;
 }
 .lbanner{
     width: 70%;
-    height: 90vh;
+    height: 95vh;
     background: url('../img/IMAGEM-LOGIN.png');
-    background-size: 150vh;
+    background-size: 110%;
+    background-color: #002829;
     background-repeat: no-repeat;
     background-position-x: -70px;
 
@@ -145,7 +143,7 @@ body{
 .lBoxVest{
     width: 25%;
     height: 25%;
-    margin-left: 70%;
+    margin-left: 62%;
     margin-top: 38%;
     padding-top: 20px;
     align-items: center;
@@ -431,6 +429,7 @@ body{
 }
 .hConteudo{
     display: flex;
+    height: 60px;
 }
 .hContEsq{
     width: 50%;
