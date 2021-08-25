@@ -310,7 +310,6 @@ body{
 .menup{
     height: 100%;
     display: block;
-    padding-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
 
@@ -319,11 +318,10 @@ body{
     opacity: 1;
 }
 .itMenuH{
+    margin-top: 15px;
     width: 24px;
     height: 24px;
     display: block;
-    margin-bottom: 15px;
-    margin-top: 15px;
 
     background: url('../img/Icons/home_black_24dp.png');
     background-size: 100%;

@@ -1,15 +1,19 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Button, Box, Grid, IconButton, TextField } from '@material-ui/core';
+import { AiOutlineInfoCircle, AiOutlineSave, AiOutlineCloseCircle } from "react-icons/ai";
+import { Button, Box, Grid, IconButton, TextField, List, Card, CardHeader, ListItem, 
+        ListItemText, ListItemIcon, Checkbox, Divider, Typography } from '@material-ui/core';
 import { MdAdd } from "react-icons/md";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import semimg from '../../assets/img/noimg.png';
 import { DialogAlert, DialogMain, DialogLoading } from '../../components/Dialog';
 //#endregion
+  
 const GerenciarNoticias = () => { 
     //#region Variáveis e Variáveis de Estado 
+    const [checked, setChecked] = useState([]);
     const [infos, setInfos] = useState([]);
     const [open, setOpen] = useState(false);
     const [openA, setOpenA] = useState(false);
@@ -33,11 +37,11 @@ const GerenciarNoticias = () => {
                            data: item.data, usuario: item.usuario, imagem: item.imagem }));
     
     var noticia = {
-    titulo: "",
-    texto: "",
-    email: "",
-    perfil: "",
-    imagem: []
+        titulo: "",
+        texto: "",
+        email: "",
+        perfil: "",
+        imagem: []
     }
 
     var msg = "";
@@ -63,15 +67,20 @@ const GerenciarNoticias = () => {
     };
     const handleClose = () => {
       setOpen(false);
+      setChecked([]);
     };
-    const handleClickOpenE = (id, titulo, texto, imagem, usuario, data) => {
+    const handleClickOpenV = (id, titulo, texto, imagem, usuario, data) => {
+        setId(id);
+        setTitulo(titulo);
+        setTexto(texto);
+        setUsuario(usuario);
+        setImg(imagem);
+        setData(data);
+    };
+    const handleClickOpenE = (titulo, texto) => {
       setOpenE(true);
-      setId(id);
       setTituloE(titulo);
       setTextoE(texto);
-      setUsuario(usuario);
-      setImg(imagem);
-      setData(data);
     };
     const handleCloseE = () => {
       setOpenE(false);
@@ -82,7 +91,26 @@ const GerenciarNoticias = () => {
     const handleCloseL = () => {
       setOpenL(false);
     };
+    const handleToggle = (value) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+        handleClickOpenV(value.id, value.titulo, value.texto, value.imagem, value.usuario, value.data);
     
+        if (currentIndex === -1) {
+          newChecked.push(value);
+        } else {
+          newChecked.splice(currentIndex, 1);
+        }
+        
+        if(checked.length < 3){
+            setChecked(newChecked);
+        }else{
+            newChecked.splice(currentIndex, 1);
+            setChecked(newChecked);
+        }
+    };
+    
+    const numberOfChecked = (items) => checked.filter((value) => items.indexOf(value) !== -1).length;
     const handleChange = (set) => (event) => set(event.target.value);
     
     const handleChageImg = (e) => {
@@ -102,7 +130,7 @@ const GerenciarNoticias = () => {
     };
     const renderPhotos = (img) => {
         var ima = "http://localhost:3001" + img;
-        return <img src={ima} alt="Imagem Notícia" style={{maxWidth:"100px", maxHeight: "100px", borderRadius: "5px"}} />
+        return <img src={ima} alt="Imagem Notícia" style={{maxWidth:"200px", maxHeight: "130px", borderRadius: "5px"}} />
 	};
     const handleSubmit = () => {
 
@@ -180,12 +208,14 @@ const GerenciarNoticias = () => {
                           msg = "Não foi possível cadastrar essa notícia, revise os dados e tente novamente.";
                           handleClickOpenA(msg);
                       })
+                      handleClose();
             }
         } else {
             handleCloseL();
 
             msg = "Informe os dados solicitados.";
             handleClickOpenA(msg);
+            handleClose();
         }
     };
     const handleLoad = () =>{
@@ -216,10 +246,15 @@ const GerenciarNoticias = () => {
                         msg = res.data.msg
                         handleClickOpenA(msg);
                     }
+                    
+                    setTitulo(tituloE);
+                    setTexto(textoE);
+                    handleCloseE();
                 })
                 .catch((res) =>{    
                     msg = "Não foi possível atualizar essa notícia.";
                     handleClickOpenA(msg);   
+                    handleCloseE();
                 }) 
 
         }else{
@@ -246,10 +281,12 @@ const GerenciarNoticias = () => {
                         msg = res.data.msg
                         handleClickOpenA(msg);
                     }
+                    setChecked([]);
                 })
                 .catch((res) =>{    
                     msg = "Não foi possível apagar essa notícia.";
-                    handleClickOpenA(msg);   
+                    handleClickOpenA(msg); 
+                    setChecked([]);  
                 }) 
     };
 
@@ -269,136 +306,163 @@ const GerenciarNoticias = () => {
             </div>
             <div className="noticias">
                 <div className="esquerdaN">
-                    <Grid className="bxLista" item xs={12}>
-                        {infos.map((item, index) => (
-                            <Box display="bloxk">    
-                                <Box display="flex" id={index} p={1} m={1} css={{ height: "auto", width:"90%"}}>
-                                    <Box p={1} flexGrow={2} css={{ width: "200px", height: 'auto' }} >
-                                        <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.imagem, item.usuario, item.data)}>
-                                            <div className="result">{renderPhotos(item.imagem)}</div>
-                                        </li>
-                                    </Box>
-                                    <Box p={1} flexGrow={2} css={{ width: "200px", height: 'auto' }} >
-                                        <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.imagem, item.usuario, item.data)}>
-                                            <div style={{ textAlign:"left",  color: "black", alignItems:'center' }}>
-                                                <span >{item.titulo}</span><br/><br/>
-                                                <span className="labelPre">{item.texto}</span>
-                                            </div>
-                                        </li>
-                                    </Box>          
-                                    <Box p={1} >
-                                        <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                            <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(item.id, item.titulo, item.texto, item.imagem, item.usuario, item.data)}>
-                                            <EditIcon />
-                                            </IconButton>
-                                            <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleDelete(item.id, item.titulo, item.texto)} >
-                                            <DeleteIcon />
-                                            </IconButton>
-                                        </div>
-                                    </Box>
-                                </Box>                            
-                                <hr/>
-                            </Box>
-                        ))}
-                    </Grid>
+                    <Card>
+                        <CardHeader
+                            subheader={`Notícias Selecionadas para Destacar (${numberOfChecked(infos)}/3)`}
+                        />
+                        <Divider />
+                        <List container wrap="nowrap" style={{ width: "100%", height: "65vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
+                              dense component="div" role="list">
+                            {infos.map((value) => {
+                                return (
+                                    <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+                                        <ListItemIcon>
+                                            <Checkbox
+                                            checked={checked.indexOf(value) !== -1}
+                                            tabIndex={-1}
+                                            disableRipple
+                                            inputProps={{ 'aria-labelledby': value.id }}
+                                            />
+                                        </ListItemIcon>
+                                        <Typography noWrap variant="subtitle1" id={value.id}>
+                                            {value.titulo}
+                                        </Typography>
+                                    </ListItem>
+                                );
+                            })}
+                            <ListItem />
+                        </List>
+                    </Card>
                 </div>
                 <div className="direitaN">
-                    <div className="bxLeitura">
-                        <div className="bxLTexto">
-                            <span>Em breve: Campo de Leitura de Notícias</span>
-                        </div>
+                    <div className="bxLeitura" style={{ width: "96%", height: "68vh", backgroundColor: "#ffffff", overflow: 'auto', }}>
+                        {open ? (                            
+                                    <Grid item xs container direction="column" spacing={2}>
+                                    <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
+                                        <Box p={1} style={{ width:"30%" }} >                                        
+                                            <input 
+                                                className="inpImg"
+                                                type="file" 
+                                                name="imagem"
+                                                onChange={handleChageImg}
+                                            /><br/>
+                                            <label htmlFor="file" className="label">
+                                                <i className="material-icons">Imagem (até 512KB - 600 x 600) <br/> Formatos (png, jpg ou jpeg)</i>
+                                            </label>
+                                        </Box>            
+                                        <Box p={1} style={{ width:"60%", textAlign:'center' }} >
+                                            <TextField 
+                                                className="inp"
+                                                type="text" 
+                                                onChange={handleChange(setTitulo)}
+                                                value={titulo}
+                                                maxLength="75"
+                                                minLength="6"
+                                                label="Título (min 6 - max 75)"
+                                                variant="outlined"
+                                            />
+                                        </Box>            
+                                        <Box p={1} style={{ width:"10%" }} >
+                                            <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
+                                                <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleSubmit()}>
+                                                    <AiOutlineSave style={{ width:30, height:30 }} />
+                                                </IconButton>
+                                                <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClose()} >
+                                                    <AiOutlineCloseCircle style={{ width:30, height:30 }} />
+                                                </IconButton>
+                                            </div>
+                                        </Box>               
+                                    </Box>
+                                    <TextField 
+                                        className="inp"
+                                        type="text" 
+                                        onChange={handleChange(setTexto)}
+                                        value={texto}
+                                        maxLength="1990"
+                                        minLength="6"
+                                        label="Texto (min 6 - max 1990)"
+                                        multiline
+                                        variant="outlined"
+                                    />
+                                </Grid>
+                                ) : (!openE && checked.length ? (                                                                
+                                    <Grid item xs container direction="column" spacing={2}>
+                                        <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
+                                            <Box p={1} style={{ width:"30%" }} >
+                                                <div className="result">{renderPhotos(img)}</div>
+                                            </Box>            
+                                            <Box p={1} style={{ width:"60%", textAlign:'center' }} >
+                                                <Typography variant="subtitle1" id={id}>
+                                                    {titulo}
+                                                </Typography>
+                                            </Box>            
+                                            <Box p={1} style={{ width:"10%" }} >
+                                                <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
+                                                    <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(titulo, texto)}>
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                    <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleDelete(id, titulo, texto)} >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </div>
+                                            </Box>               
+                                        </Box>
+                                        <Typography variant="body2" style={{ textAlign:'justify' }} color="textSecondary">                                                
+                                            {texto}                                                          
+                                        </Typography>
+                                    </Grid>
+                                ) : (!checked.length ? (                            
+                                    <CardHeader
+                                        avatar={<AiOutlineInfoCircle/>}
+                                        subheader={`Para visualizar selecione uma notícia na lateral`}
+                                    />   
+                                ) : (                                                              
+                                    <Grid item xs container direction="column" spacing={2}>
+                                        <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
+                                            <Box p={1} style={{ width:"30%" }} >
+                                                <div className="result">{renderPhotos(img)}</div>
+                                            </Box>            
+                                            <Box p={1} style={{ width:"60%", textAlign:'center' }} >
+                                                <TextField 
+                                                    className="inp"
+                                                    type="text" 
+                                                    onChange={handleChange(setTituloE)}
+                                                    value={tituloE}
+                                                    maxLength="75"
+                                                    minLength="6"
+                                                    label="Título (min 6 - max 75)"
+                                                    variant="outlined"
+                                                />
+                                            </Box>            
+                                            <Box p={1} style={{ width:"10%" }} >
+                                                <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
+                                                    <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleAlter()}>
+                                                        <AiOutlineSave style={{ width:30, height:30 }} />
+                                                    </IconButton>
+                                                    <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleCloseE()} >
+                                                        <AiOutlineCloseCircle style={{ width:30, height:30 }} />
+                                                    </IconButton>
+                                                </div>
+                                            </Box>               
+                                        </Box>
+                                        <TextField 
+                                            className="inp"
+                                            type="text" 
+                                            onChange={handleChange(setTextoE)}
+                                            value={textoE}
+                                            maxLength="1990"
+                                            minLength="6"
+                                            label="Texto (min 6 - max 1990)"
+                                            multiline
+                                            variant="outlined"
+                                        />
+                                    </Grid>)))
+                        }
                     </div>
                 </div>
             </div>
                        
             <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>            
-            <DialogMain
-                open={open}
-                close={handleClose}
-                title={"NOVA NOTÍCIA"}
-                info={(<div>
-                    <div className="noticias">
-                        <div className="esquerda">
-                            <input 
-                                className="inpImg"
-                                type="file" 
-                                name="imagem"
-                                onChange={handleChageImg}
-                            /><br/>
-                            <label htmlFor="file" className="label">
-                                <i className="material-icons">Imagem (até 512KB - 600 x 600) <br/> Formatos (png, jpg ou jpeg)</i>
-                            </label>
-                        </div>
-                        <div className="direita">
-                            <TextField 
-                                className="inp"
-                                type="text" 
-                                onChange={handleChange(setTitulo)}
-                                value={titulo}
-                                maxLength="75"
-                                minLength="6"
-                                label="Título (min 6 - max 75)"
-                                variant="outlined"
-                            /><br/><br/>
-                        </div>
-                    </div>
-                    <div style={{ display:"block", textAlign:'center' }}>
-                        <TextField 
-                            className="inp"
-                            type="text" 
-                            onChange={handleChange(setTexto)}
-                            value={texto}
-                            maxLength="1990"
-                            minLength="6"
-                            label="Texto (min 6 - max 1990)"
-                            multiline
-                            rows={4}
-                            variant="outlined"
-                        /><br/><br/>
-                    </div>
-                    </div>)}
-                click={()=>handleSubmit()}
-                label={"CADASTRAR"}
-            />
-            <DialogMain
-                open={openE}
-                close={handleCloseE}
-                title={"EDITAR NOTÍCIA"}
-                info={(<div>
-                    <div className="noticias">
-                        <div className="esquerda">                                                 
-                            <div className="result">{renderPhotos(img)}</div>
-                        </div>
-                        <div className="direita">
-                            <input 
-                                style={{ marginLeft:'-20px' }} 
-                                className="inp"
-                                type="text" 
-                                name="titulo"
-                                onChange={handleChange(setTituloE)}
-                                value={tituloE}
-                                maxLength="75"
-                                minLength="6"
-                                placeholder="Título (min 6 - max 75)"
-                            />
-                        </div>
-                    </div>
-                    <div style={{ display:"block", textAlign:'center' }}>
-                        <textarea 
-                            className="inp"
-                            type="text" 
-                            name="texto"
-                            onChange={handleChange(setTextoE)}
-                            value={textoE}
-                            maxLength="1990"
-                            minLength="6"
-                            placeholder="Texto (min 6 - max 1990)"
-                        />
-                    </div>
-                    </div>)}
-                click={()=>handleAlter()}
-                label={"ATUALIZAR"}
-            />            
             <DialogLoading open={openL} />  
         </div>
     );
