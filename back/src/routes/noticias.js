@@ -20,5 +20,9 @@ routes.delete(
     '/noticias/:id',
     notController.apagar
 );
+routes.put(
+    '/noticias',
+    notController.destacar
+);
 
 module.exports = routes;

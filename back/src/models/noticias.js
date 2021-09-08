@@ -58,12 +58,30 @@ async function obterNoticiaPorTitulo(titulo) {
 }
 module.exports.obterNoticiaPorTitulo = obterNoticiaPorTitulo
 
-async function cadastrar(titulo, texto, id, imagem) {
+async function obterNoticiasDestacadas() {
+    try {
+        sql = `SELECT * FROM noticias WHERE not_destaque = 1`
+        retornoBD = await mysql.execute(sql);
+
+        if(retornoBD.length > 0){
+            return result = { retornoBD, retorno: true, msg: "Noticias em destaque"}
+        }else{
+            return { retorno: false, msg: "Não há notícias em destaque."}
+        }
+        
+    } catch (e) {
+        console.log(e)
+        return { retorno: false, msg: "Não há notícias em destaque.", Erro: e }
+    }
+}
+module.exports.obterNoticiasDestacadas = obterNoticiasDestacadas
+
+async function cadastrar(titulo, texto, id, imagem, destaque) {
     try {        
         var data = new Date();
 
         sql = `INSERT INTO noticias (not_titulo, not_texto, not_data, not_destaque, not_usu_id, not_imagem) VALUES (?,?,?,?,?,?)`
-        retornoBD = await mysql.execute(sql, [titulo, texto, data, 0, id, imagem])
+        retornoBD = await mysql.execute(sql, [titulo, texto, data, destaque, id, imagem])
 
         if(retornoBD.affectedRows > 0){
             return result = { retorno: true, msg: "Noticia cadastrada com sucesso!"}
@@ -81,8 +99,8 @@ async function atualizar(titulo, texto, usuid, id) {
 
         var data = new Date();
 
-        sql = `UPDATE noticias SET not_titulo = ?, not_texto = ?, not_data = ?, not_usu_id = ?, not_destaque = ? WHERE not_id = ?`
-        retornoBD = await mysql.execute(sql, [titulo, texto, data, usuid, 0, id])
+        sql = `UPDATE noticias SET not_titulo = ?, not_texto = ?, not_data = ?, not_usu_id = ? WHERE not_id = ?`
+        retornoBD = await mysql.execute(sql, [titulo, texto, data, usuid, id])
 
         if(retornoBD.affectedRows > 0){
             return result = { retorno: true, msg: "Noticia Atualizada com sucesso!"}
@@ -96,8 +114,48 @@ async function atualizar(titulo, texto, usuid, id) {
 }
 module.exports.atualizar = atualizar
 
+async function atualizarRemoverDestaque(usuid, id) {
+    try {
+
+        var data = new Date();
+
+        sql = `UPDATE noticias SET not_data = ?, not_usu_id = ?, not_destaque = ? WHERE not_id = ?`
+        retornoBD = await mysql.execute(sql, [data, usuid, 0, id])
+
+        if(retornoBD.affectedRows > 0){
+            return result = { retorno: true, msg: "Removido o Destaque da Noticia com sucesso!"}
+        }else{
+            return result = { retorno: false, msg: "Não foi possível remover o destaque desta notícia, revise os dados informados."}
+        }
+        
+    } catch (e) {
+        return result = { retorno: false, msg: "Não foi possível remover o destaque desta notícia.", Erro: e }
+    }
+}
+module.exports.atualizarRemoverDestaque = atualizarRemoverDestaque
+
+async function atualizarAddDestaque(usuid, id) {
+    try {
+
+        var data = new Date();
+
+        sql = `UPDATE noticias SET not_data = ?, not_usu_id = ?, not_destaque = ? WHERE not_id = ?`
+        retornoBD = await mysql.execute(sql, [data, usuid, 1, id])
+
+        if(retornoBD.affectedRows > 0){
+            return result = { retorno: true, msg: "Noticia Destacada com sucesso!"}
+        }else{
+            return result = { retorno: false, msg: "Não foi possível destacar desta notícia, revise os dados informados."}
+        }
+        
+    } catch (e) {
+        return result = { retorno: false, msg: "Não foi possível destacar desta notícia.", Erro: e }
+    }
+}
+module.exports.atualizarAddDestaque = atualizarAddDestaque
+
 async function apagar(id) {
-    try {        
+    try {      
             sql = `DELETE FROM noticias WHERE not_id = ?`;
             retornoBD = await mysql.execute(sql, [id])
 

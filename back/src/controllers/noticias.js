@@ -90,13 +90,11 @@ exports.cadastrar = async (req, res, next) => {
         if(result.retorno){
             
             result = "";
-
             result = await notModel.obterNoticiaPorTitulo(noticia.titulo);
 
             if(!result.retorno){
             
                 result = "";
-
                 result = await usuModel.obterEmail(noticia.email);
 
                 if(result.retorno){  
@@ -105,35 +103,65 @@ exports.cadastrar = async (req, res, next) => {
                         titulo: "",
                         texto: "",
                         id: "",
-                        imagem: ""
+                        imagem: "",
+                        destaque: 0
                     }  
 
                     noticiaC = {
                         titulo: noticia.titulo,
                         texto: noticia.texto,
                         id: result.retornoBD[0].usu_id,
-                        imagem: noticia.imagem
-                    }          
+                        imagem: noticia.imagem,
+                        destaque: 1
+                    }  
 
-                    result = "";
-                        
-                    result = await notModel.cadastrar(noticiaC.titulo, noticiaC.texto, noticiaC.id, noticiaC.imagem);
+                    result = "";                        
+                    result = await notModel.obterNoticiasDestacadas(); 
 
-                    if(result.retorno){
+                    if(!result.retorno){
+                        result = "";                        
+                        result = await notModel.cadastrar(noticiaC.titulo, noticiaC.texto, noticiaC.id, noticiaC.imagem, noticiaC.destaque);
 
-                        return res
-                                .status(200)
+                        if(result.retorno){
+
+                            return res
+                                    .status(200)
+                                    .json({ 
+                                        msg: result.msg,
+                                        retorno: true
+                                    })
+                        }else{     
+                            return res
+                                .status(400)
                                 .json({ 
                                     msg: result.msg,
-                                    retorno: true
+                                    retorno: false
                                 })
-                    }else{     
-                        return res
-                            .status(400)
-                            .json({ 
-                                msg: result.msg,
-                                retorno: false
-                            })
+                        }
+                    }else{   
+                        if( result.retornoBD.length > 2){
+                            noticiaC.destaque = 0;
+                        } 
+
+                        result = "";                        
+                        result = await notModel.cadastrar(noticiaC.titulo, noticiaC.texto, noticiaC.id, noticiaC.imagem, noticiaC.destaque);
+
+                        if(result.retorno){
+
+                            return res
+                                    .status(200)
+                                    .json({ 
+                                        msg: result.msg,
+                                        retorno: true
+                                    })
+                        }else{     
+                            return res
+                                .status(400)
+                                .json({ 
+                                    msg: result.msg,
+                                    retorno: false
+                                })
+                        }
                     }
                 }else{                         
                     return res
@@ -357,6 +385,125 @@ exports.apagar = async (req, res, next) => {
                         msg: result.msg,
                         retorno: false
                         })
+            }
+        }else{
+            return res
+                    .status(400)
+                    .json({  
+                        msg: result.msg,
+                        retorno: false
+                        })
+        }  
+    }
+    catch (e) {
+        return res
+                .status(400)
+                .json({ 
+                    msg: "Falha de conexão, revise seu acesso a internet.",
+                    retorno: false, 
+                    response: e 
+                })
+    }
+}
+//PATCH rota => /noticias
+//atualiza a situação de destaque das notícias elencadas na requisição
+exports.destacar = async (req, res, next) => {
+    try {
+
+        var perfil = req.body.perfil;      
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+
+        var noticia = {
+            titulo: "teste",
+            texto: "testeeee",
+            email: req.body.email,
+            perfil: perfil,
+            noticias: req.body.noticias
+        }
+        
+        result = val.noticia(noticia.titulo, noticia.texto, noticia.email, noticia.perfil);
+
+        if (result.retorno) { 
+            
+            result = "";
+            result = await usuModel.obterEmail(noticia.email);
+
+            if (result.retorno) {
+                var id = 0;
+                var userId = result.retornoBD[0].usu_id;
+
+                result = "";                        
+                result = await notModel.obterNoticiasDestacadas(); 
+    
+                if(!result.retorno){
+                    for (let i = 0; i < noticia.noticias.length; i++) {
+                        id = parseInt(noticia.noticias[i].id);
+
+                        result = "";                        
+                        result = await notModel.atualizarAddDestaque(userId, id);    
+                    }
+    
+                    if(result.retorno){
+                        return res
+                                .status(200)
+                                .json({ 
+                                    msg: result.msg,
+                                    retorno: true
+                                })
+                    }else{     
+                        return res
+                            .status(400)
+                            .json({ 
+                                msg: result.msg,
+                                retorno: false
+                            })
+                    }
+                }else{ 
+                    var atual = result.retornoBD;
+
+                    for (let i = 0; i < atual.length; i++){
+                        id = parseInt(atual[i].not_id),
+                        await notModel.atualizarRemoverDestaque(userId, id); 
+                    }
+
+                    for (let i = 0; i < noticia.noticias.length; i++) {
+                        id = parseInt(noticia.noticias[i].id),
+                        result = ""
+                        result = await notModel.atualizarAddDestaque(userId, id);
+                    }
+                    
+                    if(result.retorno){    
+                        return res
+                                .status(200)
+                                .json({ 
+                                    msg: result.msg,
+                                    retorno: true
+                                })
+                    }else{     
+                        return res
+                            .status(400)
+                            .json({ 
+                                msg: result.msg,
+                                retorno: false
+                            })
+                    }
+                }
+            }else{
+                return res
+                        .status(400)
+                        .json({  
+                            msg: result.msg,
+                            retorno: false
+                            })
             }
         }else{
             return res

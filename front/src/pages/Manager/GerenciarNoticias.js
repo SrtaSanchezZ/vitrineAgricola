@@ -1,14 +1,15 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { AiOutlineInfoCircle, AiOutlineSave, AiOutlineCloseCircle } from "react-icons/ai";
+import { AiOutlineInfoCircle, AiFillSave, AiOutlineCloseCircle } from "react-icons/ai";
+import { VscStarEmpty } from "react-icons/vsc";
 import { Button, Box, Grid, IconButton, TextField, List, Card, CardHeader, ListItem, 
-        ListItemText, ListItemIcon, Checkbox, Divider, Typography } from '@material-ui/core';
+       ListItemIcon, Checkbox, Divider, Typography } from '@material-ui/core';
 import { MdAdd } from "react-icons/md";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import semimg from '../../assets/img/noimg.png';
-import { DialogAlert, DialogMain, DialogLoading } from '../../components/Dialog';
+import { DialogAlert, DialogLoading } from '../../components/Dialog';
 //#endregion
   
 const GerenciarNoticias = () => { 
@@ -33,8 +34,8 @@ const GerenciarNoticias = () => {
     const [email, setEmail] = useState(localStorage.getItem("email")); 
 
     const ArrNot = (arr) =>
-      arr.map((item) => ({ id: item.id, titulo: item.titulo, texto: item.texto,
-                           data: item.data, usuario: item.usuario, imagem: item.imagem }));
+      arr.map((item) => ({ id: item.id, titulo: item.titulo, texto: item.texto, data: item.data,
+                           usuario: item.usuario, imagem: item.imagem, destaque: item.destaque }));
     
     var noticia = {
         titulo: "",
@@ -92,6 +93,9 @@ const GerenciarNoticias = () => {
       setOpenL(false);
     };
     const handleToggle = (value) => () => {
+        handleClose();
+        handleCloseE();
+
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
         handleClickOpenV(value.id, value.titulo, value.texto, value.imagem, value.usuario, value.data);
@@ -163,13 +167,16 @@ const GerenciarNoticias = () => {
                         if(res.data.retorno){                                                     
                             msg = res.data.msg
                             handleClickOpenA(msg);
+                            handleClose();
                         }else{                                                     
                             msg = res.data.msg
                             handleClickOpenA(msg);
+                            handleClose();
                         }
 
                     })
                     .catch((error) => {
+                        handleClose();
                         handleCloseL();
                         msg = "Não foi possível cadastrar essa notícia, revise os dados e tente novamente.";
                         handleClickOpenA(msg);
@@ -197,18 +204,20 @@ const GerenciarNoticias = () => {
                         if(res.data.retorno){                                                     
                             msg = res.data.msg
                             handleClickOpenA(msg);
+                            handleClose();
                         }else{                                                     
                             msg = res.data.msg
                             handleClickOpenA(msg);
+                            handleClose();
                         }
 
                       })
                       .catch((error) => {
-                          handleCloseL();
-                          msg = "Não foi possível cadastrar essa notícia, revise os dados e tente novamente.";
-                          handleClickOpenA(msg);
+                            handleClose();
+                            handleCloseL();
+                            msg = "Não foi possível cadastrar essa notícia, revise os dados e tente novamente.";
+                            handleClickOpenA(msg);
                       })
-                      handleClose();
             }
         } else {
             handleCloseL();
@@ -228,8 +237,7 @@ const GerenciarNoticias = () => {
             handleClickOpenA(msg);   
           })  
     };
-    const handleAlter = () =>{       
-
+    const handleAlter = () =>{    
         if (tituloE !== "" || textoE !== ""){
             axios
                 .put(`http://`+ back +`/noticias/`+id,{
@@ -242,16 +250,20 @@ const GerenciarNoticias = () => {
                     if(res.data.retorno){                                                     
                         msg = res.data.msg
                         handleClickOpenA(msg);
+                    
+                        setTitulo(tituloE);
+                        setTexto(textoE);
+                        handleCloseE();
                     }else{                                                     
                         msg = res.data.msg
                         handleClickOpenA(msg);
-                    }
                     
-                    setTitulo(tituloE);
-                    setTexto(textoE);
-                    handleCloseE();
+                        setTitulo(tituloE);
+                        setTexto(textoE);
+                        handleCloseE();
+                    }
                 })
-                .catch((res) =>{    
+                .catch((error) =>{    
                     msg = "Não foi possível atualizar essa notícia.";
                     handleClickOpenA(msg);   
                     handleCloseE();
@@ -263,12 +275,10 @@ const GerenciarNoticias = () => {
         }
 
     };
-    const handleDelete = (id, titulo, texto) =>{       
+    const handleDelete = () =>{       
             axios
                 .delete(`http://`+ back +`/noticias/`+id,{
                     headers:{
-                        titulo: titulo,
-                        texto: texto,
                         perfil: perfil,
                         email: email
                     }
@@ -283,11 +293,39 @@ const GerenciarNoticias = () => {
                     }
                     setChecked([]);
                 })
-                .catch((res) =>{    
+                .catch((error) =>{    
                     msg = "Não foi possível apagar essa notícia.";
                     handleClickOpenA(msg); 
                     setChecked([]);  
                 }) 
+    };
+    const handleHighlight = () =>{     
+        if(checked.length > 0){
+            axios
+                .put(`http://`+ back +`/noticias`,{
+                    perfil: perfil,
+                    email: email,
+                    noticias: checked
+                })
+                .then((res) => { 
+                    if(res.data.retorno){                                                     
+                        msg = res.data.msg
+                        handleClickOpenA(msg);
+                    }else{                                                     
+                        msg = res.data.msg
+                        handleClickOpenA(msg);
+                    }
+                    setChecked([]);
+                })
+                .catch((error) =>{    
+                    msg = "Não foi possível destacar essa(s) notícia(s).";
+                    handleClickOpenA(msg); 
+                    setChecked([]);  
+                }) 
+            }else{
+                msg = "Selecione ao menos uma notícias para destacar.";
+                handleClickOpenA(msg);                 
+            }
     };
 
     useEffect(() => {
@@ -301,13 +339,35 @@ const GerenciarNoticias = () => {
                 <div className="esquerda">
                 </div>
                 <div className="direita">
-                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset"  }} startIcon={<MdAdd/>}>NOVA NOTÍCIA</Button>
+                    <Box display="flex" justifyContent="flex-end" m={1} p={1}>              
+                        <Box p={1}>  
+                            <Button 
+                                onClick={()=>handleHighlight()} 
+                                variante="contained" 
+                                className="btnNovo"
+                                startIcon={<VscStarEmpty/>}
+                                style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset"  }}> 
+                                DESTACAR
+                            </Button>
+                        </Box>
+                        <Box p={1}>
+                            <Button 
+                                onClick={()=>handleClickOpen()} 
+                                variante="contained" 
+                                className="btnNovo"
+                                startIcon={<MdAdd/>}
+                                style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset"  }}> 
+                                NOVA NOTÍCIA
+                            </Button>
+                        </Box>       
+                    </Box>
                 </div>
             </div>
             <div className="noticias">
                 <div className="esquerdaN">
                     <Card>
                         <CardHeader
+                            avatar={<VscStarEmpty/>}
                             subheader={`Notícias Selecionadas para Destacar (${numberOfChecked(infos)}/3)`}
                         />
                         <Divider />
@@ -324,9 +384,12 @@ const GerenciarNoticias = () => {
                                             inputProps={{ 'aria-labelledby': value.id }}
                                             />
                                         </ListItemIcon>
+                                        {value.destaque == 1 ? (
                                         <Typography noWrap variant="subtitle1" id={value.id}>
-                                            {value.titulo}
-                                        </Typography>
+                                           <VscStarEmpty/> {" " + value.titulo}
+                                        </Typography>):( <Typography noWrap variant="subtitle1" id={value.id}>
+                                           {value.titulo}
+                                        </Typography>) }
                                     </ListItem>
                                 );
                             })}
@@ -364,8 +427,8 @@ const GerenciarNoticias = () => {
                                         </Box>            
                                         <Box p={1} style={{ width:"10%" }} >
                                             <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
-                                                <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleSubmit()}>
-                                                    <AiOutlineSave style={{ width:30, height:30 }} />
+                                                <IconButton size="small" style={{ padding:5, marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleSubmit()}>
+                                                    <AiFillSave style={{ width:25, height:25 }} />
                                                 </IconButton>
                                                 <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClose()} >
                                                     <AiOutlineCloseCircle style={{ width:30, height:30 }} />
@@ -401,7 +464,7 @@ const GerenciarNoticias = () => {
                                                     <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(titulo, texto)}>
                                                         <EditIcon />
                                                     </IconButton>
-                                                    <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleDelete(id, titulo, texto)} >
+                                                    <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleDelete()} >
                                                         <DeleteIcon />
                                                     </IconButton>
                                                 </div>
@@ -436,8 +499,8 @@ const GerenciarNoticias = () => {
                                             </Box>            
                                             <Box p={1} style={{ width:"10%" }} >
                                                 <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
-                                                    <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleAlter()}>
-                                                        <AiOutlineSave style={{ width:30, height:30 }} />
+                                                    <IconButton size="small" style={{ padding:5, marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleAlter()}>
+                                                        <AiFillSave style={{ width:25, height:25 }} />
                                                     </IconButton>
                                                     <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleCloseE()} >
                                                         <AiOutlineCloseCircle style={{ width:30, height:30 }} />
