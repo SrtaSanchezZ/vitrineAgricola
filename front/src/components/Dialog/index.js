@@ -72,7 +72,7 @@ export function DialogPerfil(props){
                 <AiFillCloseCircle onClick={props.close} style={{ width: '18px', height: 'auto', marginRight:"10px", marginTop: '10px' }} />
             </Box>
             <DialogContent className="Texto" style={{ width:'200px', textAlign:"center" }}>
-                <img src={props.img} alt={props.perfil} /><br/>
+                <img src={props.img} style={{ width:'100px', height:'auto' }} alt={props.perfil} /><br/>
                 <p style={{ fontSize:"18px", fontWeight:"bold" }}>Perfil {props.perfil}</p>
                 <span style={{ fontSize:"16px"}}>{props.name}</span><br/>
             </DialogContent>
