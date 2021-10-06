@@ -12,49 +12,49 @@ export const Header = () => {
             </Box>                   
             <Box p={1} display="flex" style={{ width:'60%', textAlign:'center' }} >
                 <Box p={1}  style={{width:'14%', textAlign:'center'}} style={{width:'14%', textAlign:'center'}}>
-                    <Typography variant="subtitle1" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
+                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
                         <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/" rel="home" alt="home">
                             <span className="hMenuText">HOME</span>
                         </a>
                     </Typography>
                 </Box>
                 <Box p={1}  style={{width:'14%', textAlign:'center'}}>
-                    <Typography variant="subtitle1" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
+                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
                         <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/quemsomos" rel="quemsomos" alt="quem somos">
                             <span className="hMenuText">QUEM SOMOS</span>
                         </a>
                     </Typography>
                 </Box>
                 <Box p={1}  style={{width:'14%', textAlign:'center'}}>
-                    <Typography variant="subtitle1" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
+                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
                         <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/cursos" rel="cursos" alt="cursos">
                             <span className="hMenuText">CURSOS</span>
                         </a>
                     </Typography>
                 </Box>
                 <Box p={1}  style={{width:'14%', textAlign:'center'}}>
-                    <Typography variant="subtitle1" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
+                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
                         <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/gestao" rel="gestao" alt="gestao">
                             <span className="hMenuText">GESTÃO</span>
                         </a>
                     </Typography>
                 </Box>
                 <Box p={1}  style={{width:'14%', textAlign:'center'}}>
-                    <Typography variant="subtitle1" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}>
+                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}>
                         <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/noticias" rel="noticias" alt="noticias">
                             <span className="hMenuText">NOTÍCIAS</span>
                         </a>
                     </Typography>
                 </Box>
                 <Box p={1}  style={{width:'14%', textAlign:'center'}}>
-                    <Typography variant="subtitle1" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}>
+                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}>
                         <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/contato" rel="contato" alt="contato">
                             <span className="hMenuText">CONTATO</span>
                         </a>
                     </Typography>
                 </Box>
                 <Box p={1}  style={{width:'14%', textAlign:'center'}}>
-                    <Typography variant="subtitle1" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
+                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
                         <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/vitrineagricola" rel="vitrineagricola" alt="vitrine agricola">
                             <span className="hMenuText">VITRINE</span>
                         </a>
@@ -64,7 +64,7 @@ export const Header = () => {
             <Box display="flex" justifyContent="flex-end" p={1} style={{ width:'20%', textAlign:'end', cursor:"pointer" }} >
                 <CgLogIn style={{width:"20px", height:"auto", marginRight:"10px", marginTop:"5px", marginBottom:"-6px"}} />  
                 <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/acesso" rel="Login" alt="Login">                    
-                    <Typography variant="subtitle1" style={{ textAlign:'center', textTransform:"capitalize", marginTop:"22px"}}>
+                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:"22px"}}>
                         LOGIN
                     </Typography>
                 </a>
@@ -86,14 +86,14 @@ export function HeaderAdm(props){
                 </Typography>
             </Box>               
             <Box p={1} display="flex" onClick={props.diag} style={{ width:'20%', textAlign:'end', cursor:"pointer" }} >  
-                <Box p={1} style={{ width:'40%' }}></Box>            
+                <Box p={1} style={{ width:'10%' }}></Box>            
                 <Box p={1} style={{ width:'20%' }} >
                     <Typography style={{ textAlign:'left' }}>
                         <img src={props.img} style={{ width:'49px', height:'49px'}} /> 
                     </Typography>
                 </Box>              
                 <Box p={1} style={{ width:'40%'}} >
-                    <Typography variant="subtitle1" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}>
+                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}>
                         Perfil {props.perfil}
                     </Typography>
                 </Box>

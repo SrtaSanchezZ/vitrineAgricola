@@ -8,7 +8,6 @@ var result = "";
 //obtem todos os grupos
 exports.obter = async (req, res, next) => {
     try {
-
         result = await gruModel.obter();
 
         if (result.retorno) {
@@ -121,6 +120,8 @@ exports.cadastrar = async (req, res, next) => {
             email: req.body.email,
             perfil: perfil
         }
+
+        console.log( req.body.email);
         
         result = val.grupo(grupo.nome, grupo.email, grupo.perfil);
 

@@ -30,8 +30,8 @@ const GerenciarNoticias = () => {
     const [tituloE, setTituloE] = useState("");
     const [textoE, setTextoE] = useState("");
     const [img, setImg] = useState("");  
-    const perfil = useState(localStorage.getItem("perfil"));
-    const email = useState(localStorage.getItem("email"));
+    const [perfil, setPerfil] = useState(localStorage.getItem("perfil")); 
+    const [email, setEmail] = useState(localStorage.getItem("email")); 
 
     const ArrNot = (arr) =>
       arr.map((item) => ({ id: item.id, titulo: item.titulo, texto: item.texto, data: item.data,

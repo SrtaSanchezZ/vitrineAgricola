@@ -23,8 +23,8 @@ const GerenciarUsuarios = () => {
     const [nomeE, setNomeE] = useState("");
     const [emailE, setEmailE] = useState("");
     const [senhaE, setSenhaE] = useState("");
-    const perfil = useState(localStorage.getItem("perfil"));
-    const email = useState(localStorage.getItem("email"));
+    const [perfil, setPerfil] = useState(localStorage.getItem("perfil")); 
+    const [email, setEmail] = useState(localStorage.getItem("email")); 
 
     const ArrNot = (arr) =>
       arr.map((item) => ({ id: item.id, nome: item.nome, email: item.email,

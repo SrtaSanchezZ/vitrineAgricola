@@ -1,7 +1,7 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Button, Box, Grid, IconButton, Typography, TextField } from '@material-ui/core';
+import { Button, Box, Grid, IconButton, Typography, TextField, InputLabel, Select, FormControl, FormHelperText, MenuItem } from '@material-ui/core';
 import { MdAdd } from "react-icons/md";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -27,9 +27,9 @@ const GerenciarProdutos = () => {
     const [id, setId] = useState("");
     const [nomeE, setNomeE] = useState("");
     const [descricaoE, setDescricaoE] = useState("");
-    const [img, setImg] = useState("");  
-    const perfil = useState(localStorage.getItem("perfil"));
-    const email = useState(localStorage.getItem("email"));
+    const [img, setImg] = useState(""); 
+    const [perfil, setPerfil] = useState(localStorage.getItem("perfil")); 
+    const [email, setEmail] = useState(localStorage.getItem("email")); 
 
     const ArrPro = (arr) =>
       arr.map((item) => ({ id: item.id, nome: item.nome, descricao: item.descricao,
@@ -209,14 +209,13 @@ const GerenciarProdutos = () => {
         }
     };
     const handleSubmitG = () => {
-        if (grupoNome !== ""){                
-            const formData = new FormData();
-                formData.append('perfil',perfil);
-                formData.append('email',email);
-                formData.append('nome',grupoNome);
-
+        if (grupoNome !== ""){             
             axios
-                .post(`http://` + back + `/grupos`, formData)
+                .post(`http://` + back + `/grupos`, {
+                    nome: grupoNome,
+                    email: email,
+                    perfil: perfil
+                })
                 .then((res) => {
                     if(res.data.retorno){                                                     
                         msg = res.data.msg
@@ -240,6 +239,16 @@ const GerenciarProdutos = () => {
           .get(`http://`+ back +`/produtos`)
           .then((res) => {              
             setInfos(ArrPro(res.data.response.produtos)); 
+            setInfosG(ArrGru(res.data.response.grupos)); 
+          }).catch((res) =>{ 
+            // msg = "Não foi possível localizar produtos.";
+            // handleClickOpenA(msg);   
+          })  
+    };
+    const handleLoadG = () =>{
+        axios
+          .get(`http://`+ back +`/grupos`)
+          .then((res) => {               
             setInfosG(ArrGru(res.data.response.grupos)); 
           }).catch((res) =>{ 
             // msg = "Não foi possível localizar produtos.";
@@ -303,8 +312,11 @@ const GerenciarProdutos = () => {
                 }) 
     };
 
+    console.log(infosG);
+
     useEffect(() => {
         handleLoad();
+        handleLoadG();
         // eslint-disable-next-line
       }, []);
     //#endregion
@@ -320,18 +332,18 @@ const GerenciarProdutos = () => {
                     <Box p={1} style={{textAlign:'end'}}>
                         <Button 
                             onClick={()=>handleClickOpenG()} 
-                            variante="contained" 
+                            variante="outlined"  
                             className="btnNovo"
                             startIcon={<MdAdd/>}
-                            style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", marginRight:'20px'  }}> 
+                            style={{  color:"#2E8E61" }}> 
                             NOVO GRUPO
                         </Button>
                         <Button 
                             onClick={()=>handleClickOpen()} 
-                            variante="outlined" 
+                            variante="contained" 
                             className="btnNovo"
                             startIcon={<MdAdd/>}
-                            style={{ color:"#2E8E61"}}> 
+                            style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", marginRight:'20px'}}> 
                             NOVO PRODUTO
                         </Button>
                     </Box>       
@@ -398,9 +410,24 @@ const GerenciarProdutos = () => {
                                 maxLength="75"
                                 minLength="6"
                                 label="Nome (min 6 - max 75)"
-                                variant="outlined" />
+                                variant="outlined" /><br/><br/>                                        
+                            <FormControl sx={{ minWidth: 250 }}>
+                                <InputLabel >Grupo</InputLabel>
+                                <Select
+                                value={grupo}
+                                label="Grupo"
+                                onChange={handleChange(setGrupo)}
+                                >
+                                <MenuItem value="">
+                                    <em></em>
+                                </MenuItem>                                
+                                {infosG.map((item, index) => (
+                                    <MenuItem value={item.id} style={{ color:"#000000", textAlign:'center'}}>{item.nome}</MenuItem>
+                                ))}
+                                </Select>
+                            </FormControl>
                         </div>
-                    </div><br/><br/>
+                    </div><br/>
                     <div style={{ display:"block", textAlign:'center' }}>
                         <TextField 
                             className="inp"
