@@ -11,7 +11,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import semimg from '../../../assets/img/noimg.png';
 import { DialogAlert, DialogLoading } from '../../../components/Dialog';
 //#endregion
-  
 const GerenciarNoticias = () => { 
     //#region Variáveis e Variáveis de Estado 
     const [checked, setChecked] = useState([]);
@@ -31,8 +30,8 @@ const GerenciarNoticias = () => {
     const [tituloE, setTituloE] = useState("");
     const [textoE, setTextoE] = useState("");
     const [img, setImg] = useState("");  
-    const [perfil, setPerfil] = useState(localStorage.getItem("perfil"));
-    const [email, setEmail] = useState(localStorage.getItem("email")); 
+    const perfil = useState(localStorage.getItem("perfil"));
+    const email = useState(localStorage.getItem("email"));
 
     const ArrNot = (arr) =>
       arr.map((item) => ({ id: item.id, titulo: item.titulo, texto: item.texto, data: item.data,
@@ -46,7 +45,6 @@ const GerenciarNoticias = () => {
         perfil: "",
         imagem: []
     }
-
     var msg = "";
     var back = "localhost:3001";
     //#endregion
@@ -359,10 +357,10 @@ const GerenciarNoticias = () => {
                         </Button>
                         <Button 
                             onClick={()=>handleClickOpen()} 
-                            variante="contained" 
+                            variante="outlined" 
                             className="btnNovo"
                             startIcon={<MdAdd/>}
-                            style={{ backgroundColor:"#2E8E61", color:"#FFFFFF" }}> 
+                            style={{ color:"#2E8E61"}}> 
                             NOVA NOTÍCIA
                         </Button>
                     </Box>       

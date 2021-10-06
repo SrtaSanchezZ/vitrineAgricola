@@ -13,3 +13,5 @@ routes.get(
     '/cursos',
     curController.obterCurso
 );
+
+module.exports = routes;

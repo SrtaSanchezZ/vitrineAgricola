@@ -9,10 +9,8 @@ import {Header} from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import banner from '../../../assets/img/IMAGEM-LOGIN.png';
 import {DialogReadNew} from '../../../components/Dialog';
-//#endregion
-
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
-
+//#endregion
 const News = () => {
     const [infos, setInfos] = useState([]);
     const [destaque, setDestaque] = useState([]);
@@ -21,6 +19,7 @@ const News = () => {
     const [comF, setComF] = useState("none"); 
     const [semF, setSemF] = useState("block");
     const [open, setOpen] = useState(false);
+    // eslint-disable-next-line
     const [id, setId] = useState("");
     const [titulo, setTitulo] = useState("");
     const [texto, setTexto] = useState("");
@@ -47,8 +46,6 @@ const News = () => {
             backgroundColor: '#ffffff',
         }
     };
-
-    var msg = "";
     var back = "localhost:3001";
   
     const handleOpen = (id, titulo, texto, autor, data, img) => {
@@ -70,8 +67,9 @@ const News = () => {
           .then((res) => {              
             setInfos(ArrNot(res.data.response.noticias));
             setDestaque(ArrNotDest(res.data.response.noticias)) 
-          }).catch((res) =>{    
-            msg = "Não foi possível localizar notícias.";  
+          }).catch((res) =>{   
+            // eslint-disable-next-line    
+            var msg = "Não foi possível localizar notícias.";  
           })  
     };
     const handleFiltro = () => {
@@ -123,7 +121,7 @@ const News = () => {
                     </Grid>
                     <Grid item xs={8}>
                          <AutoPlaySwipeableViews >
-                            {destaque.length != 0? (
+                            {destaque.length !== 0? (
                                 destaque.map((value) => {  
                                     return (              
                                         <div style={Object.assign({}, styles.slide, styles.slide2) } 

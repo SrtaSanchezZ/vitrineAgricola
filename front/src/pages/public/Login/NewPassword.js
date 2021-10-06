@@ -9,10 +9,13 @@ import { DialogAlert } from '../../../components/Dialog';
 //#endregion
 const NewPassword = () => {
     //#region Variáveis e Variáveis de Estado
+    // eslint-disable-next-line 
     const [adm, setAdm] = useState("lfTextNao");
+    // eslint-disable-next-line 
     const [inpE, setinpE] = useState("inp");
     const [openA, setOpenA] = useState(false);
     const [alerta, setAlerta] = useState("");
+    // eslint-disable-next-line 
     const [most, serMost] = useState("lfNsa");
     const [senha, setSenha] = useState("");
     const [senhaC, setSenhaC] = useState("");

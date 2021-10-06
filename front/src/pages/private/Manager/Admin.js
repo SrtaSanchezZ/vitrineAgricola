@@ -13,13 +13,11 @@ import GerenciarNoticias from './GerenciarNoticias';
 //#endregion
 const Admin = () => {
     //#region Variáveis e Variáveis de Estado
-    const [bPerfil, setbPerfil] = useState("perfilM");
-    const [dPerfil, setdPerfil] = useState("esconde");
     const [open, setOpen] = useState(false);
-    const [perfil, setPerfil] = useState(localStorage.getItem("perfil"));
-    const [nome, setNome] = useState(localStorage.getItem("nome"));
     const [step, setStep] = useState(1);
     const history = useHistory();
+    const perfil = useState(localStorage.getItem("perfil"));
+    const nome = useState(localStorage.getItem("nome"));
     //#endregion
     //#region Funções e Funções de Estado
     const handleOpen = () => {

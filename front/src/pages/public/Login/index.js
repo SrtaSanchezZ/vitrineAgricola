@@ -15,6 +15,7 @@ const Login = () => {
     const [admU, setAdmU] = useState("lfUnderTextN");
     const [most, serMost] = useState("lfNsa");
     const [esco, setEsco] = useState("esconde");
+    // eslint-disable-next-line 
     const [inpE, setinpE] = useState("inp");
     const [openA, setOpenA] = useState(false);
     const [openE, setOpenE] = useState(false);

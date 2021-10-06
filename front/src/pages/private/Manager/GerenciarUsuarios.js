@@ -9,6 +9,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 
 //#endregion
 const GerenciarUsuarios = () => {  
+    //#region Variáveis e Variáveis de Estado
     const [infos, setInfos] = useState([]);
     const [open, setOpen] = useState(false);
     const [openA, setOpenA] = useState(false);
@@ -22,16 +23,16 @@ const GerenciarUsuarios = () => {
     const [nomeE, setNomeE] = useState("");
     const [emailE, setEmailE] = useState("");
     const [senhaE, setSenhaE] = useState("");
-    const [perfil, setPerfil] = useState(localStorage.getItem("perfil"));
-    const [email, setEmail] = useState(localStorage.getItem("email")); 
+    const perfil = useState(localStorage.getItem("perfil"));
+    const email = useState(localStorage.getItem("email"));
 
     const ArrNot = (arr) =>
       arr.map((item) => ({ id: item.id, nome: item.nome, email: item.email,
                            senha: item.senha, perfil: item.perfil }));
-
     var msg = "";
     var back = "localhost:3001";
-
+    //#endregion
+    //#region Funções e Funções de Estado
     const handleClickOpenA = (alerta) => {
       setOpenA(true);
       setAlerta(alerta);
@@ -96,10 +97,7 @@ const GerenciarUsuarios = () => {
         axios
           .get(`http://`+ back +`/usuarios`)
           .then((res) => {   
-            console.log(res.data);
-
             setInfos(ArrNot(res.data.response.usuarios)); 
-
           }).catch((res) =>{    
             msg = "Não foi possível localizar usuarios.";
             handleClickOpenA(msg);   
@@ -160,10 +158,11 @@ const GerenciarUsuarios = () => {
                 }) 
     };
 
-    useEffect(() => {
+    useEffect(() => {           
         handleLoad();
         // eslint-disable-next-line
       }, []);
+      //#endregion
     return(
         <div>
             <Box p={1} display="flex" align="right">           
