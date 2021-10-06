@@ -2,6 +2,8 @@
 import React, { useState} from "react";
 import { useHistory } from 'react-router-dom';
 import { DialogPerfil } from '../../../components/Dialog';
+import { HeaderAdm } from '../../../components/Header';
+import { MenuPrivate } from '../../../components/Menu';
 import perfilManager from '../../../assets/img/Icons/perfil.png';
 import Reservas from './Reservas';
 import MontarVitrine from './MontarVitrine';
@@ -30,7 +32,6 @@ const Admin = () => {
         localStorage.clear();
 
         history.push("/");
-
     }
     const handleStep = (val) => {
         setStep(val);
@@ -39,51 +40,39 @@ const Admin = () => {
     switch(step) {
         case 1: 
         return(
-            <div className="privado">
-                <div className="menup">
-                    <input className="itMenuH" onClick={()=>handleStep(1)} type='button' /><br/>
-                    <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
-                    <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
-                    <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
-                </div>
-                <div className="conteudo">
-                    <div className="hConteudo">
-                        <div className="hContEsq">
+            <div>
+            <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
+                <div className="privado">
+                    <MenuPrivate 
+                        home={()=>handleStep(1)}
+                        docs={()=>handleStep(2)}
+                        views={()=>handleStep(3)} 
+                        products={()=>handleStep(4)} 
+                        news={()=>handleStep(5)} 
+                        users={()=>handleStep(6)}  />
+                    <div className="conteudo">                    
+                        <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
+                        <div style={{ marginTop:"20%" }}>
+                            <h1>Página Inicial</h1>
                         </div>
-                        <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
-                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        </div>
-                    </div>
-                    <div style={{ marginTop:"20%" }}>
-                        <h1>Página Inicial</h1>
                     </div>
                 </div>
             </div>
         );
         case 2: 
         return(
-            <div className="privado">
-                <div className="menup">
-                    <input className="itMenuH" onClick={()=>handleStep(1)} type='button' /><br/>
-                    <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
-                    <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
-                    <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
-                </div>
-                <div className="conteudo">
-                    <div className="hConteudo">
-                        <div className="hContEsq">
-                        </div>
-                        <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
-                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        </div>
-                    </div>
-                    <div style={{ marginTop:"20%" }}>
+            <div>
+                <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
+                <div className="privado">
+                    <MenuPrivate 
+                        home={()=>handleStep(1)}
+                        docs={()=>handleStep(2)}
+                        views={()=>handleStep(3)} 
+                        products={()=>handleStep(4)} 
+                        news={()=>handleStep(5)} 
+                        users={()=>handleStep(6)}  />
+                    <div className="conteudo">                        
+                        <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         <Reservas/>
                     </div>
                 </div>
@@ -91,52 +80,37 @@ const Admin = () => {
         );
         case 3: 
         return(
-            <div className="privado">
-                <div className="menup">
-                    <input className="itMenuH" onClick={()=>handleStep(1)} type='button' /><br/>
-                    <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
-                    <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
-                    <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
-                </div>
-                <div className="conteudo">
-                    <div className="hConteudo">
-                        <div className="hContEsq">
-                        </div>
-                        <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
+            <div>
+                <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
+                <div className="privado">
+                    <MenuPrivate 
+                        home={()=>handleStep(1)}
+                        docs={()=>handleStep(2)}
+                        views={()=>handleStep(3)} 
+                        products={()=>handleStep(4)} 
+                        news={()=>handleStep(5)} 
+                        users={()=>handleStep(6)}  />
+                        <div className="conteudo">                        
                             <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
+                            <MontarVitrine/>
                         </div>
-                    </div>
-                    <div style={{ marginTop:"20%" }}>
-                        <MontarVitrine/>
-                    </div>
                 </div>
             </div>
         );
         case 4: 
         return(
-            <div className="privado">
-                <div className="menup">
-                    <input className="itMenuH" onClick={()=>handleStep(1)} type='button' /><br/>
-                    <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
-                    <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
-                    <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
-                </div>
-                <div className="conteudo">
-                    <div className="hConteudo">
-                        <div className="hContEsq">
-                            <span>Gerenciar Produtos</span>
-                        </div>
-                        <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
-                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        </div>
-                    </div>
-                    <div >
+            <div>
+                <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
+                <div className="privado">
+                    <MenuPrivate 
+                        home={()=>handleStep(1)}
+                        docs={()=>handleStep(2)}
+                        views={()=>handleStep(3)} 
+                        products={()=>handleStep(4)} 
+                        news={()=>handleStep(5)} 
+                        users={()=>handleStep(6)}  />
+                    <div className="conteudo">                        
+                        <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         <GerenciarProdutos/>
                     </div>
                 </div>
@@ -144,26 +118,18 @@ const Admin = () => {
         );
         case 5: 
         return(
-            <div className="privado">
-                <div className="menup">
-                    <input className="itMenuH" onClick={()=>handleStep(1)} type='button' /><br/>
-                    <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
-                    <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
-                    <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
-                </div>
-                <div className="conteudo">
-                    <div className="hConteudo">
-                        <div className="hContEsq">
-                            <span>Gerenciar Notícias</span>
-                        </div>
-                        <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
-                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        </div>
-                    </div>
-                    <div>
+            <div>
+                <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
+                <div className="privado">
+                    <MenuPrivate 
+                        home={()=>handleStep(1)}
+                        docs={()=>handleStep(2)}
+                        views={()=>handleStep(3)} 
+                        products={()=>handleStep(4)} 
+                        news={()=>handleStep(5)} 
+                        users={()=>handleStep(6)}  />
+                    <div className="conteudo">
+                        <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         <GerenciarNoticias/>
                     </div>
                 </div>
@@ -171,26 +137,18 @@ const Admin = () => {
         );
         case 6: 
         return(
-            <div className="privado">
-                <div className="menup">
-                    <input className="itMenuH" onClick={()=>handleStep(1)} type='button' /><br/>
-                    <input className="itMenuR" onClick={()=>handleStep(2)} type='button' /><br/>
-                    <input className="itMenuMV" onClick={()=>handleStep(3)} type='button' /><br/>
-                    <input className="itMenuP" onClick={()=>handleStep(4)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(5)} type='button' /><br/>
-                    <input className="itMenuMA" onClick={()=>handleStep(6)} type='button' /><br/>
-                </div>
-                <div className="conteudo">
-                    <div className="hConteudo">
-                        <div className="hContEsq">
-                            <span>Gerenciar Usuários</span>
-                        </div>
-                        <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
-                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } /> 
-                        </div>
-                    </div>
-                    <div>
+            <div>
+                <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
+                <div className="privado">
+                    <MenuPrivate 
+                        home={()=>handleStep(1)}
+                        docs={()=>handleStep(2)}
+                        views={()=>handleStep(3)} 
+                        products={()=>handleStep(4)} 
+                        news={()=>handleStep(5)} 
+                        users={()=>handleStep(6)}  />
+                    <div className="conteudo">                        
+                        <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         <GerenciarUsuarios/>
                     </div>
                 </div>

@@ -1,10 +1,9 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Button, Dialog, DialogActions, DialogContent, Box, Grid, IconButton } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, Box, Grid, IconButton, Typography } from '@material-ui/core';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { MdAdd } from "react-icons/md";
-import CircularProgress from '@material-ui/core/CircularProgress';
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -166,14 +165,21 @@ const GerenciarUsuarios = () => {
         // eslint-disable-next-line
       }, []);
     return(
-        <div> 
-            <div className="noticias">
-                <div className="esquerda">
-                </div>
-                <div className="direita">
-                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset" }} startIcon={<MdAdd/>}>NOVO USUÁRIO</Button>
-                </div>
-            </div>
+        <div>
+            <Box p={1} display="flex" align="right">           
+                <Box p={1} style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
+                    <Typography variant="h6">
+                        Gerenciar Usuários
+                    </Typography>
+                </Box>
+                <Box p={1} display="flex" justifyContent="flex-end" style={{width:'50%', textAlign:'end'}}>      
+                    <Box p={1} style={{textAlign:'end'}}>
+                        <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset" }} startIcon={<MdAdd/>}>
+                            NOVO USUÁRIO
+                        </Button>
+                    </Box>       
+                </Box>
+            </Box> 
             <div className="noticias">
                     <Grid item xs={12}>
                         <div align="center">

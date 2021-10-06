@@ -76,12 +76,12 @@ async function obterNoticiasDestacadas() {
 }
 module.exports.obterNoticiasDestacadas = obterNoticiasDestacadas
 
-async function cadastrar(titulo, texto, id, imagem, destaque) {
+async function cadastrar(titulo, texto, id, imagem, destaque, autor) {
     try {        
         var data = new Date();
 
-        sql = `INSERT INTO noticias (not_titulo, not_texto, not_data, not_destaque, not_usu_id, not_imagem) VALUES (?,?,?,?,?,?)`
-        retornoBD = await mysql.execute(sql, [titulo, texto, data, destaque, id, imagem])
+        sql = `INSERT INTO noticias (not_titulo, not_texto, not_data, not_destaque, not_usu_id, not_imagem, not_autor) VALUES (?,?,?,?,?,?,?)`
+        retornoBD = await mysql.execute(sql, [titulo, texto, data, destaque, id, imagem, autor])
 
         if(retornoBD.affectedRows > 0){
             return result = { retorno: true, msg: "Noticia cadastrada com sucesso!"}

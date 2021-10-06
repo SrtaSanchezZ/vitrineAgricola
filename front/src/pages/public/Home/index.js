@@ -1,6 +1,6 @@
 //#region Dependências
 import React from "react";
-import Header from '../../../components/Header';
+import {Header} from '../../../components/Header';
 import Footer from '../../../components/Footer';
 //#endregion
 const Home = () => {

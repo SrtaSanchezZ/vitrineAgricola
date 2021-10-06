@@ -1,7 +1,7 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Button, Dialog, DialogActions, DialogContent, Box, Grid, IconButton } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, Box, Grid, IconButton, Typography } from '@material-ui/core';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { MdAdd } from "react-icons/md";
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -267,13 +267,20 @@ const GerenciarProdutos = () => {
       }, []);
     return(
         <div> 
-            <div className="noticias">
-                <div className="esquerda">
-                </div>
-                <div className="direita">
-                    <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset"  }} startIcon={<MdAdd/>}>NOVO PRODUTO</Button>
-                </div>
-            </div>
+            <Box p={1} display="flex" align="right">           
+                <Box p={1} style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
+                    <Typography variant="h6">
+                        Gerenciar Produtos
+                    </Typography>
+                </Box>
+                <Box p={1} display="flex" justifyContent="flex-end" style={{width:'50%', textAlign:'end'}}>      
+                    <Box p={1} style={{textAlign:'end'}}>
+                        <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset"  }} startIcon={<MdAdd/>}>
+                            NOVO PRODUTO
+                        </Button>
+                    </Box>       
+                </Box>
+            </Box> 
             <div className="noticias">
                 <Grid className="bxLista" item xs={12}>
                     {infos.map((item, index) => (

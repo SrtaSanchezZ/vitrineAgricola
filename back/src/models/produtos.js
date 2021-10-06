@@ -1,5 +1,4 @@
 const mysql = require('../services/mysql');
-const val = require('../services/utils');
 
 let result = "";
 let retornoBD = "";
@@ -39,6 +38,24 @@ async function obterProdutoPorId(id) {
     }
 }
 module.exports.obterProdutoPorId = obterProdutoPorId
+
+async function obterProdutoPorGrupoId(id) {
+    try {
+        sql = `SELECT * FROM produtos WHERE pro_grupo = ?`
+        retornoBD = await mysql.execute(sql, [id]);
+
+        if(retornoBD.length > 0){
+            return result = { retornoBD, retorno: true, msg: "Produtos do grupo com id " + id}
+        }else{
+            return { retorno: false, msg: "Não há produtos cadastrados com esse id de grupo."}
+        }
+        
+    } catch (e) {
+        console.log(e)
+        return { retorno: false, msg: "Não há produtos cadastrados com esse id de grupo.", Erro: e }
+    }
+}
+module.exports.obterProdutoPorGrupoId = obterProdutoPorGrupoId
 
 async function obterProdutoPorNome(nome) {
     try {

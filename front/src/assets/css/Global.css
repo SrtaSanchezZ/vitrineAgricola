@@ -1,3 +1,7 @@
+html, *{
+    margin: 0;
+    padding: 0;
+}
 @font-face{
     font-family: 'Roboto-Medium';
     src: url('../font/Roboto-Medium.ttf') format('truetype');
@@ -10,13 +14,13 @@
     text-align: center;
 }
 body{
-    margin: 0;
-    padding: 0;
-
     font-family: 'Roboto-Regular';
 }
+.content{
+    margin-bottom: 60px;
+    padding: 30px;
+}
 .header{
-    margin-top: -22px;
     display: flex;
     padding-bottom: 10px;
     padding-left: 30px;
@@ -63,11 +67,15 @@ body{
     text-align: right;
     cursor: pointer;
 }
-.footer{ 
-    margin-bottom: -20px;   
+.footer{    
     display: flex;
-    padding-bottom: 10px;
-    padding-left: 30px;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    position: fixed;
+    width: 100%;
+    padding-bottom: 5px;
+    padding-left: 15px;
     align-items: center;
 
     font-family: 'Roboto-Regular';
@@ -126,12 +134,12 @@ body{
 }
 .login{
     width: 100%;
-    height: 95vh;
+    height: 90vh;
     display: inline-flex;
 }
 .lbanner{
     width: 70%;
-    height: 95vh;
+    height: 90vh;
     background: url('../img/IMAGEM-LOGIN.png');
     background-size: 110%;
     background-color: #002829;
@@ -307,105 +315,6 @@ body{
     margin-bottom: -21px;
     background-color: #FCFCFC;
 }
-.menup{
-    height: 100%;
-    display: block;
-    padding-left: 15px;
-    padding-right: 15px;
-
-    color: #FFFFFF;
-    background: #3A5E4E 0% 0% no-repeat padding-box;
-    opacity: 1;
-}
-.itMenuH{
-    margin-top: 15px;
-    width: 24px;
-    height: 24px;
-    display: block;
-
-    background: url('../img/Icons/home_black_24dp.png');
-    background-size: 100%;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-}
-.itMenuR{
-    width: 24px;
-    height: 24px;
-    display: block;
-
-    background: url('../img/Icons/receipt_long_black_24dp.png');
-    background-size: 100%;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-}
-.itMenuP{
-    width: 24px;
-    height: 24px;
-    display: block;
-
-    background: url('../img/Icons/pig_white_24dp.png');
-    background-size: 100%;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-}
-.itMenuMV{
-    width: 24px;
-    height: 24px;
-    display: block;
-
-    background: url('../img/Icons/view_quilt_black_24dp.png');
-    background-size: 100%;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-}
-.itMenuDN{
-    width: 24px;
-    height: 24px;
-    display: block;
-
-    background: url('../img/Icons/post_star_black_24dp.png');
-    background-size: 100%;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-}
-.itMenuGN{
-    width: 24px;
-    height: 24px;
-    display: block;
-
-    background: url('../img/Icons/post_add_black_24dp.png');
-    background-size: 100%;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-}
-.itMenuMA{
-    width: 24px;
-    height: 24px;
-    display: block;
-
-    background: url('../img/Icons/manage_accounts_black_24dp.png');
-    background-size: 100%;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-}
-.itMenuS{
-    width: 24px;
-    height: 24px;
-    display: block;
-
-    background: url('../img/Icons/settings_black_24dp.png');
-    background-size: 100%;
-    background-repeat: no-repeat;
-    border: none;
-    cursor: pointer;
-}
 .perfilM{
     width: 49px;
     height: 49px;
@@ -421,7 +330,7 @@ body{
 .conteudo{
     width: 100%;
     display: block;
-    padding: 24px;
+    padding: 10px;
 
     text-align: center;
 }
@@ -468,7 +377,6 @@ body{
 .noticias{
     display:flex;
     width: 100%;
-    padding-top: 10px;
 
     font-size: 16px;
 }
@@ -582,4 +490,10 @@ body{
 }
 .bxLTexto::-webkit-scrollbar-thumb{
     background: transparent;
+}
+.search{
+    padding: 10px;
+    box-shadow: 3px 3px 3px #00000029;
+    opacity: 1;
+    width: 100%;
 }

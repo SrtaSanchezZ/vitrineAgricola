@@ -19,9 +19,56 @@ exports.obter = async (req, res, next) => {
                         nome: pro.pro_nome,
                         descricao: pro.pro_descricao,
                         grupo: pro.pro_grupo,
-                        imagem: pro.pro_imagem,
-                        valor: pro.pro_valor,
-                        quantidade: pro.pro_quantidade                    
+                        imagem: pro.pro_imagem,                   
+                    }
+                })
+            }
+
+            return res
+                .status(200)
+                .json({ 
+                    msg: result.msg,
+                    retorno: true,
+                    response 
+                })           
+        }else{
+            return res
+                    .status(400)
+                    .json({  
+                        msg: result.msg,
+                        retorno: false
+                     })
+        }
+    }
+    catch (e) {
+        return res
+                .status(400)
+                .json({ 
+                    msg: "Falha de conexão, revise seu acesso a internet.",
+                    retorno: false, 
+                    response: e 
+                })
+    }
+}
+//GET rota => /produtos/:id
+//obtem todos os produtos segundo o id de certo grupo
+exports.obterPorGrupoId = async (req, res, next) => {
+    try {
+
+        const id = req.params.id,
+
+        result = await proModel.obterProdutoPorGrupoId(id);
+
+        if (result.retorno) {
+
+            response = {
+                produtos: result.retornoBD.map(pro => {
+                    return{        
+                        id: pro.pro_id,
+                        nome: pro.pro_nome,
+                        descricao: pro.pro_descricao,
+                        grupo: pro.pro_grupo,
+                        imagem: pro.pro_imagem,                  
                     }
                 })
             }

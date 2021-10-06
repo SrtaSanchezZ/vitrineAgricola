@@ -15,6 +15,7 @@ app.use(require('./routes/noticias'));
 app.use(require('./routes/produtos'));
 app.use(require('./routes/usuarios'));
 app.use(require('./routes/acesso'));
+app.use(require('./routes/grupos'));
 
 //quando não encontrar nenhuma rota vai entrar aqui
 app.use((req, res, next) => {

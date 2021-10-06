@@ -88,6 +88,25 @@ function email(email) {
 }
 module.exports.email = email
 
+function grupo(nome, email, perfil) {
+    if(nome.length > 0 && nome.length < 80){
+        if(email.length < 81 && email.length > 5 && rgxEmail.test(email)){
+            if(perfil == 1 || perfil == 3){
+                result = { msg: "Dados validados com sucesso!", retorno: true }
+            }else{
+                result = { msg: "Você não possui permissão para interagir com Produtos.", retorno: false }                    
+            } 
+        }else{
+            result = { msg: "E-mail inválido", retorno: false }                    
+        }                  
+    }else{
+        result = { msg: "Nome inválido", retorno: false }
+    }
+
+    return result
+}
+module.exports.grupo = grupo
+
 function reSenha(senha, token) {
     if(senha.length > 0 && senha.length < 9){
         if(token.length > 0 && token.length < 500){

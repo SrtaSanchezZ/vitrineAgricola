@@ -3,7 +3,7 @@ import React, { useState} from "react";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { Box, TextField, Button } from '@material-ui/core';
-import Header from '../../../components/Header';
+import {Header} from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import { DialogAlert, DialogMain } from '../../../components/Dialog';
 //#endregion
@@ -218,7 +218,7 @@ const Login = () => {
                 info={(<Box>
                         <p className="Texto">
                             Para prosseguir com a redefinição da sua senha, por favor informe seu email.
-                        </p>
+                        </p><br/>
                         <TextField 
                             className={inpE}
                             type="email" 

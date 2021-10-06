@@ -23,6 +23,7 @@ const GerenciarNoticias = () => {
     const [alerta, setAlerta] = useState("");
     const [titulo, setTitulo] = useState("");
     const [texto, setTexto] = useState("");
+    const [autor, setAutor] = useState("");
     const [usuario, setUsuario] = useState("");
     const [data, setData] = useState("");
     const [imagem, setImagem] = useState([]);
@@ -35,12 +36,13 @@ const GerenciarNoticias = () => {
 
     const ArrNot = (arr) =>
       arr.map((item) => ({ id: item.id, titulo: item.titulo, texto: item.texto, data: item.data,
-                           usuario: item.usuario, imagem: item.imagem, destaque: item.destaque }));
+                           usuario: item.usuario, imagem: item.imagem, destaque: item.destaque, autor: item.autor }));
     
     var noticia = {
         titulo: "",
         texto: "",
         email: "",
+        autor: "",
         perfil: "",
         imagem: []
     }
@@ -64,19 +66,21 @@ const GerenciarNoticias = () => {
 
       setTitulo("");
       setTexto("");
+      setAutor("");
       setImagem([]);
     };
     const handleClose = () => {
       setOpen(false);
       setChecked([]);
     };
-    const handleClickOpenV = (id, titulo, texto, imagem, usuario, data) => {
+    const handleClickOpenV = (id, titulo, texto, imagem, usuario, data, autor) => {
         setId(id);
         setTitulo(titulo);
         setTexto(texto);
         setUsuario(usuario);
         setImg(imagem);
         setData(data);
+        setAutor(autor);
     };
     const handleClickOpenE = (titulo, texto) => {
       setOpenE(true);
@@ -98,7 +102,7 @@ const GerenciarNoticias = () => {
 
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
-        handleClickOpenV(value.id, value.titulo, value.texto, value.imagem, value.usuario, value.data);
+        handleClickOpenV(value.id, value.titulo, value.texto, value.imagem, value.usuario, value.data, value.autor);
     
         if (currentIndex === -1) {
           newChecked.push(value);
@@ -146,14 +150,14 @@ const GerenciarNoticias = () => {
                 noticia = {
                     titulo: titulo,
                     texto: texto,
-                    email: email,
-                    perfil: perfil,
+                    autor: autor,
                     imagem: imagem[0]
                   }
                 
                 const formData = new FormData();
                   formData.append('perfil',perfil);
                   formData.append('email',email);
+                  formData.append('autor',noticia.autor);
                   formData.append('titulo',noticia.titulo);
                   formData.append('texto',noticia.texto);
                   formData.append('file',noticia.imagem);
@@ -185,12 +189,14 @@ const GerenciarNoticias = () => {
                 noticia = {
                     titulo: titulo,
                     texto: texto,
+                    autor: autor,
                     imagem: semimg
                   }
                 
                   const formData = new FormData();
                     formData.append('perfil',perfil);
                     formData.append('email',email);
+                    formData.append('autor',noticia.autor);
                     formData.append('titulo',noticia.titulo);
                     formData.append('texto',noticia.texto);
                     formData.append('file',noticia.imagem);
@@ -335,34 +341,33 @@ const GerenciarNoticias = () => {
     //#endregion
     return(
         <div> 
-            <div className="noticias">
-                <div className="esquerda">
-                </div>
-                <div className="direita">
-                    <Box display="flex" justifyContent="flex-end" m={1} p={1}>              
-                        <Box p={1}>  
-                            <Button 
-                                onClick={()=>handleHighlight()} 
-                                variante="contained" 
-                                className="btnNovo"
-                                startIcon={<VscStarEmpty/>}
-                                style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset"  }}> 
-                                DESTACAR
-                            </Button>
-                        </Box>
-                        <Box p={1}>
-                            <Button 
-                                onClick={()=>handleClickOpen()} 
-                                variante="contained" 
-                                className="btnNovo"
-                                startIcon={<MdAdd/>}
-                                style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset"  }}> 
-                                NOVA NOTÍCIA
-                            </Button>
-                        </Box>       
-                    </Box>
-                </div>
-            </div>
+            <Box p={1} display="flex" align="right">           
+                <Box p={1} style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
+                    <Typography variant="h6">
+                        Gerenciar Notícias
+                    </Typography>
+                </Box>
+                <Box p={1} display="flex" justifyContent="flex-end" style={{width:'50%', textAlign:'end'}}>      
+                    <Box p={1} style={{textAlign:'end'}}>
+                        <Button 
+                            onClick={()=>handleHighlight()} 
+                            variante="contained" 
+                            className="btnNovo"
+                            startIcon={<VscStarEmpty/>}
+                            style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", marginRight:'20px'  }}> 
+                            DESTACAR
+                        </Button>
+                        <Button 
+                            onClick={()=>handleClickOpen()} 
+                            variante="contained" 
+                            className="btnNovo"
+                            startIcon={<MdAdd/>}
+                            style={{ backgroundColor:"#2E8E61", color:"#FFFFFF" }}> 
+                            NOVA NOTÍCIA
+                        </Button>
+                    </Box>       
+                </Box>
+            </Box>
             <div className="noticias">
                 <div className="esquerdaN">
                     <Card>
@@ -413,7 +418,7 @@ const GerenciarNoticias = () => {
                                                 <i className="material-icons">Imagem (até 512KB - 600 x 600) <br/> Formatos (png, jpg ou jpeg)</i>
                                             </label>
                                         </Box>            
-                                        <Box p={1} style={{ width:"60%", textAlign:'center' }} >
+                                        <Box p={1} style={{ width:"55%", textAlign:'center' }} >
                                             <TextField 
                                                 className="inp"
                                                 type="text" 
@@ -423,12 +428,22 @@ const GerenciarNoticias = () => {
                                                 minLength="6"
                                                 label="Título (min 6 - max 75)"
                                                 variant="outlined"
+                                            /><br/><br/><br/>
+                                            <TextField 
+                                                className="inp"
+                                                type="text" 
+                                                onChange={handleChange(setAutor)}
+                                                value={autor}
+                                                maxLength="75"
+                                                minLength="6"
+                                                label="Autor(a) (min 6 - max 75)"
+                                                variant="outlined"
                                             />
                                         </Box>            
-                                        <Box p={1} style={{ width:"10%" }} >
-                                            <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
+                                        <Box p={1} style={{ width:"15%" }} >
+                                            <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
                                                 <IconButton size="small" style={{ padding:5, marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleSubmit()}>
-                                                    <AiFillSave style={{ width:25, height:25 }} />
+                                                    <AiFillSave style={{ width:30, height:30 }} />
                                                 </IconButton>
                                                 <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClose()} >
                                                     <AiOutlineCloseCircle style={{ width:30, height:30 }} />
@@ -454,12 +469,15 @@ const GerenciarNoticias = () => {
                                             <Box p={1} style={{ width:"30%" }} >
                                                 <div className="result">{renderPhotos(img)}</div>
                                             </Box>            
-                                            <Box p={1} style={{ width:"60%", textAlign:'center' }} >
+                                            <Box p={1} style={{ width:"55%", textAlign:'center' }} >
                                                 <Typography variant="subtitle1" id={id}>
                                                     {titulo}
+                                                </Typography><br/>
+                                                <Typography variant="subtitle1" id={id}>
+                                                    {autor}
                                                 </Typography>
                                             </Box>            
-                                            <Box p={1} style={{ width:"10%" }} >
+                                            <Box p={1} style={{ width:"15%" }} >
                                                 <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
                                                     <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(titulo, texto)}>
                                                         <EditIcon />
@@ -485,7 +503,7 @@ const GerenciarNoticias = () => {
                                             <Box p={1} style={{ width:"30%" }} >
                                                 <div className="result">{renderPhotos(img)}</div>
                                             </Box>            
-                                            <Box p={1} style={{ width:"60%", textAlign:'center' }} >
+                                            <Box p={1} style={{ width:"55%", textAlign:'center' }} >
                                                 <TextField 
                                                     className="inp"
                                                     type="text" 
@@ -495,12 +513,15 @@ const GerenciarNoticias = () => {
                                                     minLength="6"
                                                     label="Título (min 6 - max 75)"
                                                     variant="outlined"
-                                                />
+                                                /><br/><br/><br/>
+                                                <Typography variant="subtitle1" id={id}>
+                                                    {autor}
+                                                </Typography>
                                             </Box>            
-                                            <Box p={1} style={{ width:"10%" }} >
-                                                <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
+                                            <Box p={1} style={{ width:"15%" }} >
+                                                <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
                                                     <IconButton size="small" style={{ padding:5, marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleAlter()}>
-                                                        <AiFillSave style={{ width:25, height:25 }} />
+                                                        <AiFillSave style={{ width:30, height:30 }} />
                                                     </IconButton>
                                                     <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleCloseE()} >
                                                         <AiOutlineCloseCircle style={{ width:30, height:30 }} />

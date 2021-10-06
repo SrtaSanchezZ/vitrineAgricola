@@ -22,7 +22,8 @@ exports.obter = async (req, res, next) => {
                         imagem: not.not_imagem,
                         data: not.not_data,
                         destaque: not.not_destaque,
-                        usuario: not.not_usu_id
+                        usuario: not.not_usu_id,
+                        autor: not.not_autor
                     }
                 })
             }
@@ -61,6 +62,7 @@ exports.cadastrar = async (req, res, next) => {
             titulo:"",
             texto:"",
             email:"",
+            autor:"",
             perfil:"",
             imagem:""
         }
@@ -81,6 +83,7 @@ exports.cadastrar = async (req, res, next) => {
             titulo: req.body.titulo,
             texto: req.body.texto,
             email: req.body.email,
+            autor: req.body.autor,
             perfil: perfil,
             imagem: '/files/' + req.file.filename
         }
@@ -102,7 +105,8 @@ exports.cadastrar = async (req, res, next) => {
                     var noticiaC = {
                         titulo: "",
                         texto: "",
-                        id: "",
+                        id: "", 
+                        autor: "",
                         imagem: "",
                         destaque: 0
                     }  
@@ -110,7 +114,8 @@ exports.cadastrar = async (req, res, next) => {
                     noticiaC = {
                         titulo: noticia.titulo,
                         texto: noticia.texto,
-                        id: result.retornoBD[0].usu_id,
+                        id: result.retornoBD[0].usu_id, 
+                        autor: noticia.autor,
                         imagem: noticia.imagem,
                         destaque: 1
                     }  
@@ -120,7 +125,7 @@ exports.cadastrar = async (req, res, next) => {
 
                     if(!result.retorno){
                         result = "";                        
-                        result = await notModel.cadastrar(noticiaC.titulo, noticiaC.texto, noticiaC.id, noticiaC.imagem, noticiaC.destaque);
+                        result = await notModel.cadastrar(noticiaC.titulo, noticiaC.texo, noticiaC.id, noticiaC.imagem, noticiaC.destaque, noticiaC.autor);
 
                         if(result.retorno){
 
@@ -144,7 +149,7 @@ exports.cadastrar = async (req, res, next) => {
                         } 
 
                         result = "";                        
-                        result = await notModel.cadastrar(noticiaC.titulo, noticiaC.texto, noticiaC.id, noticiaC.imagem, noticiaC.destaque);
+                        result = await notModel.cadastrar(noticiaC.titulo, noticiaC.texto, noticiaC.id, noticiaC.imagem, noticiaC.destaque, noticiaC.autor);
 
                         if(result.retorno){
 
