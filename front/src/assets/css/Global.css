@@ -17,8 +17,7 @@ body{
     font-family: 'Roboto-Regular';
 }
 .content{
-    margin-bottom: 60px;
-    padding: 30px;
+    padding: 20px;
 }
 .header{
     display: flex;
@@ -242,16 +241,6 @@ body{
     align-items: center;
     font-size: 13px;
 }
-.logoNSA{
-    width: 130px;
-    height: 110px;
-    margin-bottom: 30px;
-
-    background: url('../img/NSA.jpeg');
-    background-repeat: no-repeat;
-    background-size: 100%;
-    border: none;
-}
 .btnNSA{
     width: 50%;
     height: 50px;
@@ -264,16 +253,6 @@ body{
     letter-spacing: 1.25px;
     color: #FFFFFF;
     cursor: pointer;
-}
-.logoCoop{
-    width: 130px;
-    height: 110px;
-    margin-bottom: 30px;
-
-    background: url('../img/logo-colegio.png');
-    background-repeat: no-repeat;
-    background-size: 100%;
-    border: none;
 }
 .esconde{
     display: none;

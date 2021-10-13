@@ -9,7 +9,7 @@ import usuario from '../../assets/img/Icons/manage_accounts_black_24dp.png';
 
 export function MenuPrivate(props){
     return(
-        <Box m={1} bgcolor="#FFFFFF" color="#333333" style={{ opacity: "1" }}>                
+        <Box m={1} bgcolor="#FFFFFF" color="#333333" style={{ opacity: "1", margin:0 }}>                
             <Box p={1} onClick={props.home} style={{ cursor:"pointer" }} >
                 <Typography style={{ textAlign:'center' }}>
                     <img src={inicio} style={{ width:'24px', height:'auto' }} />

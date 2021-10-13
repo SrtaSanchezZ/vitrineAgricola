@@ -1,6 +1,6 @@
 import React from 'react';
 import { CgLogIn } from "react-icons/cg";
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography, Grid } from '@material-ui/core';
 import logo from '../../assets/img/logo-ETEC-neg.png';
 export const Header = () => {
     return(
@@ -62,9 +62,9 @@ export const Header = () => {
                 </Box>
             </Box>               
             <Box display="flex" justifyContent="flex-end" p={1} style={{ width:'20%', textAlign:'end', cursor:"pointer" }} >
-                <CgLogIn style={{width:"20px", height:"auto", marginRight:"10px", marginTop:"5px", marginBottom:"-6px"}} />  
+                <CgLogIn style={{width:"20px", height:"auto", marginRight:"10px", marginTop:"5px"}} />  
                 <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/acesso" rel="Login" alt="Login">                    
-                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:"22px"}}>
+                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:"22px", marginRight:'24px'}}>
                         LOGIN
                     </Typography>
                 </a>
@@ -74,30 +74,30 @@ export const Header = () => {
 }
 export function HeaderAdm(props){
     return(
-        <Box display="flex" bgcolor="#2E8E61" color="#ffffff"  >                
-            <Box p={1} style={{ width:'10%' }} >
-                <Typography style={{ textAlign:'center' }}>
-                    <img src={logo} style={{ width:'88px', height:'auto', marginTop:'-15px' }} />
-                </Typography>
-            </Box>                   
-            <Box p={1} style={{ width:'70%' }} >
-                <Typography variant="h6" style={{ textAlign:'left', marginTop:'10px' }}>
-                    Painel Administrativo
-                </Typography>
-            </Box>               
-            <Box p={1} display="flex" onClick={props.diag} style={{ width:'20%', textAlign:'end', cursor:"pointer" }} >  
-                <Box p={1} style={{ width:'10%' }}></Box>            
-                <Box p={1} style={{ width:'20%' }} >
-                    <Typography style={{ textAlign:'left' }}>
-                        <img src={props.img} style={{ width:'49px', height:'49px'}} /> 
+        <Box display="flex" bgcolor="#2E8E61" color="#ffffff" style={{ padding:'10px'}}>
+            <Grid container spacing={2}>
+                <Grid item xs={1}>
+                    <Typography style={{ textAlign:'center' }}>
+                        <img src={logo} style={{ width:'88px', height:'auto', marginTop:'-15px' }} />
                     </Typography>
-                </Box>              
-                <Box p={1} style={{ width:'40%'}} >
-                    <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}>
-                        Perfil {props.perfil}
+                </Grid>
+                <Grid item xs={9}>
+                    <Typography variant="h6" style={{ textAlign:'left', marginTop:'10px' }}>
+                        Painel Administrativo
                     </Typography>
-                </Box>
-            </Box>  
+                </Grid>
+                <Grid item xs={2} container spacing={4} onClick={props.diag} style={{ cursor:'pointer'}}>
+                    <Grid item xs={3}></Grid>
+                    <Grid item xs={3}>
+                        <img src={props.img} style={{ width:'49px', height:'49px', marginTop:'5px'}} /> 
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Typography variant="subtitle2" style={{ textAlign:'left', textTransform:"capitalize", marginTop:'20px' }}>
+                            Perfil {props.perfil}
+                        </Typography>                        
+                    </Grid>
+                </Grid>
+            </Grid>
         </Box>
    );
 }

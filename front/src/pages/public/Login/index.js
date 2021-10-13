@@ -6,6 +6,8 @@ import { Box, TextField, Button } from '@material-ui/core';
 import {Header} from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import { DialogAlert, DialogMain } from '../../../components/Dialog';
+import NSA from '../../../assets/img/NSA.jpeg';
+import Coop from '../../../assets/img/logo-colegio.png';
 //#endregion
 const Login = () => {
     //#region Variáveis e Variáveis de Estado
@@ -151,7 +153,7 @@ const Login = () => {
                         </div>
                     </div>
                     <div className={most}>
-                        <input className="logoNSA" />
+                        <img src={NSA} style={{ width:"130px", height:"auto"}} alt="NSA" />
                         <p style={{ paddingBottom:'10%' }}>
                             NSA (Novo Sistema Acadêmico) é um sistema cadêmico desenvolvido para facilitar o trabalho da área acadêmica das Etecs do Centro Paula Souza. <br/><br/>
                             Para acessar clique no botão abaixo.
@@ -168,8 +170,8 @@ const Login = () => {
                             </Button>
                         </a>
                     </div> 
-                    <div className={esco}>
-                        <input className="logoCoop" />
+                    <div className={esco}>                   
+                        <img src={Coop} style={{ width:"130px", height:"auto"}} alt="Cooperativa Escola" />
                         <p>
                             Área restrita para acesso administrativo
                         </p><br/>

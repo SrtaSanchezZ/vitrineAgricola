@@ -8,6 +8,7 @@ import { autoPlay } from 'react-swipeable-views-utils';
 import {Header} from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import banner from '../../../assets/img/IMAGEM-LOGIN.png';
+import seta from '../../../assets/img/Icons/chevron_right.png';
 import {DialogReadNew} from '../../../components/Dialog';
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 //#endregion
@@ -99,7 +100,7 @@ const News = () => {
             <Box sx={{ flexGrow: 1 }}  className="content">
                 <Grid container spacing={2}>
                     <Grid item xs={8}>
-                        <h4>Notícias</h4>
+                        <h5>Notícias</h5>
                     </Grid>
                     <Grid item xs={4}>
                         <TextField
@@ -127,18 +128,21 @@ const News = () => {
                                         <div style={Object.assign({}, styles.slide, styles.slide2) } 
                                         onClick={() => handleOpen(value.id, value.titulo, value.texto, value.autor, value.data, value.imagem)}>
                                             <div style={{ backgroundImage: `url(${"http://localhost:3001" + value.imagem})`, 
-                                                        backgroundRepeat: 'no-repeat', minHeight: 480, backgroundAttachment: 'fixed', 
-                                                        backgroundSize: '100% 100%'  
+                                                        backgroundRepeat: 'no-repeat', minHeight:"400px", maxHeight:"450px", backgroundSize: '100%'  
                                                 }}>
-                                            </div><br/>
-                                            {value.titulo}
+                                            </div>
+                                            <Box bgcolor="#00000099" color="#ffffff" style={{ marginTop:'-62px', padding:'16px'}}>
+                                                <Typography variant="h6" >
+                                                    {value.titulo}
+                                                </Typography>
+                                            </Box>
                                         </div>
                                     )  
                                 })
                             ):(
                                 <div style={Object.assign({}, styles.slide, styles.slide2) }>
                                     <div style={{ backgroundImage: `url(${banner})`, backgroundRepeat: 'no-repeat', 
-                                                height: 480, backgroundAttachment: 'fixed', backgroundSize: 'cover'  
+                                                height: 430, backgroundAttachment: 'fixed', backgroundSize: 'cover'  
                                     }}>
                                     </div>
                                         <a href="https://www.vestibulinhoetec.com.br/home/" rel="noreferrer" target="_blank" alt="Vestibulinho">
@@ -156,8 +160,8 @@ const News = () => {
                             <List container wrap="nowrap" style={{ width: "100%", height: "55vh", backgroundColor: "#ffffff", overflow: 'auto', paddingTop:'50px' }} >
                             {infos.map((value) => {
                                 return (
-                                    <ListItem key={value} role="listitem" button sx={{  height: 180, flexGrow: 1}} >
-                                        <Box className="content" sx={{  height: 100, flexGrow: 1, overflow: 'hidden', px: 1  }} 
+                                    <ListItem key={value} role="listitem" button sx={{  height: 150, flexGrow: 1}} >
+                                        <Box className="content" sx={{  height: 95, overflow: 'hidden', px: 1  }} 
                                             onClick={() => handleOpen(value.id, value.titulo, value.texto, value.autor, value.data, value.imagem)}>
                                             <Grid container spacing={2} >
                                                 <Grid item xs={6}>
@@ -165,8 +169,8 @@ const News = () => {
                                                         {(value.data.slice(0,10).split('-').reverse().join()).replace(/,/g,'/')}
                                                     </Typography>
                                                 </Grid>
-                                                <Grid item xs={6}>
-                                                    <Typography variant="body2" gutterBottom style={{ textAlign:'right'}}>
+                                                <Grid item xs={6} style={{ paddingRight:'24px' }}>
+                                                    <Typography variant="body2" gutterBottom style={{ textAlign:'right' }}>
                                                         {value.autor}
                                                     </Typography>
                                                 </Grid>
@@ -176,12 +180,12 @@ const News = () => {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={2} >
-                                                    <Typography variant="subtitle1" gutterBottom style={{ textAlign:'right'}}>
-                                                        { ">" }
+                                                    <Typography variant="subtitle1" gutterBottom style={{ textAlign:'right', marginRight:'-10px'}}>
+                                                        <img src={seta} alt="leitura" style={{ width:'24px', height:'auto' }} />
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={12} wrap="nowrap">
-                                                    <Box sx={{ overflow: 'hidden', px: 1 }}>
+                                                    <Box xs={{ overflow: 'hidden', px: 1 }}>
                                                         <Typography nowrap variant="body2">
                                                             {value.texto}
                                                         </Typography>
