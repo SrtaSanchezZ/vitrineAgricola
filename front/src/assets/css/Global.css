@@ -160,15 +160,6 @@ body{
     opacity: 1;
     text-align: center;
 }
-.limgVest{
-    width: 70%;
-    height: 45%;
-    
-    background: url('../img/Vestibulinho.png');
-    background-repeat: no-repeat;
-    background-size: 100%;
-    border: none;
-}
 .btnVest{
     width: 70%;
     height: 50px;

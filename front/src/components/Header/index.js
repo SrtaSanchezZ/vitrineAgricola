@@ -4,7 +4,7 @@ import { Box, Typography, Grid } from '@material-ui/core';
 import logo from '../../assets/img/logo-ETEC-neg.png';
 export const Header = () => {
     return(
-        <Box display="flex" bgcolor="#2E8E61" color="#ffffff"  >                
+        <Box display="flex" bgcolor="#3A5E4E" color="#ffffff"  >                
             <Box p={1} style={{ width:'20%' }} >
                 <Typography style={{ textAlign:'start', paddingLeft:'10%' }}>
                     <img src={logo} style={{ width:'88px', height:'auto', marginTop:'-15px', marginBottom:'-15px' }} />
@@ -74,7 +74,7 @@ export const Header = () => {
 }
 export function HeaderAdm(props){
     return(
-        <Box display="flex" bgcolor="#2E8E61" color="#ffffff" style={{ padding:'10px'}}>
+        <Box display="flex" bgcolor="#3A5E4E" color="#ffffff" style={{ padding:'10px'}}>
             <Grid container spacing={2}>
                 <Grid item xs={1}>
                     <Typography style={{ textAlign:'center' }}>

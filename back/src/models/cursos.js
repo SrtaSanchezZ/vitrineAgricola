@@ -27,7 +27,7 @@ async function obterArea() {
         retornoBD = await mysql.execute(sql);
 
         if(retornoBD.length > 0){
-            return result = { retornoBD, retorno: true, msg: "Área com id " + id}
+            return result = { retornoBD, retorno: true, msg: "Areas cadastradas"}
         }else{
             return { retorno: false, msg: "Não há area cadastrada com esse id."}
         }
@@ -45,7 +45,7 @@ async function obterCursos() {
         retornoBD = await mysql.execute(sql);
 
         if(retornoBD.length > 0){
-            return result = { retornoBD, retorno: true, msg: "Curso com essa área id " + id}
+            return result = { retornoBD, retorno: true, msg: "Cursos cadastrados"}
         }else{
             return { retorno: false, msg: "Não há cursos cadastrados com essa área id."}
         }

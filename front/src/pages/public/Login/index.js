@@ -8,6 +8,7 @@ import Footer from '../../../components/Footer';
 import { DialogAlert, DialogMain } from '../../../components/Dialog';
 import NSA from '../../../assets/img/NSA.jpeg';
 import Coop from '../../../assets/img/logo-colegio.png';
+import Vest from '../../../assets/img/Vestibulinho.png';
 //#endregion
 const Login = () => {
     //#region Variáveis e Variáveis de Estado
@@ -133,7 +134,7 @@ const Login = () => {
             <div className="login">
                 <div className="lbanner">
                     <div className="lBoxVest">
-                        <input className="limgVest" />
+                        <img src={Vest} style={{ width: '70%', height:'auto' }} alt="Vestibulinho" />
                         <a href="https://www.vestibulinhoetec.com.br/home/" rel="noreferrer" target="_blank" alt="Vestibulinho">
                             <input className="btnVest" type='button' value="INSCREVA-SE" />
                         </a>
