@@ -47,12 +47,30 @@ async function obterCursos() {
         if(retornoBD.length > 0){
             return result = { retornoBD, retorno: true, msg: "Cursos cadastrados"}
         }else{
-            return { retorno: false, msg: "Não há cursos cadastrados com essa área id."}
+            return { retorno: false, msg: "Não há cursos cadastrados."}
         }
         
     } catch (e) {
         console.log(e)
-        return { retorno: false, msg: "Não há cursos cadastrados com essa área id.", Erro: e }
+        return { retorno: false, msg: "Não há cursos cadastrados.", Erro: e }
     }
 }
 module.exports.obterCursos = obterCursos
+
+async function obterCursoId(id) {
+    try {
+        sql = `SELECT * FROM cursos WHERE cur_id = ?`
+        retornoBD = await mysql.execute(sql, id);
+
+        if(retornoBD.length > 0){
+            return result = { retornoBD, retorno: true, msg: "Curso cadastrado"}
+        }else{
+            return { retorno: false, msg: "Não há curso cadastrado com esse id."}
+        }
+        
+    } catch (e) {
+        console.log(e)
+        return { retorno: false, msg: "Não há cursos cadastrados.", Erro: e }
+    }
+}
+module.exports.obterCursoId = obterCursoId

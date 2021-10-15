@@ -7,6 +7,7 @@ import About from './pages/public/About';
 import Business from './pages/public/Business';
 import Contact from './pages/public/Contact';
 import Courses from './pages/public/Courses';
+import CourseReading from './pages/public/Courses/CourseReading';
 import News from './pages/public/News';
 import Showcase from './pages/public/Showcase';
 import Admin from './pages/private/Manager/Admin';
@@ -32,6 +33,7 @@ export default function Routes(){
                 <Route component={Business} exact path="/gestao" />
                 <Route component={Contact} exact path="/contato" />
                 <Route component={Courses} exact path="/cursos" />
+                <Route component={CourseReading} exact path="/cursos/:id" />
                 <Route component={News} exact path="/noticias" />
                 <Route component={Showcase} exact path="/vitrineagricola" />
                 <Route component={Login} exact path="/acesso" />

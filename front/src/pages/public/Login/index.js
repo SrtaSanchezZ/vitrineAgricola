@@ -156,7 +156,7 @@ const Login = () => {
                     <div className={most}>
                         <img src={NSA} style={{ width:"130px", height:"auto"}} alt="NSA" />
                         <p style={{ paddingBottom:'10%' }}>
-                            NSA (Novo Sistema Acadêmico) é um sistema cadêmico desenvolvido para facilitar o trabalho da área acadêmica das Etecs do Centro Paula Souza. <br/><br/>
+                            NSA (Novo Sistema Acadêmico) é um sistema desenvolvido para facilitar o trabalho da área acadêmica das Etecs do Centro Paula Souza. <br/><br/>
                             Para acessar clique no botão abaixo.
                         </p>
                         <a href="https://nsa.cps.sp.gov.br/" rel="noreferrer" target="_blank" alt="NSA" style={{ textDecoration:'none' }}>

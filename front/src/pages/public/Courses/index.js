@@ -1,8 +1,9 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import { styled } from '@material-ui/styles';
-import { Box, Button, Card, CardContent, CardMedia, CardActionArea, CardActions, Grid, Typography, List } from '@material-ui/core';
+import { Box, Button, Card, CardContent, CardMedia, Grid, Typography, List } from '@material-ui/core';
 import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
@@ -11,29 +12,14 @@ import { Header } from '../../../components/Header';
 import Footer from '../../../components/Footer';
 //#endregion
 const Courses = () => {
+    var back = "localhost:3001";
+    var history = useHistory();
+
     const [nivel, setNivel] = useState([]);
     const [area, setArea] = useState([]);
     const [cursos, setCursos] = useState([]);
     const [nivelId, setNivelId] = useState(1);
     const [nivelNome, setNivelNome] = useState("Ensino Médio");
-    const [areaId, setAreaId] = useState("");
-    const [areaNome, setAreaNome] = useState("");
-    const [areaNivel, setAreaNivel] = useState("");
-    const [cursosId, setCursosId] = useState("");
-    const [cursosNome, setCursosNome] = useState("");
-    const [cursosCoordenacao, setCursosCoordenacao] = useState("");
-    const [cursosEmail, setCursosEmail] = useState("");
-    const [cursosEixo, setCursosEixo] = useState("");
-    const [cursosObj, setCursosObj] = useState("");
-    const [cursosPrincipal, setCursosPrincipal] = useState("");
-    const [cursosMercado, setCursosMercado] = useState("");
-    const [cursosMod1, setCursosMod1] = useState("");
-    const [cursosMod2, setCursosMod2] = useState("");
-    const [cursosMod3, setCursosMod3] = useState("");
-    const [cursosMod4, setCursosMod4] = useState("");
-    const [cursosDuracao, setCursosDuracao] = useState("");
-    const [cursosImg, setCursosImg] = useState("");
-    const [cursosArea, setCursosArea] = useState("");
     const [expanded, setExpanded] = useState('panel1');
 
     const ArrNivel = (arr) =>
@@ -45,10 +31,6 @@ const Courses = () => {
             email: item.email, eixo: item.eixo, obj: item.obj, principal: item.principal,                
             mercado: item.mercado, mod1: item.mod1, mod2: item.mod2, mod3: item.mod3,                
             mod4: item.mod4, duracao: item.duracao, img: item.img, area: item.area }));
-
-    var msg = "";
-    var back = "localhost:3001";
-
     
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -87,7 +69,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(() => ({
           .then((res) => {              
             setNivel(ArrNivel(res.data.response.nivel));
           }).catch((res) =>{    
-            msg = "Não foi possível localizar eixos de ensino.";  
+            var msg = "Não foi possível localizar eixos de ensino.";  
           })  
     };
     const handleLoadArea = () =>{
@@ -96,7 +78,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(() => ({
           .then((res) => {              
             setArea(ArrArea(res.data.response.area));
           }).catch((res) =>{    
-            msg = "Não foi possível localizar áreas de ensino.";  
+            var msg = "Não foi possível localizar áreas de ensino.";  
           })  
     };
     const handleLoadCursos = () =>{
@@ -105,7 +87,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(() => ({
           .then((res) => {              
             setCursos(ArrCursos(res.data.response.cursos));
           }).catch((res) =>{    
-            msg = "Não foi possível localizar cursos.";  
+            var msg = "Não foi possível localizar cursos.";  
           })  
     };
     const handleChange = (panel) => (event, newExpanded) => {
@@ -115,6 +97,9 @@ const AccordionDetails = styled(MuiAccordionDetails)(() => ({
       setNivelId(id);
       setNivelNome(nome);
     };
+    const handleRedirect = (id) =>{
+      history.push('/cursos/' + id);
+    }
     useEffect(() => {
       handleLoadNivel();
       handleLoadArea();
@@ -164,36 +149,38 @@ const AccordionDetails = styled(MuiAccordionDetails)(() => ({
                             <AccordionSummary id={'panel' + areas.id}>
                               <Typography variant="subtitle2">{areas.nome}</Typography>
                             </AccordionSummary>
-                            <AccordionDetails>
-                              {cursos.map((curso) => {
-                                return (
-                                  <div>
-                                    {curso.area === areas.id?
-                                      (                                        
-                                        <Card sx={{ display: 'flex', maxWidth: 345, maxHeight: 100, padding:'24px' }}>
-                                          <CardMedia
-                                            component="img"
-                                            sx={{ width: 100, height: 100 }}
-                                            image={"http://" + back + curso.img}
-                                            alt={curso.nome}
-                                          />
-                                          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                          <CardContent wrap="nowrap">
-                                            <Typography variant="subtitle2" style={{ textTransform:'capitalize' }}>
-                                              {curso.nome}
-                                            </Typography>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-                                              <Button size="small" color="primary">
-                                                Saiba mais
-                                              </Button>
+                            <AccordionDetails>           
+                              <Box sx={{ display: 'flex', padding:"16px" }}> 
+                                {cursos.map((curso) => {
+                                  return (
+                                    <div>
+                                      {curso.area === areas.id?
+                                        (                                                                  
+                                          <Card onClick={()=>handleRedirect(curso.id)} sx={{ display: 'flex', maxWidth: 345, maxHeight: 100, padding:'16px', marginRight:'16px', cursor:'pointer' }}>
+                                            <CardMedia
+                                              component="img"
+                                              sx={{ width: 100, height: 100 }}
+                                              image={"http://" + back + curso.img}
+                                              alt={curso.nome}
+                                            />
+                                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                            <CardContent wrap="nowrap">
+                                              <Typography variant="subtitle2" style={{ textTransform:'capitalize' }}>
+                                                {curso.nome}
+                                              </Typography>
+                                              <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1, marginTop:'10px' }}>
+                                                <Button size="small" color="primary">
+                                                  Saiba mais
+                                                </Button>
+                                              </Box>
+                                            </CardContent>
                                             </Box>
-                                          </CardContent>
-                                          </Box>
-                                        </Card>):null
-                                    }
-                                  </div>
+                                          </Card> ):null
+                                      }
+                                    </div>
+                                  )}
                                 )}
-                              )}
+                              </Box>
                             </AccordionDetails>                           
                           </Accordion>):null}            
                     </div>                    
@@ -204,7 +191,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(() => ({
               </Grid>
             </Box>
             <Footer/>
-          </div>
+        </div>
     );
 }
 

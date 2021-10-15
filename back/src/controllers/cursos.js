@@ -149,3 +149,62 @@ exports.obterCurso = async (req, res, next) => {
                 })
     }
 }
+//GET rota => /cursos/:id
+//obtem curso com o id informado
+exports.obterCursoId = async (req, res, next) => {
+    try {
+
+        const id = req.params.id;
+
+        result = await curModel.obterCursoId(id);
+
+        if (result.retorno) {
+
+            response = {
+                cursos: result.retornoBD.map(cur => {
+                    return{        
+                        id: cur.cur_id,
+                        nome: cur.cur_nome,                
+                        coordenador: cur.cur_coordernador,                
+                        email: cur.cur_email,                
+                        eixo: cur.cur_eixo,                
+                        obj: cur.cur_obj,                
+                        principal: cur.cur_principal,                
+                        mercado: cur.cur_mercado,                
+                        mod1: cur.cur_mod1,                
+                        mod2: cur.cur_mod2,                
+                        mod3: cur.cur_mod3,                
+                        mod4: cur.cur_mod4,                
+                        duracao: cur.cur_duracao,                
+                        img: cur.cur_img,                
+                        area: cur.cur_area,                
+                    }
+                })
+            }
+
+            return res
+                .status(200)
+                .json({ 
+                    msg: result.msg,
+                    retorno: true,
+                    response 
+                })           
+        }else{
+            return res
+                    .status(400)
+                    .json({  
+                        msg: result.msg,
+                        retorno: false
+                     })
+        }
+    }
+    catch (e) {
+        return res
+                .status(400)
+                .json({ 
+                    msg: "Falha de conexão, revise seu acesso a internet.",
+                    retorno: false, 
+                    response: e 
+                })
+    }
+}

@@ -13,5 +13,9 @@ routes.get(
     '/cursos',
     curController.obterCurso
 );
+routes.get(
+    '/cursos/:id',
+    curController.obterCursoId
+);
 
 module.exports = routes;

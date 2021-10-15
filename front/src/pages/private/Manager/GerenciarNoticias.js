@@ -280,30 +280,33 @@ const GerenciarNoticias = () => {
 
     };
     const handleDelete = () =>{       
-            axios
-                .delete(`http://`+ back +`/noticias/`+id,{
-                    headers:{
-                        perfil: perfil,
-                        email: email
-                    }
-                })
-                .then((res) => { 
-                    if(res.data.retorno){                                                     
-                        msg = res.data.msg
-                        handleClickOpenA(msg);
-                    }else{                                                     
-                        msg = res.data.msg
-                        handleClickOpenA(msg);
-                    }
-                    setChecked([]);
-                })
-                .catch((error) =>{    
-                    msg = "Não foi possível apagar essa notícia.";
-                    handleClickOpenA(msg); 
-                    setChecked([]);  
-                }) 
+        axios
+            .delete(`http://`+ back +`/noticias/`+id,{
+                headers:{
+                    perfil: perfil,
+                    email: email
+                }
+            })
+            .then((res) => { 
+                if(res.data.retorno){                                                     
+                    msg = res.data.msg
+                    handleClickOpenA(msg);
+                }else{                                                     
+                    msg = res.data.msg
+                    handleClickOpenA(msg);
+                }
+                setChecked([]);
+            })
+            .catch((error) =>{    
+                msg = "Não foi possível apagar essa notícia.";
+                handleClickOpenA(msg); 
+                setChecked([]);  
+            }) 
     };
-    const handleHighlight = () =>{     
+    const handleHighlight = () =>{   
+
+        handleClickOpenL();
+
         if(checked.length > 0){
             axios
                 .put(`http://`+ back +`/noticias`,{
@@ -320,15 +323,18 @@ const GerenciarNoticias = () => {
                         handleClickOpenA(msg);
                     }
                     setChecked([]);
+                    handleCloseL();
                 })
                 .catch((error) =>{    
                     msg = "Não foi possível destacar essa(s) notícia(s).";
                     handleClickOpenA(msg); 
                     setChecked([]);  
+                    handleCloseL();
                 }) 
             }else{
                 msg = "Selecione ao menos uma notícias para destacar.";
-                handleClickOpenA(msg);                 
+                handleClickOpenA(msg);   
+                handleCloseL();              
             }
     };
 
@@ -338,21 +344,21 @@ const GerenciarNoticias = () => {
       }, []);
     //#endregion
     return(
-        <div> 
+        <Grid display="block" style={{ paddingLeft:'24px', paddingRight:'24px' }}>
             <Box p={1} display="flex" align="right">           
-                <Box p={1} style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
+                <Box  style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
                     <Typography variant="h6">
                         Gerenciar Notícias
                     </Typography>
                 </Box>
-                <Box p={1} display="flex" justifyContent="flex-end" style={{width:'50%', textAlign:'end'}}>      
+                <Box  display="flex" justifyContent="flex-end" style={{ width:'50%', textAlign:'end' }}>      
                     <Box p={1} style={{textAlign:'end'}}>
                         <Button 
                             onClick={()=>handleHighlight()} 
                             variante="contained" 
                             className="btnNovo"
                             startIcon={<VscStarEmpty/>}
-                            style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", marginRight:'20px'  }}> 
+                            style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", marginRight:'20px' }}> 
                             DESTACAR
                         </Button>
                         <Button 
@@ -360,7 +366,7 @@ const GerenciarNoticias = () => {
                             variante="outlined" 
                             className="btnNovo"
                             startIcon={<MdAdd/>}
-                            style={{ color:"#2E8E61"}}> 
+                            style={{ color:"#2E8E61", position:"unset", border:'2px solid #2E8E61' }}> 
                             NOVA NOTÍCIA
                         </Button>
                     </Box>       
@@ -401,7 +407,7 @@ const GerenciarNoticias = () => {
                     </Card>
                 </div>
                 <div className="direitaN">
-                    <div className="bxLeitura" style={{ width: "96%", height: "68vh", backgroundColor: "#ffffff", overflow: 'auto', }}>
+                    <div className="bxLeitura" style={{ width: "96%", height: "68vh", backgroundColor: "#ffffff", overflow: 'auto'}}>
                         {open ? (                            
                                     <Grid item xs container direction="column" spacing={2}>
                                     <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
@@ -486,7 +492,7 @@ const GerenciarNoticias = () => {
                                                 </div>
                                             </Box>               
                                         </Box>
-                                        <Typography variant="body2" style={{ textAlign:'justify' }} color="textSecondary">                                                
+                                        <Typography variant="body2" style={{ textAlign:'justify', paddingLeft:'20px' }} color="textSecondary">                                                
                                             {texto}                                                          
                                         </Typography>
                                     </Grid>
@@ -546,7 +552,7 @@ const GerenciarNoticias = () => {
                        
             <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>            
             <DialogLoading open={openL} />  
-        </div>
+        </Grid>
     );
 }
 export default GerenciarNoticias;

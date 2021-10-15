@@ -1,12 +1,11 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Button, Dialog, DialogActions, DialogContent, Box, Grid, IconButton, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, FormControl, 
+         Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { MdAdd } from "react-icons/md";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-
+import { DialogAlert, DialogMain } from '../../../components/Dialog';
 //#endregion
 const GerenciarUsuarios = () => {  
     //#region Variáveis e Variáveis de Estado
@@ -48,13 +47,19 @@ const GerenciarUsuarios = () => {
     };
     const handleClose = () => {
       setOpen(false);
+      setNome('');
+      setEmailU('');
+      setSenha('');
+      setPerfilU('');
+
     };
-    const handleClickOpenE = (id, nome, email) => {
+    const handleClickOpenE = (id, nome, email, perfil, senha) => {
       setOpenE(true);
       setId(id);
       setNomeE(nome);
       setEmailE(email);
-      setSenhaE("");
+      setSenhaE(senha);
+      setPerfilU(perfil);
     };
     const handleCloseE = () => {
       setOpenE(false);
@@ -81,6 +86,7 @@ const GerenciarUsuarios = () => {
                             msg = res.data.msg
                             handleClickOpenA(msg);
                         }
+                        handleClose();
 
                     })
                     .catch((error) => {
@@ -121,6 +127,8 @@ const GerenciarUsuarios = () => {
                         msg = res.data.msg
                         handleClickOpenA(msg);
                     }
+                    
+                    handleCloseE();
                 })
                 .catch((res) =>{    
                     msg = "Não foi possível atualizar esse usuário.";
@@ -133,29 +141,30 @@ const GerenciarUsuarios = () => {
         }
 
     };
-    const handleDelete = (id, nome) =>{       
-            axios
-                .delete(`http://`+ back +`/usuarios/`+id,{
-                    headers:{
-                        nome: nome,
-                        senha: "010203",
-                        perfil: perfil,
-                        email: email
-                    }
-                })
-                .then((res) => { 
-                    if(res.data.retorno){                                                     
-                        msg = res.data.msg
-                        handleClickOpenA(msg);
-                    }else{                                                     
-                        msg = res.data.msg
-                        handleClickOpenA(msg);
-                    }
-                })
-                .catch((res) =>{    
-                    msg = "Não foi possível apagar esse usuario.";
-                    handleClickOpenA(msg);   
-                }) 
+    const handleDelete = () =>{       
+        axios
+            .delete(`http://`+ back +`/usuarios/`+id,{
+                headers:{
+                    nome: nomeE,
+                    senha: "010203",
+                    perfil: perfil,
+                    email: email
+                }
+            })
+            .then((res) => { 
+                if(res.data.retorno){                                                     
+                    msg = res.data.msg
+                    handleClickOpenA(msg);
+                }else{                                                     
+                    msg = res.data.msg
+                    handleClickOpenA(msg);
+                }
+                handleCloseE();
+            })
+            .catch((res) =>{    
+                msg = "Não foi possível apagar esse usuario.";
+                handleClickOpenA(msg);   
+            }) 
     };
 
     useEffect(() => {           
@@ -164,188 +173,196 @@ const GerenciarUsuarios = () => {
       }, []);
       //#endregion
     return(
-        <div>
-            <Box p={1} display="flex" align="right">           
-                <Box p={1} style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
+        <Grid display="block" style={{ paddingLeft:'24px', paddingRight:'24px' }}>
+            <Box p={1} display="flex">           
+                <Box style={{ width:'50%', textAlign:'start', paddingTop:'20px' }}>                         
                     <Typography variant="h6">
                         Gerenciar Usuários
                     </Typography>
                 </Box>
-                <Box p={1} display="flex" justifyContent="flex-end" style={{width:'50%', textAlign:'end'}}>      
+                <Box style={{width:'50%', textAlign:'end'}}>      
                     <Box p={1} style={{textAlign:'end'}}>
-                        <Button onClick={()=>handleClickOpen()} variante="contained" className="btnNovo" style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", position:"unset" }} startIcon={<MdAdd/>}>
+                        <Button onClick={()=>handleClickOpen()} 
+                                variante="outlined" 
+                                className="btnNovo" 
+                                startIcon={<MdAdd/>}
+                                style={{ color:"#2E8E61", position:"unset", border:'2px solid #2E8E61' }}>
                             NOVO USUÁRIO
                         </Button>
                     </Box>       
                 </Box>
-            </Box> 
-            <div className="noticias">
-                    <Grid item xs={12}>
-                        <div align="center">
-                            <Box display="flex" p={1} m={1} css={{ height: "auto", width: "100%", borderRadius: "5px", backgroundColor: "#2E8E61", fontWeight: 'bolder' }}>
-                                <Box p={1} flexGrow={2}>
-                                    <span className="ml-0" style={{ color: "#ffffff", fontSize: "120%", marginLeft:"-130px"}}>NOME</span>
+            </Box>
+            <Box p={1}>
+                <Typography variant="subtitle1" style={{ textAlign:'left' }} >
+                   Lista de Usuários
+                </Typography>
+            </Box>            
+            <Box p={1} sx={{ flexGrow: 1 }}>
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                    {infos.map((item, index) => (  
+                        <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
+                            <Card onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.perfil, item.senha)} 
+                                    sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                <Box p={2}>
+                                    <Avatar>{item.nome.substring(0,2).toUpperCase()}</Avatar>
                                 </Box>
-                            </Box>
-                        </div>
-                        <Box>
-                            {infos.map((item, index) => (
-                                <div align="center">
-                                <Box display="flex" p={1} m={1} css={{ height: "auto", minWidth:"100%", maxWidth: "150%", borderRadius: "5px", backgroundColor: "#b6ffb5" }}>
-                                    <Box id="valor" p={1} flexGrow={2} css={{ width: "200px", height: 'auto' }} >
-                                        <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.senha)}>
-                                            <span className="ml-0" style={{ color: "black", fontSize: "120%"}}>{item.nome}</span>
-                                        </li>
-                                    </Box>         
-                                    <Box p={1} >
-                                    <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset"  }} onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.senha)}>
-                                        <EditIcon />
-                                        </IconButton>
-                                        <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset"  }} onClick={() => handleDelete(item.id, item.nome)} >
-                                        <DeleteIcon />
-                                        </IconButton>
-                                    </div>
-                                    </Box>
-                                </Box>
-                                </div>
-                            ))}
+                                <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
+                                    <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold'  }}>
+                                        {item.nome}
+                                    </Typography>
+                                    {item.perfil === 1?(
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize' }}>
+                                        Master
+                                    </Typography>):null}
+                                    {item.perfil === 2?(
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize' }}>
+                                        Redator
+                                    </Typography>):null}
+                                    {item.perfil === 3?(
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize' }}>
+                                        Vendedor
+                                    </Typography>):null}
+                                </CardContent>
+                            </Card>
+                        </Grid> 
+                    ))}
+                </Grid>
+            </Box>
+            
+            <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>            
+            <DialogMain
+                open={open}
+                close={handleClose}
+                title={"NOVO USUÁRIO"}
+                info={(
+                    <Box>
+                        <Box display="flex" style={{ paddingBottom:'15px' }}>
+                            <TextField 
+                                className="inp"
+                                type="nome" 
+                                onChange={handleChange(setNome)}
+                                value={nome}
+                                maxLength="75"
+                                minLength="6"
+                                label="Nome de Usuário"
+                                variant="outlined"
+                                style={{ marginRight:'10px' }}
+                            />
+                            <TextField 
+                                className="inp"
+                                type="email" 
+                                onChange={handleChange(setEmailU)}
+                                value={emailU}
+                                maxLength="75"
+                                minLength="6"
+                                label="E-mail"
+                                variant="outlined"
+                            />
                         </Box>
-                    </Grid>
-            </div>
-                       
-            <Dialog open={openA} onClose={handleCloseA} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#2E8E61" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <span style={{marginLeft:'10px'}}>AVISO!</span>
-                    <AiFillCloseCircle onClick={() => handleCloseA()} style={{ width: '18px', height: 'auto', marginLeft: '65%', marginRight:"20px", marginTop: '25px' }} />
-                </Box>
-                <DialogContent className="Texto" style={{ marginTop: '10px' }}>
-                <p className="Texto" id="alerta" style={{ color: '#000000', textAlign: 'center', textSizeAdjust: 'auto', fontSize: '120%', fontWeight: 'bolder' }} >
-                    {alerta}
-                </p>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseA} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                        Ok
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#2E8E61" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <span>NOVO USUÁRIO</span>
-                    <AiFillCloseCircle onClick={() => handleClose()} style={{ width: '18px', height: 'auto', marginLeft: '70%', marginRight:"20px", marginTop: '25px' }} />
-                </Box>
-                <DialogContent className="Texto" style={{ marginTop: '10px' }}>
-                    <div style={{ display:"block" }}>
-                        <input 
-                            className="inp"
-                            type="text" 
-                            name="titulo"
-                            onChange={handleChange(setNome)}
-                            value={nome}
-                            maxLength="75"
-                            minLength="6"
-                            placeholder="Nome (min 6 - max 75)"
-                        />
-                        <input 
-                            className="inp"
-                            type="text" 
-                            name="texto"
-                            onChange={handleChange(setEmailU)}
-                            value={emailU}
-                            maxLength="80"
-                            minLength="5"
-                            placeholder="E-mail (min 5 - max 80)"
-                        />
-                        <select name="select" 
-                            className="inp"
-                            onChange={handleChange(setPerfilU)}>
-                          <option value=""> </option>
-                          <option value="master">Master</option>
-                          <option value="vendedor">Vendedor</option>
-                          <option value="redator">Redator</option>
-                        </select>
-                        <input 
-                            className="inp"
-                            type="text" 
-                            name="texto"
-                            onChange={handleChange(setSenha)}
-                            value={senha}
-                            maxLength="10"
-                            minLength="5"
-                            placeholder="Senha (min 6 - max 8)"
-                        />
-                    </div>
-                </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                            CANCELAR
-                        </Button>
-                        <Button onClick={()=>handleSubmit()} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                            CADASTRAR
-                        </Button>
-                    </DialogActions>
-            </Dialog>
-            
-            <Dialog open={openE} onClose={handleCloseE} aria-labelledby="form-dialog-title">
-                <Box bgcolor="#2E8E61" color="#ffffff" align="right" style={{ height: '70px' }}>
-                    <span>EDITAR USUÁRIO</span>
-                    <AiFillCloseCircle onClick={() => handleCloseE()} style={{ width: '18px', height: 'auto', marginLeft: '70%', marginRight:"20px", marginTop: '25px' }} />
-                </Box>
-                <DialogContent className="Texto" style={{ marginTop: '10px' }}>                                            
-                    
-                <div style={{ display:"block" }}>
-                        <input 
-                            className="inp"
-                            type="text" 
-                            name="titulo"
-                            onChange={handleChange(setNomeE)}
-                            value={nomeE}
-                            maxLength="75"
-                            minLength="6"
-                            placeholder="Nome (min 6 - max 75)"
-                        />
-                        <input 
-                            className="inp"
-                            type="text" 
-                            name="texto"
-                            onChange={handleChange(setEmailE)}
-                            value={emailE}
-                            maxLength="80"
-                            minLength="5"
-                            placeholder="E-mail (min 5 - max 80)"
-                        />
-                        <select name="select" 
-                            className="inp"
-                            onChange={handleChange(setPerfilU)}>
-                          <option value=""> </option>
-                          <option value="master">Master</option>
-                          <option value="vendedor">Vendedor</option>
-                          <option value="redator">Redator</option>
-                        </select>
-                        <input 
-                            className="inp"
-                            type="text" 
-                            name="texto"
-                            onChange={handleChange(setSenhaE)}
-                            value={senhaE}
-                            maxLength="10"
-                            minLength="5"
-                            placeholder="Senha (min 5 - max 10)"
-                        />
-                    </div>
-                </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseE} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                            CANCELAR
-                        </Button>
-                        <Button onClick={()=>handleAlter()} style={{ backgroundColor: "#2E8E61", color: '#ffffff' }}>
-                            ATUALIZAR
-                        </Button>
-                    </DialogActions>
-            </Dialog> 
-        </div>
+                        <Box display="flex" style={{ paddingBottom:'7.5px' }}>                                                                   
+                            <FormControl sx={{ minWidth: 245 }}>
+                                <InputLabel>Nível de Acesso</InputLabel>
+                                <Select
+                                    value={perfilU}
+                                    label="Nível de Acesso"
+                                    onChange={handleChange(setPerfilU)}
+                                    >
+                                    <MenuItem value="">
+                                        <em></em>
+                                    </MenuItem> 
+                                    <MenuItem style={{ color:"#000000", textAlign:'center'}} value="master">Master</MenuItem>
+                                    <MenuItem style={{ color:"#000000", textAlign:'center'}} value="vendedor">Vendedor</MenuItem>
+                                    <MenuItem style={{ color:"#000000", textAlign:'center'}} value="redator">Redator</MenuItem> 
+                                </Select>
+                            </FormControl>
+                            <TextField 
+                                className="inp"
+                                type="password" 
+                                onChange={handleChange(setSenha)}
+                                value={senha}
+                                maxLength="10"
+                                minLength="5"
+                                label="Senha"
+                                variant="outlined"
+                                style={{ marginLeft:'10px' }}
+                            />
+                        </Box>
+                    </Box>)}
+                click={()=>handleSubmit()}
+                label={"SALVAR"}
+            />            
+            <DialogMain
+                open={openE}
+                close={handleCloseE}
+                title={"EDITAR USUÁRIO"}
+                info={(
+                    <Box>
+                        <Box display="flex" style={{ paddingBottom:'15px' }}>
+                            <TextField 
+                                className="inp"
+                                type="nome" 
+                                onChange={handleChange(setNomeE)}
+                                value={nomeE}
+                                maxLength="75"
+                                minLength="6"
+                                label="Nome de Usuário"
+                                variant="outlined"
+                                style={{ marginRight:'10px' }}
+                            />
+                            <TextField 
+                                className="inp"
+                                type="email" 
+                                onChange={handleChange(setEmailE)}
+                                value={emailE}
+                                maxLength="75"
+                                minLength="6"
+                                label="E-mail"
+                                variant="outlined"
+                            />
+                        </Box>
+                        <Box display="flex" style={{ paddingBottom:'7.5px' }}>                                                                   
+                            <FormControl sx={{ minWidth: 245 }}>
+                                <InputLabel>Nível de Acesso</InputLabel>
+                                <Select
+                                    value={perfilU}
+                                    label="Nível de Acesso"
+                                    onChange={handleChange(setPerfilU)}
+                                    >
+                                    {perfilU === 1?(
+                                    <MenuItem value={perfilU} style={{ color:"#000000", textAlign:'center'}}>
+                                       Atual: Master
+                                    </MenuItem>):null}
+                                    {perfilU === 2?(
+                                    <MenuItem value={perfilU} style={{ color:"#000000", textAlign:'center'}}>
+                                       Atual: Redator
+                                    </MenuItem>):null}
+                                    {perfilU === 3?(
+                                    <MenuItem value={perfilU} style={{ color:"#000000", textAlign:'center'}}>
+                                       Atual: Vendedor
+                                    </MenuItem>):null}
+                                    <MenuItem style={{ color:"#000000", textAlign:'center'}} value="master">Master</MenuItem>
+                                    <MenuItem style={{ color:"#000000", textAlign:'center'}} value="vendedor">Vendedor</MenuItem>
+                                    <MenuItem style={{ color:"#000000", textAlign:'center'}} value="redator">Redator</MenuItem> 
+                                </Select>
+                            </FormControl>
+                            <TextField 
+                                className="inp"
+                                type="password" 
+                                onChange={handleChange(setSenhaE)}
+                                value={senhaE}
+                                maxLength="10"
+                                minLength="5"
+                                label="Senha"
+                                variant="outlined"
+                                style={{ marginLeft:'10px' }}
+                            />
+                        </Box>
+                    </Box>)}
+                click={()=>handleAlter()}
+                delete={()=>handleDelete()}
+                label={"SALVAR"}
+            /> 
+        </Grid>
     );
 }
 export default GerenciarUsuarios;

@@ -1,6 +1,6 @@
 import React from "react";
-import { AiFillCloseCircle } from 'react-icons/ai';
-import { FiLogOut } from "react-icons/fi";
+import { GrClose } from 'react-icons/gr';
+import { FiLogOut, FiTrash } from "react-icons/fi";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Button, Dialog, DialogActions, DialogContent, Box, Typography } from '@material-ui/core';
 import user from '../../assets/img/Icons/manage_accounts_black_24dp.png';
@@ -29,18 +29,28 @@ export function DialogAlert(props){
  export function DialogMain(props){
     return(
         <Dialog open={props.open} onClose={props.close} aria-labelledby="form-dialog-title">
-            <Box display="flex" bgcolor="#2E8E61" color="#ffffff" align="right" style={{ height: '40px', paddingTop:'5px' }}>                
+            <Box display="flex" color="#21222D" align="right" style={{ height: '40px', paddingTop:'5px' }}>                
                 <Box p={1} style={{ width:'50%' }} >
                     <span style={{ marginTop: '10px', marginLeft:'5px' }}>{props.title}</span>
                 </Box>                
                 <Box p={1} style={{ width:'50%', textAlign:'end', cursor:'pointer' }} >
-                    <AiFillCloseCircle onClick={props.close} style={{ width: '18px', height: 'auto', marginLeft: '58%', marginRight:"10px" }} />
+                    <GrClose onClick={props.close} style={{ width: '16px', height: 'auto', marginLeft: '58%', marginRight:"10px" }} />
                 </Box>
             </Box>
-            <DialogContent className="Texto" style={{ width:'500px', borderBottom: '1px solid #00000024', paddingBottom: '30px' }}>
+            <DialogContent className="Texto" style={{ width:'500px', paddingBottom: '30px' }}>
                 {props.info}
             </DialogContent>
-            <DialogActions>
+            {props.delete ? (        
+                <Box style={{ marginBottom:' -50px', padding:'10px' }}>  
+                    <Button onClick={props.delete}
+                        startIcon={<FiTrash/>}
+                        style={{
+                            color:"#000000"
+                        }}>
+                        EXCLUIR
+                    </Button>
+                </Box>):null}                
+            <DialogActions> 
                 <Button onClick={props.close}
                     style={{
                         color:"#00000061"
