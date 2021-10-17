@@ -1,15 +1,19 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Avatar, Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent, FormControl, 
+import { Avatar, Box, Button, Card, CardContent, InputAdornment, FormControl, 
          Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core';
-import { AiFillCloseCircle } from 'react-icons/ai';
+import Search from '@material-ui/icons/Search';
 import { MdAdd } from "react-icons/md";
 import { DialogAlert, DialogMain } from '../../../components/Dialog';
 //#endregion
 const GerenciarUsuarios = () => {  
     //#region Variáveis e Variáveis de Estado
     const [infos, setInfos] = useState([]);
+    const [filtro, setFiltro] = useState([]);
+    const [valorF, setValorF] = useState("");
+    const [comF, setComF] = useState("none"); 
+    const [semF, setSemF] = useState("block");
     const [open, setOpen] = useState(false);
     const [openA, setOpenA] = useState(false);
     const [openE, setOpenE] = useState(false);
@@ -105,8 +109,7 @@ const GerenciarUsuarios = () => {
           .then((res) => {   
             setInfos(ArrNot(res.data.response.usuarios)); 
           }).catch((res) =>{    
-            msg = "Não foi possível localizar usuarios.";
-            handleClickOpenA(msg);   
+            msg = "Não foi possível localizar usuarios.";  
           })  
     };
     const handleAlter = () =>{       
@@ -166,6 +169,21 @@ const GerenciarUsuarios = () => {
                 handleClickOpenA(msg);   
             }) 
     };
+    const handleFiltro = () => {
+      setFiltro(infos.filter(item => item.nome.toUpperCase().indexOf(valorF.toUpperCase()) !== -1));
+
+      if(filtro.length > 1){
+        setSemF("none");
+        setComF("block");
+      }else{
+        setSemF("block");
+        setComF("none");
+      }
+    };
+    const handleChangeFiltro = (set) => (event) => {
+      set(event.target.value)
+      handleFiltro();
+    };
 
     useEffect(() => {           
         handleLoad();
@@ -192,34 +210,96 @@ const GerenciarUsuarios = () => {
                     </Box>       
                 </Box>
             </Box>
-            <Box p={1}>
-                <Typography variant="subtitle1" style={{ textAlign:'left' }} >
-                   Lista de Usuários
-                </Typography>
-            </Box>            
-            <Box p={1} sx={{ flexGrow: 1 }}>
+            <Box p={1} display="flex">           
+                <Box style={{ width:'50%', textAlign:'start', paddingTop:'20px' }}>  
+                    <Typography variant="subtitle1" style={{ textAlign:'left' }} >
+                        Lista de Usuários
+                    </Typography>
+                </Box>
+                <Box style={{width:'50%', textAlign:'end'}}>      
+                    <Box p={1} style={{textAlign:'end'}}>
+                        <TextField
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search style={{ margin:'5px' }} />
+                                    </InputAdornment>
+                                ),
+                                'aria-label': 'search',
+                                disableUnderline: true
+                            }}
+                            placeholder="Busque por um usuário"
+                            className="search"
+                            variant="standard"
+                            value={valorF}
+                            onChange={handleChangeFiltro(setValorF)}
+                            style={{ width:'60%', borderRadius:'60px' }}
+                        /> 
+                    </Box>       
+                </Box>
+            </Box>           
+            <Box p={1} display={semF} sx={{ flexGrow: 1 }}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                     {infos.map((item, index) => (  
                         <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
                             <Card onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.perfil, item.senha)} 
                                     sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
                                 <Box p={2}>
-                                    <Avatar>{item.nome.substring(0,2).toUpperCase()}</Avatar>
+                                    <Avatar style={{ color:'#201E1E', backgroundColor:'#DBDADA' }}>
+                                        <Typography variant="subtitle1" style={{ fontWeight:'bold' }}>
+                                            {item.nome.substring(0,2).toUpperCase()}
+                                        </Typography>
+                                    </Avatar>
                                 </Box>
                                 <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
-                                    <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold'  }}>
+                                    <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
                                         {item.nome}
                                     </Typography>
                                     {item.perfil === 1?(
-                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize' }}>
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
                                         Master
                                     </Typography>):null}
                                     {item.perfil === 2?(
-                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize' }}>
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
                                         Redator
                                     </Typography>):null}
                                     {item.perfil === 3?(
-                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize' }}>
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
+                                        Vendedor
+                                    </Typography>):null}
+                                </CardContent>
+                            </Card>
+                        </Grid> 
+                    ))}
+                </Grid>
+            </Box>
+            <Box p={1} display={comF} sx={{ flexGrow: 1 }}>
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                    {filtro.map((item, index) => (  
+                        <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
+                            <Card onClick={() => handleClickOpenE(item.id, item.nome, item.email, item.perfil, item.senha)} 
+                                    sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                <Box p={2}>
+                                    <Avatar style={{ color:'#201E1E', backgroundColor:'#DBDADA' }}>
+                                        <Typography variant="subtitle1" style={{ fontWeight:'bold' }}>
+                                            {item.nome.substring(0,2).toUpperCase()}
+                                        </Typography>
+                                    </Avatar>
+                                </Box>
+                                <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
+                                    <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                        {item.nome}
+                                    </Typography>
+                                    {item.perfil === 1?(
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
+                                        Master
+                                    </Typography>):null}
+                                    {item.perfil === 2?(
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
+                                        Redator
+                                    </Typography>):null}
+                                    {item.perfil === 3?(
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
                                         Vendedor
                                     </Typography>):null}
                                 </CardContent>

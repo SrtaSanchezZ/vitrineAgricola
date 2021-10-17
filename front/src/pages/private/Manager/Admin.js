@@ -1,6 +1,7 @@
 //#region Dependências
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import { useHistory } from 'react-router-dom';
+import {  Box } from '@material-ui/core';
 import { DialogPerfil } from '../../../components/Dialog';
 import { HeaderAdm } from '../../../components/Header';
 import { MenuPrivate } from '../../../components/Menu';
@@ -34,34 +35,41 @@ const Admin = () => {
     const handleStep = (val) => {
         setStep(val);
     }
+    const handleLoad = () => {
+        history.push("/" + perfil[0]);
+    }
+    useEffect(() => {
+      handleLoad();
+      // eslint-disable-next-line
+    }, []);
     //#endregion
     switch(step) {
         case 1: 
         return(
-            <div>
-            <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
-                <div className="privado">
+            <Box bgcolor="#FCFCFC" style={{ height: '100vh'}}>
+                <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
+                <Box display="flex" bgcolor="#FCFCFC">
                     <MenuPrivate 
                         home={()=>handleStep(1)}
                         docs={()=>handleStep(2)}
                         views={()=>handleStep(3)} 
                         products={()=>handleStep(4)} 
                         news={()=>handleStep(5)} 
-                        users={()=>handleStep(6)}  />
-                    <div className="conteudo">                    
+                        users={()=>handleStep(6)} />
+                    <Box className="conteudo">                    
                         <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         <div style={{ marginTop:"20%" }}>
                             <h1>Página Inicial</h1>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </Box>
+                </Box>
+            </Box>
         );
         case 2: 
         return(
             <div>
                 <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
-                <div className="privado">
+                <Box display="flex" bgcolor="#FCFCFC">
                     <MenuPrivate 
                         home={()=>handleStep(1)}
                         docs={()=>handleStep(2)}
@@ -69,18 +77,18 @@ const Admin = () => {
                         products={()=>handleStep(4)} 
                         news={()=>handleStep(5)} 
                         users={()=>handleStep(6)}  />
-                    <div className="conteudo">                        
+                    <Box className="conteudo">                      
                         <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         <Reservas/>
-                    </div>
-                </div>
+                    </Box>
+                </Box>
             </div>
         );
         case 3: 
         return(
             <div>
                 <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
-                <div className="privado">
+                <Box display="flex" bgcolor="#FCFCFC">
                     <MenuPrivate 
                         home={()=>handleStep(1)}
                         docs={()=>handleStep(2)}
@@ -88,18 +96,18 @@ const Admin = () => {
                         products={()=>handleStep(4)} 
                         news={()=>handleStep(5)} 
                         users={()=>handleStep(6)}  />
-                        <div className="conteudo">                        
-                            <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                            <MontarVitrine/>
-                        </div>
-                </div>
+                    <Box className="conteudo">                      
+                        <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
+                        <MontarVitrine/>
+                    </Box>
+                </Box>
             </div>
         );
         case 4: 
         return(
             <div>
                 <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
-                <div className="privado">
+                <Box display="flex" bgcolor="#FCFCFC">
                     <MenuPrivate 
                         home={()=>handleStep(1)}
                         docs={()=>handleStep(2)}
@@ -107,18 +115,18 @@ const Admin = () => {
                         products={()=>handleStep(4)} 
                         news={()=>handleStep(5)} 
                         users={()=>handleStep(6)}  />
-                    <div className="conteudo">                        
+                    <Box className="conteudo">                    
                         <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         <GerenciarProdutos/>
-                    </div>
-                </div>
+                    </Box>
+                </Box>
             </div>
         );
         case 5: 
         return(
             <div>
                 <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
-                <div className="privado">
+                <Box display="flex" bgcolor="#FCFCFC">
                     <MenuPrivate 
                         home={()=>handleStep(1)}
                         docs={()=>handleStep(2)}
@@ -126,18 +134,18 @@ const Admin = () => {
                         products={()=>handleStep(4)} 
                         news={()=>handleStep(5)} 
                         users={()=>handleStep(6)}  />
-                    <div className="conteudo">
+                    <Box className="conteudo"> 
                         <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         <GerenciarNoticias/>
-                    </div>
-                </div>
+                    </Box>
+                </Box>
             </div>
         );
         case 6: 
         return(
             <div>
                 <HeaderAdm perfil={perfil} img={perfilManager} diag={()=>handleOpen()} />
-                <div className="privado">
+                <Box display="flex" bgcolor="#FCFCFC">
                     <MenuPrivate 
                         home={()=>handleStep(1)}
                         docs={()=>handleStep(2)}
@@ -145,11 +153,11 @@ const Admin = () => {
                         products={()=>handleStep(4)} 
                         news={()=>handleStep(5)} 
                         users={()=>handleStep(6)}  />
-                    <div className="conteudo">                        
+                    <Box className="conteudo">                        
                         <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         <GerenciarUsuarios/>
-                    </div>
-                </div>
+                    </Box>
+                </Box>
             </div>
         );
         default:

@@ -3,11 +3,12 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { AiOutlineInfoCircle, AiFillSave, AiOutlineCloseCircle } from "react-icons/ai";
 import { VscStarEmpty } from "react-icons/vsc";
-import { Button, Box, Grid, IconButton, TextField, List, Card, CardHeader, ListItem, 
+import { Button, Box, Grid, IconButton, TextField, List, Card, CardHeader, InputAdornment, ListItem, 
        ListItemIcon, Checkbox, Divider, Typography } from '@material-ui/core';
 import { MdAdd } from "react-icons/md";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import Search from '@material-ui/icons/Search';
 import semimg from '../../../assets/img/noimg.png';
 import { DialogAlert, DialogLoading } from '../../../components/Dialog';
 //#endregion
@@ -15,6 +16,10 @@ const GerenciarNoticias = () => {
     //#region Variáveis e Variáveis de Estado 
     const [checked, setChecked] = useState([]);
     const [infos, setInfos] = useState([]);
+    const [filtro, setFiltro] = useState([]);
+    const [valorF, setValorF] = useState("");
+    const [comF, setComF] = useState("none"); 
+    const [semF, setSemF] = useState("block");
     const [open, setOpen] = useState(false);
     const [openA, setOpenA] = useState(false);
     const [openE, setOpenE] = useState(false);
@@ -237,8 +242,7 @@ const GerenciarNoticias = () => {
           .then((res) => {              
             setInfos(ArrNot(res.data.response.noticias)); 
           }).catch((res) =>{    
-            msg = "Não foi possível localizar notícias.";
-            handleClickOpenA(msg);   
+            msg = "Não foi possível localizar notícias."; 
           })  
     };
     const handleAlter = () =>{    
@@ -337,6 +341,22 @@ const GerenciarNoticias = () => {
                 handleCloseL();              
             }
     };
+    const handleFiltro = () => {
+      setFiltro(infos.filter(infos => infos.texto.toUpperCase().indexOf(valorF.toUpperCase()) !== -1 
+                            || infos.titulo.toUpperCase().indexOf(valorF.toUpperCase()) !== -1
+                            || infos.autor.toUpperCase().indexOf(valorF.toUpperCase()) !== -1));
+      if(filtro.length > 1){
+        setSemF("none");
+        setComF("block");
+      }else{
+        setSemF("block");
+        setComF("none");
+      }
+    };
+    const handleChangeFiltro = (set) => (event) => {
+      set(event.target.value)
+      handleFiltro();
+    };
 
     useEffect(() => {
         handleLoad();
@@ -372,6 +392,34 @@ const GerenciarNoticias = () => {
                     </Box>       
                 </Box>
             </Box>
+            <Box p={1} display="flex">           
+                <Box style={{ width:'50%', textAlign:'start', paddingTop:'20px' }}>  
+                    <Typography variant="subtitle1" style={{ textAlign:'left' }} >
+                        Lista de Notícias
+                    </Typography>
+                </Box>
+                <Box style={{width:'50%', textAlign:'end'}}>      
+                    <Box p={1} style={{textAlign:'end'}}>
+                        <TextField
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search style={{ margin:'5px' }} />
+                                    </InputAdornment>
+                                ),
+                                'aria-label': 'search',
+                                disableUnderline: true
+                            }}
+                            placeholder="Busque por uma notícia"
+                            className="search"
+                            variant="standard"
+                            value={valorF}
+                            onChange={handleChangeFiltro(setValorF)}
+                            style={{ width:'60%', borderRadius:'60px' }}
+                        /> 
+                    </Box>       
+                </Box>
+            </Box> 
             <div className="noticias">
                 <div className="esquerdaN">
                     <Card>
@@ -380,173 +428,202 @@ const GerenciarNoticias = () => {
                             subheader={`Notícias Selecionadas para Destacar (${numberOfChecked(infos)}/3)`}
                         />
                         <Divider />
-                        <List container wrap="nowrap" style={{ width: "100%", height: "65vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
-                              dense component="div" role="list">
-                            {infos.map((value) => {
-                                return (
-                                    <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
-                                        <ListItemIcon>
-                                            <Checkbox
-                                            checked={checked.indexOf(value) !== -1}
-                                            tabIndex={-1}
-                                            disableRipple
-                                            inputProps={{ 'aria-labelledby': value.id }}
-                                            />
-                                        </ListItemIcon>
-                                        {value.destaque == 1 ? (
-                                        <Typography noWrap variant="subtitle1" id={value.id}>
-                                           <VscStarEmpty/> {" " + value.titulo}
-                                        </Typography>):( <Typography noWrap variant="subtitle1" id={value.id}>
-                                           {value.titulo}
-                                        </Typography>) }
-                                    </ListItem>
-                                );
-                            })}
-                            <ListItem />
-                        </List>
+                        <Box display={semF}>
+                            <List className="bxLista" container wrap="nowrap" style={{ width: "100%", height: "50vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
+                                dense component="div" role="list">
+                                {infos.map((value) => {
+                                    return (
+                                        <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+                                            <ListItemIcon>
+                                                <Checkbox
+                                                checked={checked.indexOf(value) !== -1}
+                                                tabIndex={-1}
+                                                disableRipple
+                                                inputProps={{ 'aria-labelledby': value.id }}
+                                                />
+                                            </ListItemIcon>
+                                            {value.destaque == 1 ? (
+                                            <Typography noWrap variant="subtitle1" id={value.id}>
+                                            <VscStarEmpty/> {" " + value.titulo}
+                                            </Typography>):( <Typography noWrap variant="subtitle1" id={value.id}>
+                                            {value.titulo}
+                                            </Typography>) }
+                                        </ListItem>
+                                    );
+                                })}
+                                <ListItem />
+                            </List>
+                        </Box>
+                        <Box display={comF}>
+                            <List className="bxLista" container wrap="nowrap" style={{ width: "100%", height: "50vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
+                                dense component="div" role="list">
+                                {filtro.map((value) => {
+                                    return (
+                                        <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+                                            <ListItemIcon>
+                                                <Checkbox
+                                                checked={checked.indexOf(value) !== -1}
+                                                tabIndex={-1}
+                                                disableRipple
+                                                inputProps={{ 'aria-labelledby': value.id }}
+                                                />
+                                            </ListItemIcon>
+                                            {value.destaque == 1 ? (
+                                            <Typography noWrap variant="subtitle1" id={value.id}>
+                                            <VscStarEmpty/> {" " + value.titulo}
+                                            </Typography>):( <Typography noWrap variant="subtitle1" id={value.id}>
+                                            {value.titulo}
+                                            </Typography>) }
+                                        </ListItem>
+                                    );
+                                })}
+                                <ListItem />
+                            </List>
+                        </Box>
                     </Card>
                 </div>
-                <div className="direitaN">
-                    <div className="bxLeitura" style={{ width: "96%", height: "68vh", backgroundColor: "#ffffff", overflow: 'auto'}}>
-                        {open ? (                            
-                                    <Grid item xs container direction="column" spacing={2}>
-                                    <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
-                                        <Box p={1} style={{ width:"30%" }} >                                        
-                                            <input 
-                                                className="inpImg"
-                                                type="file" 
-                                                name="imagem"
-                                                onChange={handleChageImg}
-                                            /><br/>
-                                            <label htmlFor="file" className="label">
-                                                <i className="material-icons">Imagem (até 512KB - 600 x 600) <br/> Formatos (png, jpg ou jpeg)</i>
-                                            </label>
-                                        </Box>            
-                                        <Box p={1} style={{ width:"55%", textAlign:'center' }} >
-                                            <TextField 
-                                                className="inp"
-                                                type="text" 
-                                                onChange={handleChange(setTitulo)}
-                                                value={titulo}
-                                                maxLength="75"
-                                                minLength="6"
-                                                label="Título (min 6 - max 75)"
-                                                variant="outlined"
-                                            /><br/><br/><br/>
-                                            <TextField 
-                                                className="inp"
-                                                type="text" 
-                                                onChange={handleChange(setAutor)}
-                                                value={autor}
-                                                maxLength="75"
-                                                minLength="6"
-                                                label="Autor(a) (min 6 - max 75)"
-                                                variant="outlined"
-                                            />
-                                        </Box>            
-                                        <Box p={1} style={{ width:"15%" }} >
-                                            <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                                <IconButton size="small" style={{ padding:5, marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleSubmit()}>
-                                                    <AiFillSave style={{ width:30, height:30 }} />
-                                                </IconButton>
-                                                <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClose()} >
-                                                    <AiOutlineCloseCircle style={{ width:30, height:30 }} />
-                                                </IconButton>
-                                            </div>
-                                        </Box>               
-                                    </Box>
+                <div className="bxLeitura" style={{ width: "96%", height: "54vh", backgroundColor: "#ffffff", overflow: 'auto'}}>
+                    {open ? (                            
+                        <Grid item xs container direction="column" spacing={2}>
+                            <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
+                                <Box p={1} style={{ width:"30%" }} >                                        
+                                    <input 
+                                        className="inpImg"
+                                        type="file" 
+                                        name="imagem"
+                                        onChange={handleChageImg}
+                                    /><br/>
+                                    <label htmlFor="file" className="label">
+                                        <i className="material-icons">Imagem (até 512KB - 600 x 600) <br/> Formatos (png, jpg ou jpeg)</i>
+                                    </label>
+                                </Box>            
+                                <Box p={1} style={{ width:"55%", textAlign:'center' }} >
                                     <TextField 
                                         className="inp"
                                         type="text" 
-                                        onChange={handleChange(setTexto)}
-                                        value={texto}
-                                        maxLength="1990"
+                                        onChange={handleChange(setTitulo)}
+                                        value={titulo}
+                                        maxLength="75"
                                         minLength="6"
-                                        label="Texto (min 6 - max 1990)"
-                                        multiline
+                                        label="Título (min 6 - max 75)"
+                                        variant="outlined"
+                                    /><br/><br/><br/>
+                                    <TextField 
+                                        className="inp"
+                                        type="text" 
+                                        onChange={handleChange(setAutor)}
+                                        value={autor}
+                                        maxLength="75"
+                                        minLength="6"
+                                        label="Autor(a) (min 6 - max 75)"
                                         variant="outlined"
                                     />
-                                </Grid>
-                                ) : (!openE && checked.length ? (                                                                
-                                    <Grid item xs container direction="column" spacing={2}>
-                                        <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
-                                            <Box p={1} style={{ width:"30%" }} >
-                                                <div className="result">{renderPhotos(img)}</div>
-                                            </Box>            
-                                            <Box p={1} style={{ width:"55%", textAlign:'center' }} >
-                                                <Typography variant="subtitle1" id={id}>
-                                                    {titulo}
-                                                </Typography><br/>
-                                                <Typography variant="subtitle1" id={id}>
-                                                    {autor}
-                                                </Typography>
-                                            </Box>            
-                                            <Box p={1} style={{ width:"15%" }} >
-                                                <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
-                                                    <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(titulo, texto)}>
-                                                        <EditIcon />
-                                                    </IconButton>
-                                                    <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleDelete()} >
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                </div>
-                                            </Box>               
-                                        </Box>
-                                        <Typography variant="body2" style={{ textAlign:'justify', paddingLeft:'20px' }} color="textSecondary">                                                
-                                            {texto}                                                          
+                                </Box>            
+                                <Box p={1} style={{ width:"15%" }} >
+                                    <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
+                                        <IconButton size="small" style={{ padding:5, marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleSubmit()}>
+                                            <AiFillSave style={{ width:30, height:30 }} />
+                                        </IconButton>
+                                        <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClose()} >
+                                            <AiOutlineCloseCircle style={{ width:30, height:30 }} />
+                                        </IconButton>
+                                    </div>
+                                </Box>               
+                            </Box>
+                            <TextField 
+                                className="inp"
+                                type="text" 
+                                onChange={handleChange(setTexto)}
+                                value={texto}
+                                maxLength="1990"
+                                minLength="6"
+                                label="Texto (min 6 - max 1990)"
+                                multiline
+                                variant="outlined"
+                            />
+                        </Grid>
+                        ) : (!openE && checked.length ? (                                                                
+                        <Grid item xs container direction="column" spacing={2}>
+                            <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
+                                <Box p={1} style={{ width:"30%" }} >
+                                    <div className="result">{renderPhotos(img)}</div>
+                                </Box>            
+                                <Box p={1} style={{ width:"55%", textAlign:'center' }} >
+                                    <Typography variant="subtitle1" id={id}>
+                                        {titulo}
+                                    </Typography><br/>
+                                    <Typography variant="subtitle1" id={id}>
+                                        {autor}
+                                    </Typography>
+                                </Box>            
+                                <Box p={1} style={{ width:"15%" }} >
+                                    <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
+                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(titulo, texto)}>
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleDelete()} >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </div>
+                                </Box>               
+                            </Box>
+                            <Typography variant="body2" style={{ textAlign:'justify', paddingLeft:'20px' }} color="textSecondary">                                                
+                                {texto}                                                          
+                            </Typography>
+                        </Grid>
+                        ) : (!checked.length ? (                           
+                                <CardHeader subheader={
+                                    <Box p={1} display="flex" style={{ paddingLeft:'25%'}} >                                
+                                        <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                                        <Typography variant="body2" color="textSecondary">                
+                                            Para visualizar selecione uma notícia na lateral                                                      
                                         </Typography>
-                                    </Grid>
-                                ) : (!checked.length ? (                            
-                                    <CardHeader
-                                        avatar={<AiOutlineInfoCircle/>}
-                                        subheader={`Para visualizar selecione uma notícia na lateral`}
-                                    />   
-                                ) : (                                                              
-                                    <Grid item xs container direction="column" spacing={2}>
-                                        <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
-                                            <Box p={1} style={{ width:"30%" }} >
-                                                <div className="result">{renderPhotos(img)}</div>
-                                            </Box>            
-                                            <Box p={1} style={{ width:"55%", textAlign:'center' }} >
-                                                <TextField 
-                                                    className="inp"
-                                                    type="text" 
-                                                    onChange={handleChange(setTituloE)}
-                                                    value={tituloE}
-                                                    maxLength="75"
-                                                    minLength="6"
-                                                    label="Título (min 6 - max 75)"
-                                                    variant="outlined"
-                                                /><br/><br/><br/>
-                                                <Typography variant="subtitle1" id={id}>
-                                                    {autor}
-                                                </Typography>
-                                            </Box>            
-                                            <Box p={1} style={{ width:"15%" }} >
-                                                <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                                    <IconButton size="small" style={{ padding:5, marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleAlter()}>
-                                                        <AiFillSave style={{ width:30, height:30 }} />
-                                                    </IconButton>
-                                                    <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleCloseE()} >
-                                                        <AiOutlineCloseCircle style={{ width:30, height:30 }} />
-                                                    </IconButton>
-                                                </div>
-                                            </Box>               
-                                        </Box>
-                                        <TextField 
-                                            className="inp"
-                                            type="text" 
-                                            onChange={handleChange(setTextoE)}
-                                            value={textoE}
-                                            maxLength="1990"
-                                            minLength="6"
-                                            label="Texto (min 6 - max 1990)"
-                                            multiline
-                                            variant="outlined"
-                                        />
-                                    </Grid>)))
-                        }
-                    </div>
+                                    </Box> }
+                                />   
+                        ) : (                                                              
+                        <Grid item xs container direction="column" spacing={2}>
+                            <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
+                                <Box p={1} style={{ width:"30%" }} >
+                                    <div className="result">{renderPhotos(img)}</div>
+                                </Box>            
+                                <Box p={1} style={{ width:"55%", textAlign:'center' }} >
+                                    <TextField 
+                                        className="inp"
+                                        type="text" 
+                                        onChange={handleChange(setTituloE)}
+                                        value={tituloE}
+                                        maxLength="75"
+                                        minLength="6"
+                                        label="Título (min 6 - max 75)"
+                                        variant="outlined"
+                                    /><br/><br/><br/>
+                                    <Typography variant="subtitle1" id={id}>
+                                        {autor}
+                                    </Typography>
+                                </Box>            
+                                <Box p={1} style={{ width:"15%" }} >
+                                    <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
+                                        <IconButton size="small" style={{ padding:5, marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleAlter()}>
+                                            <AiFillSave style={{ width:30, height:30 }} />
+                                        </IconButton>
+                                        <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleCloseE()} >
+                                            <AiOutlineCloseCircle style={{ width:30, height:30 }} />
+                                        </IconButton>
+                                    </div>
+                                </Box>               
+                            </Box>
+                            <TextField 
+                                className="inp"
+                                type="text" 
+                                onChange={handleChange(setTextoE)}
+                                value={textoE}
+                                maxLength="1990"
+                                minLength="6"
+                                label="Texto (min 6 - max 1990)"
+                                multiline
+                                variant="outlined"
+                            />
+                        </Grid>)))}
                 </div>
             </div>
                        

@@ -115,14 +115,14 @@ async function apagar(id) {
             retornoBD = await mysql.execute(sql, [id])
 
             if(retornoBD.affectedRows > 0){
-                return result = { retorno: true, msg: "Produto apagado com sucesso!"}
+                return result = { retorno: true, msg: "Produto excluido com sucesso!"}
             }else{
-                return result = { retorno: false, msg: "Não foi possível apagadar esse produto, tente novamente."}
+                return result = { retorno: false, msg: "Não foi possível excluir esse produto, tente novamente."}
             }
         
     } catch (e) {
         console.log(e)
-        return result = { retorno: false, msg: "Não foi possível apagadar esse produto.", Erro: e }
+        return result = { retorno: false, msg: "Não foi possível excluir esse produto.", Erro: e }
     }
 }
 module.exports.apagar = apagar

@@ -3,7 +3,6 @@ import { GrClose } from 'react-icons/gr';
 import { FiLogOut, FiTrash } from "react-icons/fi";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Button, Dialog, DialogActions, DialogContent, Box, Typography } from '@material-ui/core';
-import user from '../../assets/img/Icons/manage_accounts_black_24dp.png';
  
 export function DialogAlert(props){
      return(
@@ -129,22 +128,12 @@ export function DialogPerfil(props){
                 <img src={props.img} style={{ width:'60px', height:'auto' }} alt={props.perfil} /><br/>
                 <Typography variant="h6" style={{ textAlign:'center', textTransform:"capitalize" }}>Perfil {props.perfil}</Typography>
                 <Typography variant="subtitle1" style={{ textAlign:'center' }}>{props.name}</Typography>      
-                <Box p={1} style={{ textAlign:'center' }} >
-                    <hr style={{ width:'100%' }} /> 
-                </Box>                 
-                <Button 
-                    onClick={props.close} 
-                    variante="text" 
-                    startIcon={<img src={user} style={{ width:'30px', height:'auto' }} alt="Editar Perfil" />}
-                    style={{ color:"#21222DCC", textAlign:"center", textTransform:"capitalize"  }}> 
-                    Edite Perfil
-                </Button>  
             </DialogContent>  
             <DialogActions style={{ textAlign:"center" }}>
                 <Button
                     startIcon={<FiLogOut/>}
                     style={{
-                        color:"#3A3E87"
+                        color:"#2E8E61"
                     }}
                     onClick={props.click}>
                     LOGOUT

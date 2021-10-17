@@ -1,8 +1,11 @@
 //#region Dependências
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import { useHistory } from 'react-router-dom';
+import {  Box } from '@material-ui/core';
 import { DialogPerfil } from '../../../components/Dialog';
-import perfilEdit from '../../../assets/img/Icons/perfilEdit.png';
+import { HeaderAdm } from '../../../components/Header';
+import { MenuPrivate } from '../../../components/Menu';
+import redator from '../../../assets/img/Icons/perfilEdit.png';
 import GerenciarNoticias from './GerenciarNoticias';
 //#endregion
 const Edit = () => {
@@ -22,62 +25,57 @@ const Edit = () => {
     }
     const handleLogout = () => {
         localStorage.clear();
+
         history.push("/");
     }
     const handleStep = (val) => {
         setStep(val);
     }
+    const handleLoad = () => {
+        history.push("/" + perfil[0]);
+    }
+    useEffect(() => {
+      handleLoad();
+      // eslint-disable-next-line
+    }, []);
     //#endregion
     switch(step) {
         case 1: 
         return(
-            <div className="privado">
-                <div className="menup">
-                    <input className="itMenuH" onClick={()=>handleStep(1)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(2)} type='button' /><br/>
-                </div>
-                <div className="conteudo">
-                    <div className="hConteudo">
-                        <div className="hContEsq">
+            <div>
+            <HeaderAdm perfil={perfil} img={redator} diag={()=>handleOpen()} />
+                <Box display="flex" bgcolor="#FCFCFC" >
+                    <MenuPrivate 
+                        home={()=>handleStep(1)}
+                        news={()=>handleStep(5)} />
+                    <Box  className="conteudo">               
+                        <DialogPerfil open={open} close={handleClose} img={redator} perfil={perfil} name={nome} click={()=>handleLogout() } />
+                        <div style={{ marginTop:"20%" }}>
+                            <h1>Página Inicial</h1>
                         </div>
-                        <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
-                            <DialogPerfil open={open} close={handleClose} img={perfilEdit} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        </div>
-                    </div>
-                    <div style={{ marginTop:"20%" }}>
-                        <h1>Página Inicial</h1>
-                    </div>
-                </div>
+                    </Box>
+                </Box>
             </div>
         );
-        case 2: 
+        case 5: 
         return(
-            <div className="privado">
-                <div className="menup">
-                    <input className="itMenuH" onClick={()=>handleStep(1)} type='button' /><br/>
-                    <input className="itMenuGN" onClick={()=>handleStep(2)} type='button' /><br/>
-                </div>
-                <div className="conteudo">
-                    <div className="hConteudo">
-                        <div className="hContEsq">
-                            <span>Gerenciar Notícias</span>
-                        </div>
-                        <div className="hContDir">
-                            <input onClick={()=>handleOpen()} className="perfilM" type='button' />
-                            <DialogPerfil open={open} close={handleClose} img={perfilEdit} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        </div>
-                    </div>
-                    <div>
+            <div>
+                <HeaderAdm perfil={perfil} img={redator} diag={()=>handleOpen()} />
+                <Box display="flex" bgcolor="#FCFCFC" >
+                    <MenuPrivate 
+                        home={()=>handleStep(1)}
+                        news={()=>handleStep(5)} />
+                    <Box  className="conteudo"> 
+                        <DialogPerfil open={open} close={handleClose} img={redator} perfil={perfil} name={nome} click={()=>handleLogout() } />
                         <GerenciarNoticias/>
-                    </div>
-                </div>
+                    </Box>
+                </Box>
             </div>
         );
         default:
       return(
         step
       );
-    }
+    }   
 }
 export default Edit;

@@ -74,28 +74,25 @@ export const Header = () => {
 }
 export function HeaderAdm(props){
     return(
-        <Box display="flex" bgcolor="#3A5E4E" color="#ffffff" style={{ padding:'10px'}}>
-            <Grid container spacing={2}>
+        <Box display="flex" bgcolor="#3A5E4E" color="#ffffff">
+            <Grid container>
                 <Grid item xs={1}>
                     <Typography style={{ textAlign:'center' }}>
-                        <img src={logo} style={{ width:'88px', height:'auto', marginTop:'-15px' }} />
+                        <img src={logo} style={{ width:'88px', height:'auto', marginTop:'-10px', marginBottom:'-10px' }} />
                     </Typography>
                 </Grid>
                 <Grid item xs={9}>
-                    <Typography variant="h6" style={{ textAlign:'left', marginTop:'10px' }}>
+                    <Typography variant="h6" style={{ textAlign:'left', marginLeft:'10px', marginTop:'20px' }}>
                         Painel Administrativo
                     </Typography>
                 </Grid>
-                <Grid item xs={2} container spacing={4} onClick={props.diag} style={{ cursor:'pointer'}}>
-                    <Grid item xs={3}></Grid>
-                    <Grid item xs={3}>
-                        <img src={props.img} style={{ width:'49px', height:'49px', marginTop:'5px'}} /> 
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography variant="subtitle2" style={{ textAlign:'left', textTransform:"capitalize", marginTop:'20px' }}>
+                <Grid item xs={2} onClick={props.diag} style={{ cursor:'pointer', paddingLeft:'5%'}}>
+                    <Box display="flex" p={1} style={{ marginTop:'15px', textAlign:'end' }}>
+                        <img src={props.img} style={{ width:'40px', height:'40px', marginTop:'-7px'}} /> 
+                        <Typography variant="subtitle2" style={{ textAlign:'end', textTransform:"capitalize", marginLeft:'20px' }}>
                             Perfil {props.perfil}
                         </Typography>                        
-                    </Grid>
+                    </Box>
                 </Grid>
             </Grid>
         </Box>

@@ -13,6 +13,7 @@ import {DialogReadNew} from '../../../components/Dialog';
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 //#endregion
 const News = () => {
+    //#region Variáveis e Variáveis de Estado 
     const [infos, setInfos] = useState([]);
     const [destaque, setDestaque] = useState([]);
     const [filtro, setFiltro] = useState([]);
@@ -48,7 +49,8 @@ const News = () => {
         }
     };
     var back = "localhost:3001";
-  
+    //#endregion  
+    //#region Funções e Funções de Estado
     const handleOpen = (id, titulo, texto, autor, data, img) => {
         setOpen(true);
         setId(id);
@@ -93,7 +95,7 @@ const News = () => {
       handleLoad();
       // eslint-disable-next-line
     }, []);
-
+    //#endregion
     return(
         <div>
             <Header/>
@@ -128,8 +130,8 @@ const News = () => {
                                         <div style={Object.assign({}, styles.slide, styles.slide2) } 
                                         onClick={() => handleOpen(value.id, value.titulo, value.texto, value.autor, value.data, value.imagem)}>
                                             <div style={{ backgroundImage: `url(${"http://localhost:3001" + value.imagem})`, 
-                                                        backgroundRepeat: 'no-repeat', minHeight:"400px", maxHeight:"450px", 
-                                                        backgroundSize: '100%', cursor:'pointer'  
+                                                        backgroundRepeat: 'no-repeat', height:430, backgroundSize: '100%', 
+                                                        cursor:'pointer'  
                                                 }}>
                                             </div>
                                             <Box bgcolor="#00000099" color="#ffffff" style={{ marginTop:'-62px', padding:'16px'}}>
@@ -159,7 +161,7 @@ const News = () => {
                             <Typography noWrap variant="h6">
                                 ÚLTIMAS NOTÍCIAS
                             </Typography>
-                            <List container wrap="nowrap" style={{ width: "100%", height: "55vh", backgroundColor: "#ffffff", overflow: 'auto', paddingTop:'50px' }} >
+                            <List container wrap="nowrap" style={{ width: "100%", height: "55vh", backgroundColor: "#ffffff", overflow: 'auto' }} >
                             {infos.map((value) => {
                                 return (
                                     <ListItem key={value} role="listitem" button sx={{  height: 150, flexGrow: 1}} >

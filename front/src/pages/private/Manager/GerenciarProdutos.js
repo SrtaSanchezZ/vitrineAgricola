@@ -1,17 +1,30 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Button, Box, Grid, IconButton, Typography, TextField, InputLabel, Select, FormControl, MenuItem } from '@material-ui/core';
+import { Avatar, Button, Box, Card, CardContent, FormControl, Grid, IconButton, InputLabel, InputAdornment, 
+         MenuItem, Select, Typography, TextField } from '@material-ui/core';
 import { MdAdd } from "react-icons/md";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import Search from '@material-ui/icons/Search';
 import semimg from '../../../assets/img/noimg.png';
+import ImgProduto from '../../../assets/img/Icons/shopping_basket_black_24dp.png';
 import { DialogAlert, DialogLoading, DialogMain } from '../../../components/Dialog';
 //#endregion
 const GerenciarProdutos = () => { 
     //#region Variáveis e Variáveis de Estado
     const [infos, setInfos] = useState([]);
     const [infosG, setInfosG] = useState([]);
+    const [filtro, setFiltro] = useState([]);
+    const [valorF, setValorF] = useState("");
+    const [comF, setComF] = useState("none"); 
+    const [semF, setSemF] = useState("block");
+    const [filtroG, setFiltroG] = useState([]);
+    const [valorFG, setValorFG] = useState("");
+    const [comFG, setComFG] = useState("none"); 
+    const [semFG, setSemFG] = useState("block");
+    const [comG, setComG] = useState("none"); 
+    const [semG, setSemG] = useState("block");
     const [open, setOpen] = useState(false);
     const [openA, setOpenA] = useState(false);
     const [openE, setOpenE] = useState(false);
@@ -23,6 +36,7 @@ const GerenciarProdutos = () => {
     const [grupo, setGrupo] = useState("");
     const [grupoId, setGrupoId] = useState("");
     const [grupoNome, setGrupoNome] = useState("");
+    const [grupoNomeE, setGrupoNomeE] = useState("");
     const [imagem, setImagem] = useState([]);
     const [id, setId] = useState("");
     const [nomeE, setNomeE] = useState("");
@@ -45,6 +59,7 @@ const GerenciarProdutos = () => {
         perfil: "",
         imagem: []
     }
+    let total = 0;
     var msg = "";
     var back = "localhost:3001";
     //#endregion
@@ -96,7 +111,7 @@ const GerenciarProdutos = () => {
         setGrupoNome("");
     };
     const handleCloseG = () => {
-      setOpenG(false);
+        setOpenG(false);
     };
     
     const handleChange = (set) => (event) => set(event.target.value);
@@ -241,8 +256,7 @@ const GerenciarProdutos = () => {
             setInfos(ArrPro(res.data.response.produtos)); 
             setInfosG(ArrGru(res.data.response.grupos)); 
           }).catch((res) =>{ 
-            // msg = "Não foi possível localizar produtos.";
-            // handleClickOpenA(msg);   
+            msg = "Não foi possível localizar produtos.";
           })  
     };
     const handleLoadG = () =>{
@@ -251,8 +265,7 @@ const GerenciarProdutos = () => {
           .then((res) => {               
             setInfosG(ArrGru(res.data.response.grupos)); 
           }).catch((res) =>{ 
-            // msg = "Não foi possível localizar produtos.";
-            // handleClickOpenA(msg);   
+            msg = "Não foi possível localizar produtos.";  
           })  
     };
     const handleAlter = () =>{       
@@ -311,9 +324,20 @@ const GerenciarProdutos = () => {
                     handleClickOpenA(msg);   
                 }) 
     };
-
-    console.log(infosG);
-
+    const handleFiltroG = () => {
+      setFiltroG(infosG.filter(infos => infos.texto.toUpperCase().indexOf(valorFG.toUpperCase()) !== -1));
+      if(filtro.length > 1){
+        setSemFG("none");
+        setComFG("block");
+      }else{
+        setSemFG("block");
+        setComFG("none");
+      }
+    };
+    const handleChangeFiltroG = (set) => (event) => {
+      set(event.target.value)
+      handleFiltroG();
+    };
     useEffect(() => {
         handleLoad();
         handleLoadG();
@@ -321,35 +345,94 @@ const GerenciarProdutos = () => {
       }, []);
     //#endregion
     return(
-        <div>    
+        <Grid display="block" style={{ paddingLeft:'24px', paddingRight:'24px' }}>
             <Box p={1} display="flex" align="right">                      
-                <Box p={1} style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
+                <Box style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
                     <Typography variant="h6">
                         Gerenciar Produtos
                     </Typography>
                 </Box>  
                 <Box p={1} display="flex" justifyContent="flex-end" style={{width:'50%', textAlign:'end'}}>      
-                    <Box p={1} style={{textAlign:'end'}}>
+                    <Box style={{textAlign:'end'}}>
                         <Button 
                             onClick={()=>handleClickOpenG()} 
                             variante="outlined"  
                             className="btnNovo"
                             startIcon={<MdAdd/>}
-                            style={{  color:"#2E8E61" }}> 
+                            style={{ color:"#2E8E61", position:"unset", border:'2px solid #2E8E61', marginRight:'20px' }}> 
                             NOVO GRUPO
                         </Button>
                         <Button 
                             onClick={()=>handleClickOpen()} 
-                            variante="contained" 
+                            variante="outlined" 
                             className="btnNovo"
                             startIcon={<MdAdd/>}
-                            style={{ backgroundColor:"#2E8E61", color:"#FFFFFF", marginRight:'20px'}}> 
+                            style={{ color:"#2E8E61", position:"unset", border:'2px solid #2E8E61'}}> 
                             NOVO PRODUTO
                         </Button>
                     </Box>       
                 </Box>
             </Box>  
-            <div className="noticias">
+            <Box p={1} display="flex">           
+                <Box style={{ width:'50%', textAlign:'start', paddingTop:'20px' }}>  
+                    <Typography variant="subtitle1" style={{ textAlign:'left' }} >
+                        Lista de Grupos
+                    </Typography>
+                </Box>
+                <Box style={{width:'50%', textAlign:'end'}}>      
+                    <Box p={1} style={{textAlign:'end'}}>
+                        <TextField
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Search style={{ margin:'5px' }} />
+                                    </InputAdornment>
+                                ),
+                                'aria-label': 'search',
+                                disableUnderline: true
+                            }}
+                            placeholder="Busque por um grupo"
+                            className="search"
+                            variant="standard"
+                            value={valorFG}
+                            onChange={handleChangeFiltroG(setValorFG)}
+                            style={{ width:'60%', borderRadius:'60px' }}
+                        /> 
+                    </Box>       
+                </Box>
+            </Box> 
+            <Box p={1} display={semFG} sx={{ flexGrow: 1 }}>
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                    {infosG.map((grup, index) => (  
+                        <Grid item xs={2} sm={4} md={4} key={grup.id}>                                                               
+                            <Card  
+                                    sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                <Box p={2}>
+                                    <Avatar style={{ color:'#201E1E', backgroundColor:'#FFFFFF' }}>
+                                        <Typography variant="subtitle1" style={{ fontWeight:'bold' }}>
+                                            <img src={ImgProduto} style={{ width:'24px', height:'auto' }} />   
+                                        </Typography>
+                                    </Avatar>
+                                </Box>
+                                <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
+                                    <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                        {grup.nome}
+                                    </Typography>
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>  
+                                        {total = infos.map(function(num){   
+                                                if(grup.id === num.grup)
+                                                    return total + 1;
+                                            }
+                                        )}
+                                        0{total.length} Produtos
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid> 
+                    ))}
+                </Grid>
+            </Box>
+            {/* <div className="noticias">
                 <Grid className="bxLista" item xs={12}>
                     {infos.map((item, index) => (
                         <Box display="bloxk">    
@@ -382,7 +465,7 @@ const GerenciarProdutos = () => {
                         </Box>
                     ))}
                 </Grid>
-            </div>  
+            </div>   */}
 
             <DialogMain
                 open={open}
@@ -501,7 +584,7 @@ const GerenciarProdutos = () => {
             />           
             <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>            
             <DialogLoading open={openL} />    
-        </div>
+        </Grid>
     );
 }
 export default GerenciarProdutos;
