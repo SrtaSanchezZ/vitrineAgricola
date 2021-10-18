@@ -4,8 +4,8 @@ const multerConfig = require('../services/multer');
 const proController = require('../controllers/produtos');
 
 routes.get(
-    '/produtos',
-    proController.obter
+    '/produtos/:id',
+    proController.obterPorGrupoId
 );
 routes.post(
     '/produtos', 

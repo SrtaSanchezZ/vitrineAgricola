@@ -1,9 +1,9 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Avatar, Button, Box, Card, CardContent, FormControl, Grid, IconButton, InputLabel, InputAdornment, 
+import { Avatar, Button, Box, Card, CardContent, CardMedia, FormControl, Grid, IconButton, InputLabel, InputAdornment, 
          MenuItem, Select, Typography, TextField } from '@material-ui/core';
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdArrowBack } from "react-icons/md";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Search from '@material-ui/icons/Search';
@@ -30,6 +30,7 @@ const GerenciarProdutos = () => {
     const [openE, setOpenE] = useState(false);
     const [openL, setOpenL] = useState(false);
     const [openG, setOpenG] = useState(false);
+    const [openGE, setOpenGE] = useState(false);
     const [alerta, setAlerta] = useState("");
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
@@ -59,7 +60,7 @@ const GerenciarProdutos = () => {
         perfil: "",
         imagem: []
     }
-    let total = 0;
+
     var msg = "";
     var back = "localhost:3001";
     //#endregion
@@ -71,8 +72,6 @@ const GerenciarProdutos = () => {
     const handleCloseA = () => {
       setOpenA(false);
       setAlerta("");
-        
-      handleLoad();
     };
     const handleClickOpen = () => {
       setOpen(true);
@@ -83,6 +82,37 @@ const GerenciarProdutos = () => {
     };
     const handleClose = () => {
       setOpen(false);
+    };
+    const handleComG = (id, nome) =>{
+        setGrupoId(id);
+        setGrupoNome(nome);
+
+        handleLoad(id);
+    };
+    const handleCloseComG = () => {
+        setSemG("block");
+        setComG("none");
+
+        setGrupoId("");
+        setGrupoNome("");
+    };
+    const handleClickOpenG = () =>{
+        setOpenG(true);
+
+        setGrupoId("");
+        setGrupoNome("");
+    };
+    const handleCloseG = () => {
+        setOpenG(false);
+    };
+    const handleClickOpenGE = () =>{
+        setOpenGE(true);
+
+        setGrupoId("");
+        setGrupoNome("");
+    };
+    const handleCloseGE = () => {
+        setOpenGE(false);
     };
     const handleClickOpenE = (id, nome, descricao, imagem) => {
       setOpenE(true);
@@ -103,15 +133,6 @@ const GerenciarProdutos = () => {
     };
     const handleCloseL = () => {
       setOpenL(false);
-    };
-    const handleClickOpenG = () =>{
-        setOpenG(true);
-
-        setGrupoId("");
-        setGrupoNome("");
-    };
-    const handleCloseG = () => {
-        setOpenG(false);
     };
     
     const handleChange = (set) => (event) => set(event.target.value);
@@ -249,14 +270,16 @@ const GerenciarProdutos = () => {
             handleClickOpenA(msg);
         }
     };
-    const handleLoad = () =>{
+    const handleLoad = (id) =>{
         axios
-          .get(`http://`+ back +`/produtos`)
+          .get(`http://`+ back +`/produtos/`+ id)
           .then((res) => {              
             setInfos(ArrPro(res.data.response.produtos)); 
-            setInfosG(ArrGru(res.data.response.grupos)); 
+            setSemG("none");
+            setComG("block");
           }).catch((res) =>{ 
-            msg = "Não foi possível localizar produtos.";
+            msg = "Não foi possível localizar produtos para esse grupo.";
+            handleClickOpenA(msg);   
           })  
     };
     const handleLoadG = () =>{
@@ -324,9 +347,23 @@ const GerenciarProdutos = () => {
                     handleClickOpenA(msg);   
                 }) 
     };
-    const handleFiltroG = () => {
-      setFiltroG(infosG.filter(infos => infos.texto.toUpperCase().indexOf(valorFG.toUpperCase()) !== -1));
+    const handleFiltro = () => {
+      setFiltro(infos.filter(info => info.nome.toUpperCase().indexOf(valorF.toUpperCase()) !== -1));
       if(filtro.length > 1){
+        setSemF("none");
+        setComF("block");
+      }else{
+        setSemF("block");
+        setComF("none");
+      }
+    };
+    const handleChangeFiltro = (set) => (event) => {
+      set(event.target.value)
+      handleFiltro();
+    };
+    const handleFiltroG = () => {
+      setFiltroG(infosG.filter(info => info.nome.toUpperCase().indexOf(valorFG.toUpperCase()) !== -1));
+      if(filtroG.length > 1){
         setSemFG("none");
         setComFG("block");
       }else{
@@ -339,103 +376,227 @@ const GerenciarProdutos = () => {
       handleFiltroG();
     };
     useEffect(() => {
-        handleLoad();
         handleLoadG();
         // eslint-disable-next-line
       }, []);
     //#endregion
+
+    console.log(infos);
+
     return(
         <Grid display="block" style={{ paddingLeft:'24px', paddingRight:'24px' }}>
-            <Box p={1} display="flex" align="right">                      
-                <Box style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
-                    <Typography variant="h6">
-                        Gerenciar Produtos
-                    </Typography>
+            <Box display={semG}>
+                <Box p={1} display="flex" align="right">                      
+                    <Box style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
+                        <Typography variant="h6">
+                            Gerenciar Produtos
+                        </Typography>
+                    </Box>  
+                    <Box p={1} display="flex" justifyContent="flex-end" style={{width:'50%', textAlign:'end'}}>      
+                        <Box style={{textAlign:'end'}}>
+                            <Button 
+                                onClick={()=>handleClickOpenG()} 
+                                variante="outlined"  
+                                className="btnNovo"
+                                startIcon={<MdAdd/>}
+                                style={{ color:"#2E8E61", position:"unset", border:'2px solid #2E8E61', marginRight:'20px' }}> 
+                                NOVO GRUPO
+                            </Button>
+                            <Button 
+                                onClick={()=>handleClickOpen()} 
+                                variante="outlined" 
+                                className="btnNovo"
+                                startIcon={<MdAdd/>}
+                                style={{ color:"#2E8E61", position:"unset", border:'2px solid #2E8E61'}}> 
+                                NOVO PRODUTO
+                            </Button>
+                        </Box>       
+                    </Box>
                 </Box>  
-                <Box p={1} display="flex" justifyContent="flex-end" style={{width:'50%', textAlign:'end'}}>      
-                    <Box style={{textAlign:'end'}}>
-                        <Button 
-                            onClick={()=>handleClickOpenG()} 
-                            variante="outlined"  
-                            className="btnNovo"
-                            startIcon={<MdAdd/>}
-                            style={{ color:"#2E8E61", position:"unset", border:'2px solid #2E8E61', marginRight:'20px' }}> 
-                            NOVO GRUPO
-                        </Button>
-                        <Button 
-                            onClick={()=>handleClickOpen()} 
-                            variante="outlined" 
-                            className="btnNovo"
-                            startIcon={<MdAdd/>}
-                            style={{ color:"#2E8E61", position:"unset", border:'2px solid #2E8E61'}}> 
-                            NOVO PRODUTO
-                        </Button>
-                    </Box>       
-                </Box>
-            </Box>  
-            <Box p={1} display="flex">           
-                <Box style={{ width:'50%', textAlign:'start', paddingTop:'15px' }}>  
-                    <Typography variant="subtitle1" style={{ textAlign:'left' }} >
-                        Lista de Grupos
-                    </Typography>
-                </Box>
-                <Box p={1} style={{width:'50%', textAlign:'end'}}>      
-                    <Box style={{textAlign:'end'}}>
-                        <TextField
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Search style={{ margin:'5px' }} />
-                                    </InputAdornment>
-                                ),
-                                'aria-label': 'search',
-                                disableUnderline: true
-                            }}
-                            placeholder="Busque por um grupo"
-                            className="search"
-                            variant="standard"
-                            value={valorFG}
-                            onChange={handleChangeFiltroG(setValorFG)}
-                            style={{ width:'60%', borderRadius:'60px' }}
-                        /> 
-                    </Box>       
-                </Box>
-            </Box> 
-            <Box p={1} display={semFG} sx={{ flexGrow: 1 }}>
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {infosG.map((grup, index) => (  
-                        <Grid item xs={2} sm={4} md={4} key={grup.id}>                                                               
-                            <Card  
-                                    sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
-                                <Box p={2}>
-                                    <Avatar style={{ color:'#201E1E', backgroundColor:'#FFFFFF' }}>
-                                        <Typography variant="subtitle1" style={{ fontWeight:'bold' }}>
-                                            <img src={ImgProduto} style={{ width:'24px', height:'auto' }} />   
+                <Box p={1} display="flex">           
+                    <Box style={{ width:'50%', textAlign:'start', paddingTop:'15px' }}>  
+                        <Typography variant="subtitle1" style={{ textAlign:'left' }} >
+                            Lista de Grupos
+                        </Typography>
+                    </Box>
+                    <Box p={1} style={{width:'50%', textAlign:'end'}}>      
+                        <Box style={{textAlign:'end'}}>
+                            <TextField
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <Search style={{ margin:'5px' }} />
+                                        </InputAdornment>
+                                    ),
+                                    'aria-label': 'search',
+                                    disableUnderline: true
+                                }}
+                                placeholder="Busque por um grupo"
+                                className="search"
+                                variant="standard"
+                                value={valorFG}
+                                onChange={handleChangeFiltroG(setValorFG)}
+                                style={{ width:'60%', borderRadius:'60px' }}
+                            /> 
+                        </Box>       
+                    </Box>
+                </Box> 
+                <Box p={1} display={semFG} sx={{ flexGrow: 1 }}>
+                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                        {infosG.map((grup, index) => (  
+                            <Grid item xs={2} sm={4} md={4} key={grup.id}>                                                               
+                                <Card onClick={()=>handleComG(grup.id, grup.nome)}
+                                        sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                    <Box p={2}>
+                                        <Avatar style={{ color:'#201E1E', backgroundColor:'#FFFFFF' }}>
+                                            <Typography variant="subtitle1" style={{ fontWeight:'bold' }}>
+                                                <img src={ImgProduto} style={{ width:'24px', height:'auto' }} />   
+                                            </Typography>
+                                        </Avatar>
+                                    </Box>
+                                    <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
+                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                            {grup.nome}
                                         </Typography>
-                                    </Avatar>
-                                </Box>
-                                <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
-                                    <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
-                                        {grup.nome}
-                                    </Typography>
-                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>  
-                                        {infos.map((num) => {   
-                                            return (<>
-                                            {grup.id === num.grupo ?
-                                                (
-                                                 total + 1
-                                                ):null}
-                                            </>)}
-                                        )}
-                                        {total.length} Produtos
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid> 
-                    ))}
-                </Grid>
+                                    </CardContent>
+                                </Card>
+                            </Grid> 
+                        ))}
+                    </Grid>
+                </Box>
+                <Box p={1} display={comFG} sx={{ flexGrow: 1 }}>
+                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                        {filtroG.map((grup, index) => (  
+                            <Grid item xs={2} sm={4} md={4} key={grup.id}>                                                               
+                                <Card onClick={()=>handleComG(grup.id, grup.nome)} 
+                                      sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                    <Box p={2}>
+                                        <Avatar style={{ color:'#201E1E', backgroundColor:'#FFFFFF' }}>
+                                            <Typography variant="subtitle1" style={{ fontWeight:'bold' }}>
+                                                <img src={ImgProduto} style={{ width:'24px', height:'auto' }} />   
+                                            </Typography>
+                                        </Avatar>
+                                    </Box>
+                                    <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
+                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                            {grup.nome}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid> 
+                        ))}
+                    </Grid>
+                </Box>
             </Box>
-            {/* <div className="noticias">
+            <Box display={comG}>
+                <Box p={1} display="flex" align="right">                      
+                    <Box style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>         
+                        <Box style={{textAlign:'start'}}>
+                            <Button 
+                                onClick={()=>handleCloseComG()} 
+                                variante="outlined" 
+                                className="btnNovo"
+                                startIcon={
+                                    <Avatar style={{ color:'#201E1E', backgroundColor:'#21222D1E' }}>
+                                        <MdArrowBack style={{ width:'24px', height:'auto' }} />   
+                                    </Avatar>
+                                    }
+                                style={{ color:"#000000", position:"unset"}}>                                                        
+                                <Typography variant="h6">
+                                    {grupoNome}
+                                </Typography>
+                            </Button>
+                        </Box> 
+                    </Box>  
+                    <Box p={1} display="flex" justifyContent="flex-end" style={{width:'50%', textAlign:'end'}}>      
+                        <Box style={{textAlign:'end'}}>
+                            <Button 
+                                onClick={()=>handleClickOpen()} 
+                                variante="outlined" 
+                                className="btnNovo"
+                                startIcon={<MdAdd/>}
+                                style={{ color:"#2E8E61", position:"unset", border:'2px solid #2E8E61'}}> 
+                                NOVO PRODUTO
+                            </Button>
+                        </Box>       
+                    </Box>
+                </Box>  
+                <Box p={1} display="flex">           
+                    <Box p={1} display="flex" style={{ width:'50%', textAlign:'start', paddingTop:'15px' }}>
+                        <img src={ImgProduto} style={{ width:'24px', height:'24px', marginRight:'16px' }} />     
+                        <Typography variant="subtitle1" style={{ textAlign:'left' }} >      
+                            Lista de {grupoNome + " (" + infos.length + ")"  }
+                        </Typography>
+                    </Box>
+                    <Box p={1} style={{width:'50%', textAlign:'end'}}>      
+                        <Box style={{textAlign:'end'}}>
+                            <TextField
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <Search style={{ margin:'5px' }} />
+                                        </InputAdornment>
+                                    ),
+                                    'aria-label': 'search',
+                                    disableUnderline: true
+                                }}
+                                placeholder="Busque por um produto"
+                                className="search"
+                                variant="standard"
+                                value={valorF}
+                                onChange={handleChangeFiltro(setValorF)}
+                                style={{ width:'60%', borderRadius:'60px' }}
+                            /> 
+                        </Box>       
+                    </Box>
+                </Box> 
+                <Box p={1} display={semF} sx={{ flexGrow: 1 }}>
+                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                        {infos.map((item, index) => (  
+                            <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
+                                <Card  
+                                        sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                    <CardMedia
+                                        component="img"
+                                        sx={{ width: 100, height: 'auto' }}
+                                        image={"http://" + back + item.imagem}
+                                        alt={item.nome}
+                                    />
+                                    <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
+                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                            {item.nome}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid> 
+                        ))}
+                    </Grid>
+                </Box>
+                <Box p={1} display={comF} sx={{ flexGrow: 1 }}>
+                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                        {filtro.map((item, index) => (  
+                            <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
+                                <Card  
+                                        sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                    <Box p={2}>
+                                        <Avatar style={{ color:'#201E1E', backgroundColor:'#FFFFFF' }}>
+                                            <Typography variant="subtitle1" style={{ fontWeight:'bold' }}>
+                                                <img src={ImgProduto} style={{ width:'24px', height:'auto' }} />   
+                                            </Typography>
+                                        </Avatar>
+                                    </Box>
+                                    <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
+                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                            {item.nome}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid> 
+                        ))}
+                    </Grid>
+                </Box>
+            </Box>
+           {/* <div className="noticias">
                 <Grid className="bxLista" item xs={12}>
                     {infos.map((item, index) => (
                         <Box display="bloxk">    

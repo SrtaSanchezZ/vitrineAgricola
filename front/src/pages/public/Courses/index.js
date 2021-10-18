@@ -32,36 +32,36 @@ const Courses = () => {
             mercado: item.mercado, mod1: item.mod1, mod2: item.mod2, mod3: item.mod3,                
             mod4: item.mod4, duracao: item.duracao, img: item.img, area: item.area }));
     
-const Accordion = styled((props) => (
-  <MuiAccordion disableGutters elevation={0} square {...props} />
-))(() => ({
-  borderBottom: `1px solid #c3c3c3`,
-  '&:not(:last-child)': {
-    borderBottom: 0,
-  },
-  '&:before': {
-    display: 'none',
-  },
-}));
-const AccordionSummary = styled((props) => (
-  <MuiAccordionSummary
-    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
-    {...props}
-  />
-))(() => ({
-  borderTop: `1px solid #c3c3c3`,
-  flexDirection: 'row-reverse',
-  '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-    transform: 'rotate(90deg)',
-  },
-  '& .MuiAccordionSummary-content': {
-    marginLeft: 10,
-  },
-}));
-const AccordionDetails = styled(MuiAccordionDetails)(() => ({
-  padding: 2,
-  borderTop: '1px solid rgba(0, 0, 0, .125)',
-}));
+    const Accordion = styled((props) => (
+      <MuiAccordion disableGutters elevation={0} square {...props} />
+    ))(() => ({
+      borderBottom: `1px solid #c3c3c3`,
+      '&:not(:last-child)': {
+        borderBottom: 0,
+      },
+      '&:before': {
+        display: 'none',
+      },
+    }));
+    const AccordionSummary = styled((props) => (
+      <MuiAccordionSummary
+        expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
+        {...props}
+      />
+    ))(() => ({
+      borderTop: `1px solid #c3c3c3`,
+      flexDirection: 'row-reverse',
+      '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
+        transform: 'rotate(90deg)',
+      },
+      '& .MuiAccordionSummary-content': {
+        marginLeft: 10,
+      },
+    }));
+    const AccordionDetails = styled(MuiAccordionDetails)(() => ({
+      padding: 2,
+      borderTop: '1px solid rgba(0, 0, 0, .125)',
+    }));
 
     const handleLoadNivel = () =>{
         axios
