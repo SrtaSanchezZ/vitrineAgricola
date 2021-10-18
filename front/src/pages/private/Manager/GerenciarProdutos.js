@@ -374,13 +374,13 @@ const GerenciarProdutos = () => {
                 </Box>
             </Box>  
             <Box p={1} display="flex">           
-                <Box style={{ width:'50%', textAlign:'start', paddingTop:'20px' }}>  
+                <Box style={{ width:'50%', textAlign:'start', paddingTop:'15px' }}>  
                     <Typography variant="subtitle1" style={{ textAlign:'left' }} >
                         Lista de Grupos
                     </Typography>
                 </Box>
-                <Box style={{width:'50%', textAlign:'end'}}>      
-                    <Box p={1} style={{textAlign:'end'}}>
+                <Box p={1} style={{width:'50%', textAlign:'end'}}>      
+                    <Box style={{textAlign:'end'}}>
                         <TextField
                             InputProps={{
                                 startAdornment: (
@@ -419,12 +419,15 @@ const GerenciarProdutos = () => {
                                         {grup.nome}
                                     </Typography>
                                     <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>  
-                                        {total = infos.map(function(num){   
-                                                if(grup.id === num.grup)
-                                                    return total + 1;
-                                            }
+                                        {infos.map((num) => {   
+                                            return (<>
+                                            {grup.id === num.grupo ?
+                                                (
+                                                 total + 1
+                                                ):null}
+                                            </>)}
                                         )}
-                                        0{total.length} Produtos
+                                        {total.length} Produtos
                                     </Typography>
                                 </CardContent>
                             </Card>
