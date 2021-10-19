@@ -75,10 +75,10 @@ async function obterProdutoPorNome(nome) {
 }
 module.exports.obterProdutoPorNome = obterProdutoPorNome
 
-async function cadastrar(nome, descricao, grupo, imagem) {
+async function cadastrar(nome, descricao, grupo, metrica, imagem) {
     try {        
-        sql = `INSERT INTO produtos (pro_nome, pro_descricao, pro_grupo, pro_imagem) VALUES (?,?,?,?)`
-        retornoBD = await mysql.execute(sql, [nome, descricao, grupo, imagem])
+        sql = `INSERT INTO produtos (pro_nome, pro_descricao, pro_grupo, pro_metrica, pro_imagem) VALUES (?,?,?,?,?)`
+        retornoBD = await mysql.execute(sql, [nome, descricao, grupo, metrica, imagem])
 
         if(retornoBD.affectedRows > 0){
             return result = { retorno: true, msg: "Produto cadastrado com sucesso!"}
@@ -91,11 +91,11 @@ async function cadastrar(nome, descricao, grupo, imagem) {
 }
 module.exports.cadastrar = cadastrar
 
-async function atualizar(nome, descricao, grupo, id) {
+async function atualizar(nome, descricao, grupo, metrica, id) {
     try {
 
-        sql = `UPDATE produtos SET pro_nome = ?, pro_descricao = ?, pro_grupo = ? WHERE pro_id = ?`
-        retornoBD = await mysql.execute(sql, [nome, descricao, grupo, id])
+        sql = `UPDATE produtos SET pro_nome = ?, pro_descricao = ?, pro_grupo = ?, pro_metrica = ? WHERE pro_id = ?`
+        retornoBD = await mysql.execute(sql, [nome, descricao, grupo, metrica, id])
 
         if(retornoBD.affectedRows > 0){
             return result = { retorno: true, msg: "Produto atualizado com sucesso!"}

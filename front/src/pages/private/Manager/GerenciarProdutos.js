@@ -1,11 +1,10 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Avatar, Button, Box, Card, CardContent, CardMedia, FormControl, Grid, IconButton, InputLabel, InputAdornment, 
-         MenuItem, Select, Typography, TextField } from '@material-ui/core';
+import { Avatar, Button, Box, Card, CardContent, CardMedia, FormControl, Grid, 
+        InputLabel, InputAdornment, MenuItem, Select, Typography, TextField } from '@material-ui/core';
 import { MdAdd, MdArrowBack } from "react-icons/md";
 import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 import Search from '@material-ui/icons/Search';
 import semimg from '../../../assets/img/noimg.png';
 import ImgProduto from '../../../assets/img/Icons/shopping_basket_black_24dp.png';
@@ -35,6 +34,7 @@ const GerenciarProdutos = () => {
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
     const [grupo, setGrupo] = useState("");
+    const [metrica, setMetrica] = useState("");
     const [grupoId, setGrupoId] = useState("");
     const [grupoNome, setGrupoNome] = useState("");
     const [grupoNomeE, setGrupoNomeE] = useState("");
@@ -42,13 +42,14 @@ const GerenciarProdutos = () => {
     const [id, setId] = useState("");
     const [nomeE, setNomeE] = useState("");
     const [descricaoE, setDescricaoE] = useState("");
+    const [metricaE, setMetricaE] = useState("");
     const [img, setImg] = useState(""); 
     const [perfil, setPerfil] = useState(localStorage.getItem("perfil")); 
     const [email, setEmail] = useState(localStorage.getItem("email")); 
 
     const ArrPro = (arr) =>
       arr.map((item) => ({ id: item.id, nome: item.nome, descricao: item.descricao,
-                           grupo: item.grupo, imagem: item.imagem })); 
+                           grupo: item.grupo, metrica: item.metrica, imagem: item.imagem })); 
     const ArrGru = (arr) =>
         arr.map((item) => ({ id: item.id, nome: item.nome}));
     
@@ -56,6 +57,7 @@ const GerenciarProdutos = () => {
         nome: "",
         descricao: "",
         grupo: "",
+        metrica: "",
         email: "",
         perfil: "",
         imagem: []
@@ -78,6 +80,8 @@ const GerenciarProdutos = () => {
 
       setNome("");
       setDescricao("");
+      setMetrica("");
+      setGrupo("");
       setImagem([]);
     };
     const handleClose = () => {
@@ -95,6 +99,8 @@ const GerenciarProdutos = () => {
 
         setGrupoId("");
         setGrupoNome("");
+        setInfos([]);
+        handleLoadG();
     };
     const handleClickOpenG = () =>{
         setOpenG(true);
@@ -108,17 +114,17 @@ const GerenciarProdutos = () => {
     const handleClickOpenGE = () =>{
         setOpenGE(true);
 
-        setGrupoId("");
-        setGrupoNome("");
+        setGrupoNomeE(grupoNome);
     };
     const handleCloseGE = () => {
         setOpenGE(false);
     };
-    const handleClickOpenE = (id, nome, descricao, imagem) => {
+    const handleClickOpenE = (id, nome, descricao, metrica, imagem) => {
       setOpenE(true);
       setId(id);
       setNomeE(nome);
       setDescricaoE(descricao);
+      setMetricaE(metrica);
       setImg(imagem);
     };
     const handleCloseE = () => {
@@ -167,6 +173,7 @@ const GerenciarProdutos = () => {
                     nome: nome,
                     descricao: descricao,
                     grupo: grupo,
+                    metrica: metrica,
                     email: email,
                     perfil: perfil,
                     imagem: imagem[0]
@@ -178,6 +185,7 @@ const GerenciarProdutos = () => {
                   formData.append('nome',produto.nome);
                   formData.append('descricao',produto.descricao);
                   formData.append('grupo',produto.grupo);
+                  formData.append('metrica',produto.metrica);
                   formData.append('file',produto.imagem);
 
                 axios
@@ -194,6 +202,8 @@ const GerenciarProdutos = () => {
                             handleClickOpenA(msg);
                         }
 
+                        handleClose();
+
                     })
                     .catch((error) => {
                         handleCloseL();
@@ -205,6 +215,7 @@ const GerenciarProdutos = () => {
                     nome: nome,
                     descricao: descricao,
                     grupo: grupo,
+                    metrica: metrica,
                     imagem: semimg
                   }
                 
@@ -214,6 +225,7 @@ const GerenciarProdutos = () => {
                     formData.append('nome',produto.nome);
                     formData.append('descricao',produto.descricao);
                     formData.append('grupo',produto.grupo);
+                    formData.append('metrica',produto.metrica);
                     formData.append('file',produto.imagem);
   
                   axios
@@ -229,6 +241,8 @@ const GerenciarProdutos = () => {
                             msg = res.data.msg
                             handleClickOpenA(msg);
                         }
+                        
+                        handleClose();
 
                       })
                       .catch((error) => {
@@ -278,8 +292,9 @@ const GerenciarProdutos = () => {
             setSemG("none");
             setComG("block");
           }).catch((res) =>{ 
-            msg = "Não foi possível localizar produtos para esse grupo.";
-            handleClickOpenA(msg);   
+            msg = "Não foi possível localizar produtos para esse grupo."; 
+            setSemG("none");
+            setComG("block");
           })  
     };
     const handleLoadG = () =>{
@@ -299,6 +314,7 @@ const GerenciarProdutos = () => {
                     nome: nomeE,
                     descricao: descricaoE,
                     grupo: grupo,
+                    metricaE: metricaE,
                     perfil: perfil,
                     email: email
                 })
@@ -322,13 +338,40 @@ const GerenciarProdutos = () => {
         }
 
     };
-    const handleDelete = (id, nome, descricao) =>{       
+    const handleAlterG = () =>{       
+
+        if (grupoNomeE !== ""){
             axios
-                .delete(`http://`+ back +`/produtos/`+id,{
+                .put(`http://`+ back +`/grupos/`+ grupoId,{
+                    nome: grupoNomeE,
+                    perfil: perfil,
+                    email: email
+                })
+                .then((res) => { 
+                    if(res.data.retorno){                                                     
+                        msg = res.data.msg
+                        handleClickOpenA(msg);
+                        setGrupoNome(grupoNomeE);
+                    }else{                                                     
+                        msg = res.data.msg
+                        handleClickOpenA(msg);
+                    }
+                })
+                .catch((res) =>{    
+                    msg = "Não foi possível atualizar esse grupo.";
+                    handleClickOpenA(msg);   
+                }) 
+
+        }else{
+            msg = "O nome e descrição devem ser preenchidos";
+            handleClickOpenA(msg);   
+        }
+
+    };
+    const handleDelete = () =>{       
+            axios
+                .delete(`http://`+ back +`/produtos/`+ id,{
                     headers:{
-                        nome: nome,
-                        descricao: descricao,
-                        grupo: grupo,
                         perfil: perfil,
                         email: email
                     }
@@ -344,6 +387,30 @@ const GerenciarProdutos = () => {
                 })
                 .catch((res) =>{    
                     msg = "Não foi possível apagar esse produto.";
+                    handleClickOpenA(msg);   
+                }) 
+    };
+    const handleDeleteG = () =>{       
+            axios
+                .delete(`http://`+ back +`/grupos/`+ grupoId,{
+                    headers:{
+                        perfil: perfil,
+                        email: email
+                    }
+                })
+                .then((res) => { 
+                    if(res.data.retorno){                                                     
+                        msg = res.data.msg
+                        handleClickOpenA(msg);
+                    }else{                                                     
+                        msg = res.data.msg
+                        handleClickOpenA(msg);
+                    }
+                    handleCloseGE();
+                    handleCloseComG();
+                })
+                .catch((res) =>{    
+                    msg = "Não foi possível apagar esse grupo, apague os produtos vinculados a ele.";
                     handleClickOpenA(msg);   
                 }) 
     };
@@ -377,12 +444,12 @@ const GerenciarProdutos = () => {
     };
     useEffect(() => {
         handleLoadG();
+        if(infos.length > 0){
+            handleLoad();
+        }
         // eslint-disable-next-line
       }, []);
     //#endregion
-
-    console.log(infos);
-
     return(
         <Grid display="block" style={{ paddingLeft:'24px', paddingRight:'24px' }}>
             <Box display={semG}>
@@ -495,7 +562,7 @@ const GerenciarProdutos = () => {
                             <Button 
                                 onClick={()=>handleCloseComG()} 
                                 variante="outlined" 
-                                className="btnNovo"
+                                className="btnVoltar"
                                 startIcon={
                                     <Avatar style={{ color:'#201E1E', backgroundColor:'#21222D1E' }}>
                                         <MdArrowBack style={{ width:'24px', height:'auto' }} />   
@@ -505,6 +572,15 @@ const GerenciarProdutos = () => {
                                 <Typography variant="h6">
                                     {grupoNome}
                                 </Typography>
+                            </Button>
+                            <Button 
+                                onClick={()=>handleClickOpenGE()} 
+                                variante="outlined" 
+                                className="btnEditGrupo"
+                                endIcon={
+                                    <EditIcon style={{ color:'#21222D' }}/>
+                                }
+                                style={{ color:"#000000", position:"unset"}}>
                             </Button>
                         </Box> 
                     </Box>  
@@ -521,134 +597,114 @@ const GerenciarProdutos = () => {
                         </Box>       
                     </Box>
                 </Box>  
-                <Box p={1} display="flex">           
-                    <Box p={1} display="flex" style={{ width:'50%', textAlign:'start', paddingTop:'15px' }}>
-                        <img src={ImgProduto} style={{ width:'24px', height:'24px', marginRight:'16px' }} />     
-                        <Typography variant="subtitle1" style={{ textAlign:'left' }} >      
-                            Lista de {grupoNome + " (" + infos.length + ")"  }
+                {infos.length !== null ?(
+                    <Box>
+                        <Box p={1} display="flex">           
+                            <Box p={1} display="flex" style={{ width:'50%', textAlign:'start', paddingTop:'15px' }}>
+                                <img src={ImgProduto} style={{ width:'24px', height:'24px', marginRight:'16px' }} />     
+                                <Typography variant="subtitle1" style={{ textAlign:'left' }} >      
+                                    Lista de {grupoNome + " (" + infos.length + ")"  }
+                                </Typography>
+                            </Box>
+                            <Box p={1} style={{width:'50%', textAlign:'end'}}>      
+                                <Box style={{textAlign:'end'}}>
+                                    <TextField
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <Search style={{ margin:'5px' }} />
+                                                </InputAdornment>
+                                            ),
+                                            'aria-label': 'search',
+                                            disableUnderline: true
+                                        }}
+                                        placeholder="Busque por um produto"
+                                        className="search"
+                                        variant="standard"
+                                        value={valorF}
+                                        onChange={handleChangeFiltro(setValorF)}
+                                        style={{ width:'60%', borderRadius:'60px' }}
+                                    /> 
+                                </Box>       
+                            </Box>
+                        </Box> 
+                        <Box p={1} display={semF} sx={{ flexGrow: 1 }}>
+                            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                                {infos.map((item, index) => (  
+                                    <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
+                                        <Card onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.metrica, item.imagem)}
+                                            sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                            <CardMedia
+                                                component="img"
+                                                sx={{ width: 100, height: 'auto' }}
+                                                image={"http://" + back + item.imagem}
+                                                alt={item.nome}
+                                            />
+                                            <CardContent wrap="nowrap" style={{ textAlign:'left', width:'100%' }}>     
+                                                <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                                    {item.nome}
+                                                </Typography>
+                                                <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
+                                                    {item.descricao}
+                                                </Typography>
+                                            </CardContent>
+                                            <Typography variant="subtitle2" style={{ textTransform:'capitalize', textAlign:'end', width:'100%' }}>
+                                                Por {item.metrica}
+                                            </Typography> 
+                                        </Card>
+                                    </Grid> 
+                                ))}
+                            </Grid>
+                        </Box>
+                        <Box p={1} display={comF} sx={{ flexGrow: 1 }}>
+                            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                                {filtro.map((item, index) => (  
+                                    <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
+                                        <Card onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.metrica, item.imagem)}
+                                            sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                            <Box p={2}>
+                                                <Avatar style={{ color:'#201E1E', backgroundColor:'#FFFFFF' }}>
+                                                    <Typography variant="subtitle1" style={{ fontWeight:'bold' }}>
+                                                        <img src={ImgProduto} style={{ width:'24px', height:'auto' }} />   
+                                                    </Typography>
+                                                </Avatar>
+                                            </Box>
+                                            <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
+                                                <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                                    {item.nome}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid> 
+                                ))}
+                            </Grid>
+                        </Box>
+                    </Box>):(
+                    <Box color="#000000" style={{ textTransform:'capitalize', fontWeight:'bold', textAlign:'center' }}>
+                        <Typography variant="subtitle1" >
+                            Não há produtos cadastrados neste grupo
                         </Typography>
                     </Box>
-                    <Box p={1} style={{width:'50%', textAlign:'end'}}>      
-                        <Box style={{textAlign:'end'}}>
-                            <TextField
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <Search style={{ margin:'5px' }} />
-                                        </InputAdornment>
-                                    ),
-                                    'aria-label': 'search',
-                                    disableUnderline: true
-                                }}
-                                placeholder="Busque por um produto"
-                                className="search"
-                                variant="standard"
-                                value={valorF}
-                                onChange={handleChangeFiltro(setValorF)}
-                                style={{ width:'60%', borderRadius:'60px' }}
-                            /> 
-                        </Box>       
-                    </Box>
-                </Box> 
-                <Box p={1} display={semF} sx={{ flexGrow: 1 }}>
-                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                        {infos.map((item, index) => (  
-                            <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
-                                <Card  
-                                        sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
-                                    <CardMedia
-                                        component="img"
-                                        sx={{ width: 100, height: 'auto' }}
-                                        image={"http://" + back + item.imagem}
-                                        alt={item.nome}
-                                    />
-                                    <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
-                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
-                                            {item.nome}
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            </Grid> 
-                        ))}
-                    </Grid>
-                </Box>
-                <Box p={1} display={comF} sx={{ flexGrow: 1 }}>
-                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                        {filtro.map((item, index) => (  
-                            <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
-                                <Card  
-                                        sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
-                                    <Box p={2}>
-                                        <Avatar style={{ color:'#201E1E', backgroundColor:'#FFFFFF' }}>
-                                            <Typography variant="subtitle1" style={{ fontWeight:'bold' }}>
-                                                <img src={ImgProduto} style={{ width:'24px', height:'auto' }} />   
-                                            </Typography>
-                                        </Avatar>
-                                    </Box>
-                                    <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
-                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
-                                            {item.nome}
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            </Grid> 
-                        ))}
-                    </Grid>
-                </Box>
+                )}                
             </Box>
-           {/* <div className="noticias">
-                <Grid className="bxLista" item xs={12}>
-                    {infos.map((item, index) => (
-                        <Box display="bloxk">    
-                            <Box display="flex" id={index} p={1} m={1} css={{ height: "auto", width:"90%"}}>
-                                <Box p={1} flexGrow={2} css={{ width: "200px", height: 'auto' }} >
-                                    <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.imagem)}>
-                                        <div className="result">{renderPhotos(item.imagem)}</div>
-                                    </li>
-                                </Box>
-                                <Box p={1} flexGrow={2} css={{ width: "200px", height: 'auto' }} >
-                                    <li style={{listStyleType:"none"}} onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.imagem)}>
-                                        <div style={{ textAlign:"left",  color: "black", alignItems:'center' }}>
-                                            <span >{item.nome}</span><br/><br/>
-                                            <span className="labelPre">{item.descricao}</span>
-                                        </div>
-                                    </li>
-                                </Box>          
-                                <Box p={1} >
-                                    <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.imagem)}>
-                                        <EditIcon />
-                                        </IconButton>
-                                        <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleDelete(item.id, item.nome, item.descricao)} >
-                                        <DeleteIcon />
-                                        </IconButton>
-                                    </div>
-                                </Box>
-                            </Box>                            
-                            <hr/>
-                        </Box>
-                    ))}
-                </Grid>
-            </div>   */}
-
             <DialogMain
                 open={open}
                 close={handleClose}
                 title={"NOVO PRODUTO"}
                 info={(<Box>
+                    <div style={{ display:"block", textAlign:'center' }}>
+                    <TextField 
+                        className="inpImg"
+                        type="file" 
+                        name="imagem"
+                        onChange={handleChageImg}
+                    /><br/>
+                    <label htmlFor="file" className="label">
+                        <i className="material-icons">Imagem (até 512KB) - formatos suportados (png, jpg ou jpeg)</i>
+                    </label>
+                    </div><br/>
                     <div className="noticias">
                         <div className="esquerda">
-                            <input 
-                                className="inpImg"
-                                type="file" 
-                                name="imagem"
-                                onChange={handleChageImg}
-                            /><br/>
-                            <label htmlFor="file" className="label">
-                                <i className="material-icons">Imagem (até 512KB - 600 x 600) <br/> Formatos (png, jpg ou jpeg)</i>
-                            </label>
-                        </div>
-                        <div className="direita">
                             <TextField 
                                 className="inp"
                                 type="text" 
@@ -674,18 +730,42 @@ const GerenciarProdutos = () => {
                                 </Select>
                             </FormControl>
                         </div>
-                    </div><br/>
-                    <div style={{ display:"block", textAlign:'center' }}>
-                        <TextField 
-                            className="inp"
-                            type="text" 
-                            onChange={handleChange(setDescricao)}
-                            value={descricao}
-                            maxLength="250"
-                            minLength="6"
-                            label="Descrição (min 6 - max 250)"
-                            multiline
-                            variant="outlined" />
+                        <div className="direita">
+                            <TextField 
+                                className="inp"
+                                type="text" 
+                                onChange={handleChange(setDescricao)}
+                                value={descricao}
+                                maxLength="250"
+                                minLength="6"
+                                label="Descrição (min 6 - max 250)"
+                                multiline
+                                variant="outlined" /><br/><br/>                                        
+                            <FormControl sx={{ minWidth: 250 }}>
+                                <InputLabel>Métrica</InputLabel>
+                                <Select
+                                    value={metrica}
+                                    label="Métrica"
+                                    onChange={handleChange(setMetrica)}
+                                >
+                                    <MenuItem value="Un.">
+                                        Unidade (Un.)
+                                    </MenuItem> 
+                                    <MenuItem value="Kg">
+                                        Quilograma (Kg)
+                                    </MenuItem>
+                                    <MenuItem value="500g">
+                                        500 Gramas (500g)
+                                    </MenuItem>
+                                    <MenuItem value="l">
+                                        Litro (l)
+                                    </MenuItem>
+                                    <MenuItem value="500ml">
+                                        500 Mililitros (500ml)
+                                    </MenuItem>  
+                                </Select>
+                            </FormControl>
+                        </div>
                     </div>
                     </Box>)}
                 click={()=>handleSubmit()}
@@ -695,12 +775,10 @@ const GerenciarProdutos = () => {
                 open={openE}
                 close={handleCloseE}
                 title={"EDITAR PRODUTO"}
-                info={(<Box>
+                info={(<Box>                                                 
+                    <div className="result">{renderPhotos(img)}</div><br/>
                     <div className="noticias">
-                        <div className="esquerda">                                                 
-                            <div className="result">{renderPhotos(img)}</div>
-                        </div>
-                        <div className="direita">
+                        <div className="esquerda">
                             <TextField 
                                 className="inp"
                                 type="text" 
@@ -709,23 +787,66 @@ const GerenciarProdutos = () => {
                                 maxLength="75"
                                 minLength="6"
                                 label="Nome (min 6 - max 75)"
-                                variant="outlined" />
+                                variant="outlined" /><br/><br/>                                        
+                            <FormControl sx={{ minWidth: 250 }}>
+                                <InputLabel >Grupo</InputLabel>
+                                <Select
+                                    value={grupoNome}
+                                    label="Grupo"
+                                    onChange={handleChange(setGrupo)}
+                                >
+                                <MenuItem value={grupoNome}>
+                                   Atual: {grupoNome}
+                                </MenuItem>                                
+                                {infosG.map((item, index) => (
+                                    <MenuItem value={item.id} style={{ color:"#000000", textAlign:'center'}}>{item.nome}</MenuItem>
+                                ))}
+                                </Select>
+                            </FormControl>
                         </div>
-                    </div><br/><br/>
-                    <div style={{ display:"block", textAlign:'center' }}>
-                        <TextField 
-                            className="inp"
-                            type="text" 
-                            onChange={handleChange(setDescricaoE)}
-                            value={descricaoE}
-                            maxLength="250"
-                            minLength="6"
-                            label="Descrição (min 6 - max 250)"
-                            multiline
-                            variant="outlined" />
-                    </div>
+                        <div className="direita">
+                            <TextField 
+                                className="inp"
+                                type="text" 
+                                onChange={handleChange(setDescricaoE)}
+                                value={descricaoE}
+                                maxLength="250"
+                                minLength="6"
+                                label="Descrição (min 6 - max 250)"
+                                multiline
+                                variant="outlined" /><br/><br/>                                        
+                            <FormControl sx={{ minWidth: 250 }}>
+                                <InputLabel>Métrica</InputLabel>
+                                <Select
+                                    value={metricaE}
+                                    label="Métrica"
+                                    onChange={handleChange(setMetricaE)}
+                                >
+                                    <MenuItem value={metricaE}>
+                                       Atual: {metricaE}
+                                    </MenuItem>
+                                    <MenuItem value="Un.">
+                                        Unidade (Un.)
+                                    </MenuItem> 
+                                    <MenuItem value="Kg">
+                                        Quilograma (Kg)
+                                    </MenuItem>
+                                    <MenuItem value="500g">
+                                        500 Gramas (500g)
+                                    </MenuItem>
+                                    <MenuItem value="l">
+                                        Litro (l)
+                                    </MenuItem>
+                                    <MenuItem value="500ml">
+                                        500 Mililitros (500ml)
+                                    </MenuItem>  
+                                </Select>
+                            </FormControl>
+                        </div>
+                        </div>
                     </Box>)}
                 click={()=>handleAlter()}
+                delete={()=>handleDelete()}
                 label={"ATUALIZAR"}
             /> 
             <DialogMain
@@ -742,10 +863,31 @@ const GerenciarProdutos = () => {
                         minLength="6"
                         label="Nome (min 6 - max 75)"
                         variant="outlined" />
+                        <br/><br/><br/>
                     </Box>)}
                 click={()=>handleSubmitG()}
                 label={"CADASTRAR"}
-            />           
+            />
+            <DialogMain
+                open={openGE}
+                close={handleCloseGE}
+                title={"EDITAR GRUPO"}
+                info={(<Box>
+                    <TextField 
+                        className="inp"
+                        type="text" 
+                        onChange={handleChange(setGrupoNomeE)}
+                        value={grupoNomeE}
+                        maxLength="75"
+                        minLength="6"
+                        label="Nome (min 6 - max 75)"
+                        variant="outlined" />
+                        <br/><br/><br/>
+                    </Box>)}
+                click={()=>handleAlterG()}
+                delete={()=>handleDeleteG()}
+                label={"ATUALIZAR"}
+            />            
             <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>            
             <DialogLoading open={openL} />    
         </Grid>

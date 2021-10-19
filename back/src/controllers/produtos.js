@@ -19,6 +19,7 @@ exports.obter = async (req, res, next) => {
                         nome: pro.pro_nome,
                         descricao: pro.pro_descricao,
                         grupo: pro.pro_grupo,
+                        metrica: pro.pro_metrica,
                         imagem: pro.pro_imagem,                   
                     }
                 })
@@ -68,6 +69,7 @@ exports.obterPorGrupoId = async (req, res, next) => {
                         nome: pro.pro_nome,
                         descricao: pro.pro_descricao,
                         grupo: pro.pro_grupo,
+                        metrica: pro.pro_metrica,
                         imagem: pro.pro_imagem,                  
                     }
                 })
@@ -107,6 +109,7 @@ exports.cadastrar = async (req, res, next) => {
             nome: "",
             descricao: "",
             grupo: "",
+            metrica: "",
             email: "",
             perfil: "",
             imagem: ""
@@ -128,6 +131,7 @@ exports.cadastrar = async (req, res, next) => {
             nome: req.body.nome,
             descricao: req.body.descricao,
             grupo: req.body.grupo,
+            metrica: req.body.metrica,
             email: req.body.email,
             perfil: perfil,
             imagem: '/files/' + req.file.filename
@@ -138,23 +142,20 @@ exports.cadastrar = async (req, res, next) => {
         if(result.retorno){
 
             result = "";
-
             result = await proModel.obterProdutoPorNome(produto.nome);
 
             if(!result.retorno){      
 
-                result = "";
-                    
-                result = await proModel.cadastrar(produto.nome, produto.descricao, produto.grupo, produto.imagem);
+                result = "";                    
+                result = await proModel.cadastrar(produto.nome, produto.descricao, produto.grupo, produto.metrica, produto.imagem);
 
                 if(result.retorno){
-
                     return res
-                            .status(200)
-                            .json({ 
-                                msg: result.msg,
-                                retorno: true
-                            })
+                        .status(200)
+                        .json({ 
+                            msg: result.msg,
+                            retorno: true
+                        })
                 }else{     
                     return res
                         .status(400)
@@ -199,6 +200,7 @@ exports.atualizar = async (req, res, next) => {
             nome: "",
             descricao: "",
             grupo: "",
+            metrica: "",
             email: "",
             perfil: ""
         }
@@ -236,7 +238,7 @@ exports.atualizar = async (req, res, next) => {
 
                 result = "";
                     
-                result = await proModel.atualizar(produto.nome, produto.descricao, produto.grupo, produto.id);
+                result = await proModel.atualizar(produto.nome, produto.descricao, produto.grupo, produto.metrica, produto.id);
 
                 if(result.retorno){
 
