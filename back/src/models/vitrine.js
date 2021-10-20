@@ -6,61 +6,50 @@ let sql = "";
 
 async function obter() {
     try {
-        sql = `SELECT * FROM itens_da_vitrine`
+        sql = `SELECT v.vit_pro_id, p.pro_nome, p.pro_descricao, p.pro_metrica,
+                p.pro_imagem, p.pro_grupo, v.vit_pro_qtd, v.vit_pro_val
+               FROM produtos p
+               LEFT JOIN vitrine AS v 
+               ON v.vit_pro_id = p.pro_id
+               WHERE v.vit_pro_qtd > 0`
         retornoBD = await mysql.execute(sql);
 
         if(retornoBD.length > 0){
-            return result = { retornoBD, retorno: true, msg: "Relação de grupos."}
+            return result = { retornoBD, retorno: true, msg: "Relação de itens da vitrine."}
         }else{
-            return result = { retorno: false, msg: "Não há grupos cadastrados." }
+            return result = { retorno: false, msg: "Não há itens na vitrine." }
         }
         
     } catch (e) {
-        return result = { retorno: false, msg: "Não há grupos cadastrados.", Erro: e }
+        return result = { retorno: false, msg: "Não há itens na vitrine.", Erro: e }
     }
 }
 module.exports.obter = obter
 
-async function obterItemPorId(id) {
+async function obterItemPorProdutoId(produto) {
     try {
-        sql = `SELECT * FROM itens_da_vitrine WHERE itv_id = ?`
-        retornoBD = await mysql.execute(sql, [id]);
+        sql = `SELECT * FROM vitrine WHERE vit_pro_id = ?`
+        retornoBD = await mysql.execute(sql, [produto]);
 
         if(retornoBD.length > 0){
-            return result = { retornoBD, retorno: true, msg: "Items com id " + id}
+            return result = { retornoBD, retorno: true, msg: "Item da Vitrine" }
         }else{
-            return { retorno: false, msg: "Não há Items cadastrados com esse id."}
+            return { retorno: false, msg: "Não há itens cadastrados com esse id."}
         }
         
     } catch (e) {
         console.log(e)
-        return { retorno: false, msg: "Não há Items cadastrados com esse id.", Erro: e }
-    }
-}
-module.exports.obterItemPorId = obterItemPorId
-
-async function obterItemPorProdutoId(id) {
-    try {
-        sql = `SELECT * FROM itens_da_vitrine WHERE itv_pro_id = ?`
-        retornoBD = await mysql.execute(sql, [id]);
-
-        if(retornoBD.length > 0){
-            return result = { retornoBD, retorno: true, msg: "Items com id " + id}
-        }else{
-            return { retorno: false, msg: "Não há Items cadastrados com esse id."}
-        }
-        
-    } catch (e) {
-        console.log(e)
-        return { retorno: false, msg: "Não há Items cadastrados com esse id.", Erro: e }
+        return { retorno: false, msg: "Não há itens cadastrados com esse id.", Erro: e }
     }
 }
 module.exports.obterItemPorProdutoId = obterItemPorProdutoId
 
-async function cadastrarItemVitrine(quantidade, valor, usuario, vitrine, produto) {
-    try {        
-        sql = `INSERT INTO itens_da_vitrine (itv_pro_qtd, itv_pro_val, itv_usu_id, itv_vit_id, itv_pro_id) VALUES (?,?,?,?,?)`
-        retornoBD = await mysql.execute(sql, [quantidade, valor, usuario, vitrine, produto])
+async function cadastrarItemVitrine(produto, quantidade, valor, usuario) {
+    try {   
+        var data = new Date();
+
+        sql = `INSERT INTO vitrine (vit_pro_id, vit_pro_qtd, vit_pro_val, vit_usu_id, vit_data) VALUES (?,?,?,?,?)`
+        retornoBD = await mysql.execute(sql, [produto, quantidade, valor, usuario, data])
 
         if(retornoBD.affectedRows > 0){
             return result = { retorno: true, msg: "Item da Vitrine cadastrado com sucesso!"}
@@ -73,11 +62,11 @@ async function cadastrarItemVitrine(quantidade, valor, usuario, vitrine, produto
 }
 module.exports.cadastrarItemVitrine = cadastrarItemVitrine
 
-async function atualizarItemVitrine(quantidade, id) {
+async function atualizarItemVitrine(produto, quantidade, valor, usuario) {
     try {
 
-        sql = `UPDATE itens_da_vitrine SET itv_pro_qtd = ? WHERE itv_id = ?`
-        retornoBD = await mysql.execute(sql, [quantidade, id])
+        sql = `UPDATE vitrine SET vit_pro_qtd = ?, vit_pro_val = ?, vit_usu_id = ? WHERE vit_pro_id = ?`
+        retornoBD = await mysql.execute(sql, [quantidade, valor, usuario, produto])
 
         if(retornoBD.affectedRows > 0){
             return result = { retorno: true, msg: "Item da Vitrine atualizado com sucesso!"}

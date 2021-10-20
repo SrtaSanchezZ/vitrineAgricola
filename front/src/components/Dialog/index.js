@@ -36,7 +36,7 @@ export function DialogAlert(props){
                     <GrClose onClick={props.close} style={{ width: '16px', height: 'auto', marginLeft: '58%', marginRight:"10px" }} />
                 </Box>
             </Box>
-            <DialogContent className="Texto" style={{ width:'500px', paddingBottom: '30px' }}>
+            <DialogContent className="Texto" style={{ minWidth:'500px', paddingBottom: '30px' }}>
                 {props.info}
             </DialogContent>
             {props.delete ? (        

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 import inicio from '../../assets/img/Icons/home_black_24dp.png';
 import reserva from '../../assets/img/Icons/receipt_black_24dp.png';
-import vitrine from '../../assets/img/Icons/view_module_black_24dp.png';
+import vitrine from '../../assets/img/Icons/vitrine.png';
 import produto from '../../assets/img/Icons/shopping_basket_black_24dp.png';
 import noticia from '../../assets/img/Icons/post_add_black_24dp.png';
 import usuario from '../../assets/img/Icons/manage_accounts_black_24dp.png';

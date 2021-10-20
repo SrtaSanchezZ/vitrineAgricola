@@ -1,9 +1,10 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Avatar, Button, Box, Card, CardContent, CardMedia, FormControl, Grid, 
+import { Avatar, Button, Box, Card, CardContent, CardHeader, CardMedia, FormControl, Grid, 
         InputLabel, InputAdornment, MenuItem, Select, Typography, TextField } from '@material-ui/core';
 import { MdAdd, MdArrowBack } from "react-icons/md";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 import EditIcon from "@material-ui/icons/Edit";
 import Search from '@material-ui/icons/Search';
 import semimg from '../../../assets/img/noimg.png';
@@ -274,6 +275,8 @@ const GerenciarProdutos = () => {
                         msg = res.data.msg
                         handleClickOpenA(msg);
                     }
+                    
+                    handleCloseG();
                 })
                 .catch((error) => {
                     msg = "Não foi possível cadastrar esse grupo, revise os dados e tente novamente.";
@@ -597,7 +600,7 @@ const GerenciarProdutos = () => {
                         </Box>       
                     </Box>
                 </Box>  
-                {infos.length !== null ?(
+                {infos.length !== 0 ?(
                     <Box>
                         <Box p={1} display="flex">           
                             <Box p={1} display="flex" style={{ width:'50%', textAlign:'start', paddingTop:'15px' }}>
@@ -630,13 +633,13 @@ const GerenciarProdutos = () => {
                         </Box> 
                         <Box p={1} display={semF} sx={{ flexGrow: 1 }}>
                             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                                {infos.map((item, index) => (  
+                                {infos.map((item, index) => (    
                                     <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
                                         <Card onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.metrica, item.imagem)}
-                                            sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                              sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
                                             <CardMedia
                                                 component="img"
-                                                sx={{ width: 100, height: 'auto' }}
+                                                sx={{ width: 100, height: 'auto', borderRadius:'5px' }}
                                                 image={"http://" + back + item.imagem}
                                                 alt={item.nome}
                                             />
@@ -658,33 +661,43 @@ const GerenciarProdutos = () => {
                         </Box>
                         <Box p={1} display={comF} sx={{ flexGrow: 1 }}>
                             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                                {filtro.map((item, index) => (  
+                                {filtro.map((item, index) => (   
                                     <Grid item xs={2} sm={4} md={4} key={item.id}>                                                               
                                         <Card onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.metrica, item.imagem)}
-                                            sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
-                                            <Box p={2}>
-                                                <Avatar style={{ color:'#201E1E', backgroundColor:'#FFFFFF' }}>
-                                                    <Typography variant="subtitle1" style={{ fontWeight:'bold' }}>
-                                                        <img src={ImgProduto} style={{ width:'24px', height:'auto' }} />   
-                                                    </Typography>
-                                                </Avatar>
-                                            </Box>
-                                            <CardContent wrap="nowrap" style={{ textAlign:'left' }}>
+                                              sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>
+                                            <CardMedia
+                                                component="img"
+                                                sx={{ width: 100, height: 'auto', borderRadius:'5px' }}
+                                                image={"http://" + back + item.imagem}
+                                                alt={item.nome}
+                                            />
+                                            <CardContent wrap="nowrap" style={{ textAlign:'left', width:'100%' }}>     
                                                 <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
                                                     {item.nome}
                                                 </Typography>
+                                                <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
+                                                    {item.descricao}
+                                                </Typography>
                                             </CardContent>
+                                            <Typography variant="subtitle2" style={{ textTransform:'capitalize', textAlign:'end', width:'100%' }}>
+                                                Por {item.metrica}
+                                            </Typography> 
                                         </Card>
                                     </Grid> 
                                 ))}
                             </Grid>
                         </Box>
                     </Box>):(
-                    <Box color="#000000" style={{ textTransform:'capitalize', fontWeight:'bold', textAlign:'center' }}>
-                        <Typography variant="subtitle1" >
-                            Não há produtos cadastrados neste grupo
-                        </Typography>
-                    </Box>
+                    <Grid item xs={12} style={{ paddingLeft:'35%' }}>              
+                        <CardHeader subheader={
+                            <Box p={1} display="flex">                                
+                                <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                                <Typography variant="body2" color="textSecondary">                
+                                    Não há produtos cadastrados para esse grupo.                                                      
+                                </Typography>
+                            </Box> }
+                        />
+                    </Grid>
                 )}                
             </Box>
             <DialogMain
