@@ -75,7 +75,6 @@ const Reservas = () => {
       handleLoad();
     };
     const handleClickOpen = (id, data, situacao, cliente, contato, total) => {
-      setOpen(true);
       setId(id);
       setData(data);
       setSituacao(situacao);
@@ -197,7 +196,6 @@ const Reservas = () => {
           .then((res) => {         
             
             setInfos(ArrRes(res.data.response.reservas));
-            setId("");
 
           }).catch((res) =>{    
             msg = "Não foi possível localizar reservas."; 
@@ -230,8 +228,6 @@ const Reservas = () => {
       set(event.target.value)
       handleFiltro();
     };
-        
-    console.log(infosI);
 
     useEffect(() => {
         handleLoad();
@@ -307,7 +303,7 @@ const Reservas = () => {
                                             <Typography variant="subtitle1" id={item.id}>
                                                 Pedido #{item.id}
                                             </Typography>
-                                            <Typography style={{ width:'58%' , textAlign:'end' }}>
+                                            <Typography style={{ width:'56%' , textAlign:'end' }}>
                                                 <img src={next} 
                                                     style={{ width:'24px', height:'24px' }} />
                                             </Typography>
@@ -324,31 +320,37 @@ const Reservas = () => {
                                     return (
                                         <ListItem key={item.id} role="listitem" 
                                                   button onClick={()=>handleClickOpen(item.id, item.data, item.situacao, item.cliente, item.contato, item.total)}>
-                                            <ListItemIcon>
-                                                {item.situacao === 1 ? (
-                                                    <img src={pedidoRecebidoBlack} 
-                                                    style={{ width:'24px', height:'24px' }} />
-                                                ): null}
-                                                {item.situacao === 2 ? (
-                                                    <img src={pagamentoConfirmadoBlack} 
-                                                    style={{ width:'24px', height:'24px' }} />
-                                                ):null}
-                                                {item.situacao === 3 ? (
-                                                    <img src={pedidoCanceladoBlack} 
-                                                    style={{ width:'24px', height:'24px' }} />
-                                                ):null}
-                                                {item.situacao === 4 ? (
-                                                    <img src={pedidoRetiradoBlack} 
-                                                    style={{ width:'24px', height:'24px' }} />
-                                                ):null}
-                                            </ListItemIcon>
-                                            <Typography variant="subtitle1" id={item.id}>
-                                                Pedido #{item.id}
-                                            </Typography>
-                                            <Typography style={{ width:'58%' , textAlign:'end' }}>
-                                                <img src={next} 
-                                                    style={{ width:'24px', height:'24px' }} />
-                                            </Typography>
+                                                <Box display="flex" style={{ width:'100%' }}>
+                                                    <Box style={{ width:'50%', textAlign:'start', padding:'16px' }}>
+                                                        <ListItemIcon>
+                                                            {item.situacao === 1 ? (
+                                                                <img src={pedidoRecebidoBlack} 
+                                                                style={{ width:'24px', height:'24px' }} />
+                                                            ): null}
+                                                            {item.situacao === 2 ? (
+                                                                <img src={pagamentoConfirmadoBlack} 
+                                                                style={{ width:'24px', height:'24px' }} />
+                                                            ):null}
+                                                            {item.situacao === 3 ? (
+                                                                <img src={pedidoCanceladoBlack} 
+                                                                style={{ width:'24px', height:'24px' }} />
+                                                            ):null}
+                                                            {item.situacao === 4 ? (
+                                                                <img src={pedidoRetiradoBlack} 
+                                                                style={{ width:'24px', height:'24px' }} />
+                                                            ):null}
+                                                        </ListItemIcon>
+                                                        <Typography variant="subtitle1" id={item.id}>
+                                                            Pedido #{item.id}
+                                                        </Typography>
+                                                    </Box>
+                                                    <Box style={{ width:'50%', textAlign:'end', padding:'16px' }}>
+                                                        <Typography>
+                                                            <img src={next} 
+                                                                style={{ width:'24px', height:'24px' }} />
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
                                         </ListItem>
                                     );
                                 })}
@@ -358,12 +360,12 @@ const Reservas = () => {
                     </Card>
                 </div>
                 <div className="bxLeitura" style={{ width: "96%", height: "54vh", backgroundColor: "#ffffff", overflow: 'auto'}}>                         
-                    {infosI.length !== 0 ? (
-                        <Box>{infosI.map((item) => {
+                    {infosI.length > 0 ? (
+                        <Box>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <Typography variant="h6">                
-                                        Pedido #{id}                                                     
+                                        Pedido #0{id}                                                     
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={4}>
@@ -371,57 +373,103 @@ const Reservas = () => {
                                         Data da reserva                                                     
                                     </Typography>
                                     <Typography variant="subtitle1" color="textSecondary">                
-                                        {data}                                                     
+                                        {(data.slice(0,10).split('-').reverse().join()).replace(/,/g,'/')}                                                     
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={8}>
-                                        {situacao === 1 ? (
-                                        <>
-                                            <ListItemIcon>
-                                                <img src={pedidoRecebidoBlack} 
-                                                style={{ width:'24px', height:'24px' }} />
-                                            </ListItemIcon>
-                                            <Typography variant="subtitle1" color="textSecondary">                
-                                                Pedido Recebido                                                    
-                                            </Typography>
-                                        </>
-                                        ): null}
-                                        {situacao === 2 ? (
-                                        <>
-                                            <ListItemIcon>
-                                                <img src={pagamentoConfirmadoBlack} 
-                                                style={{ width:'24px', height:'24px' }} />
-                                            </ListItemIcon>
-                                            <Typography variant="subtitle1" color="textSecondary">                
-                                                Pagamento Confirmado                                                    
-                                            </Typography>
-                                        </>
-                                        ):null}
-                                        {situacao === 3 ? (
-                                        <>
-                                            <ListItemIcon>
-                                                <img src={pedidoCanceladoBlack} 
-                                                style={{ width:'24px', height:'24px' }} />
-                                            </ListItemIcon>
-                                            <Typography variant="subtitle1" color="textSecondary">                
-                                                Pedido Cancelado                                                   
-                                            </Typography>
-                                        </>
-                                        ):null}
-                                        {situacao === 4 ? (
-                                        <>
-                                            <ListItemIcon>
-                                                <img src={pedidoRetiradoBlack} 
-                                                style={{ width:'24px', height:'24px' }} />
-                                            </ListItemIcon>
-                                            <Typography variant="subtitle1" color="textSecondary">                
-                                                Pedido Retirado                                                   
-                                            </Typography>
-                                        </>
-                                        ):null}
+                                    {situacao === 1 ? (
+                                    <>
+                                        <ListItemIcon>
+                                            <img src={pedidoRecebidoBlack} 
+                                            style={{ width:'24px', height:'24px' }} />
+                                        </ListItemIcon>
+                                        <Typography variant="subtitle1" color="textSecondary">                
+                                            Pedido Recebido                                                    
+                                        </Typography>
+                                    </>
+                                    ): null}
+                                    {situacao === 2 ? (
+                                    <>
+                                        <ListItemIcon>
+                                            <img src={pagamentoConfirmadoBlack} 
+                                            style={{ width:'24px', height:'24px' }} />
+                                        </ListItemIcon>
+                                        <Typography variant="subtitle1" color="textSecondary">                
+                                            Pagamento Confirmado                                                    
+                                        </Typography>
+                                    </>
+                                    ):null}
+                                    {situacao === 3 ? (
+                                    <>
+                                        <ListItemIcon>
+                                            <img src={pedidoCanceladoBlack} 
+                                            style={{ width:'24px', height:'24px' }} />
+                                        </ListItemIcon>
+                                        <Typography variant="subtitle1" color="textSecondary">                
+                                            Pedido Cancelado                                                   
+                                        </Typography>
+                                    </>
+                                    ):null}
+                                    {situacao === 4 ? (
+                                    <>
+                                        <ListItemIcon>
+                                            <img src={pedidoRetiradoBlack} 
+                                            style={{ width:'24px', height:'24px' }} />
+                                        </ListItemIcon>
+                                        <Typography variant="subtitle1" color="textSecondary">                
+                                            Pedido Retirado                                                   
+                                        </Typography>
+                                    </>
+                                    ):null}
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Typography variant="subtitle2" color="textSecondary">                
+                                        Nome do Cliente                                                     
+                                    </Typography>
+                                    <Typography variant="subtitle1" color="textSecondary">                
+                                        {cliente}                                                     
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={8}>
+                                    <Typography variant="subtitle2" color="textSecondary">                
+                                        Telefone de Contato                                                     
+                                    </Typography>
+                                    <Typography variant="subtitle1" color="textSecondary">                
+                                        {contato}                                                     
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="subtitle1" style={{ fontWeight:'bold'}}>                
+                                        Itens do Pedido                                                     
+                                    </Typography>
+                                    {infosI.map((item) => {
+                                        return (
+                                            <Box style={{ width:'100%' }}>
+                                                <Box display="flex">
+                                                    <Box style={{ width:'50%', textAlign:'start', padding:'16px' }}>
+                                                        <Typography variant="subtitle1" style={{ fontWeight:'bold'}}>                
+                                                            {item.produtoNome}                                                    
+                                                        </Typography>
+                                                        <Typography variant="subtitle2" color="textSecondary">                
+                                                            {item.produtoDescricao}                                                     
+                                                        </Typography>
+                                                    </Box>
+                                                    <Box style={{ width:'50%', textAlign:'end', padding:'16px' }}>
+                                                        <Typography variant="subtitle1">                
+                                                            x {item.quantidade}                                                    
+                                                        </Typography>
+                                                        <Typography variant="subtitle2" color="textSecondary">                
+                                                            {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}                                                     
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                                <hr style={{ width:'100%', color:'#000000' }} />
+                                            </Box>
+                                        );
+                                    })}
                                 </Grid>
                             </Grid>
-                        })}</Box>
+                        </Box>
                     ):
                     (<CardHeader subheader={
                         <Box p={1} display="flex" style={{ paddingLeft:'25%'}} >                                
