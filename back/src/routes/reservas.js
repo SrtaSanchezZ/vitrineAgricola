@@ -13,5 +13,9 @@ routes.post(
     '/reservas',
     resController.cadastrar
 )
+routes.put(
+    '/reservas/:id',
+    resController.AtualizarSituacao
+)
 
 module.exports = routes

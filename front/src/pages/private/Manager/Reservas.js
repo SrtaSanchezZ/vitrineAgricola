@@ -84,10 +84,6 @@ const Reservas = () => {
 
       handleLoadItens(id);
     };
-    const handleClose = () => {
-      setOpen(false);
-      setChecked([]);
-    };
     const handleClickOpenL = () => {
       setOpenL(true);
     };
@@ -95,101 +91,35 @@ const Reservas = () => {
       setOpenL(false);
     };
     
-    const handleChange = (set) => (event) => set(event.target.value);
-    
-    // const handleSubmit = () => {
+    const handleAlter = (situa) => {
 
-    //     handleClickOpenL();
+        handleClickOpenL();
 
-    //     if (titulo !== "" && texto !== ""){
-    //         if(imagem.length > 0){
+        axios
+            .put(`http://` + back + `/reservas/` + id, {
+                situacao: situa,
+                email: email,
+                perfil: perfil,
+            })
+            .then((res) => {
 
-    //             noticia = {
-    //                 titulo: titulo,
-    //                 texto: texto,
-    //                 autor: autor,
-    //                 imagem: imagem[0]
-    //               }
-                
-    //             const formData = new FormData();
-    //               formData.append('perfil',perfil);
-    //               formData.append('email',email);
-    //               formData.append('autor',noticia.autor);
-    //               formData.append('titulo',noticia.titulo);
-    //               formData.append('texto',noticia.texto);
-    //               formData.append('file',noticia.imagem);
+                if(res.data.retorno){ 
+                    handleCloseL();                                                    
+                    msg = res.data.msg
+                    handleClickOpenA(msg);
+                }else{    
+                    handleCloseL();                                                 
+                    msg = res.data.msg
+                    handleClickOpenA(msg);
+                }
 
-    //             axios
-    //                 .post(`http://` + back + `/noticias`, formData)
-    //                 .then((res) => {
-                        
-    //                     handleCloseL();
-
-    //                     if(res.data.retorno){                                                     
-    //                         msg = res.data.msg
-    //                         handleClickOpenA(msg);
-    //                         handleClose();
-    //                     }else{                                                     
-    //                         msg = res.data.msg
-    //                         handleClickOpenA(msg);
-    //                         handleClose();
-    //                     }
-
-    //                 })
-    //                 .catch((error) => {
-    //                     handleClose();
-    //                     handleCloseL();
-    //                     msg = "Não foi possível cadastrar essa notícia, revise os dados e tente novamente.";
-    //                     handleClickOpenA(msg);
-    //                 })
-    //         }else{
-    //             noticia = {
-    //                 titulo: titulo,
-    //                 texto: texto,
-    //                 autor: autor,
-    //                 imagem: semimg
-    //               }
-                
-    //               const formData = new FormData();
-    //                 formData.append('perfil',perfil);
-    //                 formData.append('email',email);
-    //                 formData.append('autor',noticia.autor);
-    //                 formData.append('titulo',noticia.titulo);
-    //                 formData.append('texto',noticia.texto);
-    //                 formData.append('file',noticia.imagem);
-  
-    //               axios
-    //                   .post(`http://` + back + `/noticia`, formData)
-    //                   .then((res) => {
-                        
-    //                     handleCloseL();
-
-    //                     if(res.data.retorno){                                                     
-    //                         msg = res.data.msg
-    //                         handleClickOpenA(msg);
-    //                         handleClose();
-    //                     }else{                                                     
-    //                         msg = res.data.msg
-    //                         handleClickOpenA(msg);
-    //                         handleClose();
-    //                     }
-
-    //                   })
-    //                   .catch((error) => {
-    //                         handleClose();
-    //                         handleCloseL();
-    //                         msg = "Não foi possível cadastrar essa notícia, revise os dados e tente novamente.";
-    //                         handleClickOpenA(msg);
-    //                   })
-    //         }
-    //     } else {
-    //         handleCloseL();
-
-    //         msg = "Informe os dados solicitados.";
-    //         handleClickOpenA(msg);
-    //         handleClose();
-    //     }
-    // };
+            })
+            .catch((error) => {
+                handleCloseL();
+                msg = "Não foi possível atualizar a situação dessa reserva, selecione novamente o Pedido desejado e refaça a ação.";
+                handleClickOpenA(msg);
+            })
+    };
     const handleLoad = () =>{
         axios
           .get(`http://`+ back +`/reservas`)
@@ -376,51 +306,132 @@ const Reservas = () => {
                                         {(data.slice(0,10).split('-').reverse().join()).replace(/,/g,'/')}                                                     
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={8}>
-                                    {situacao === 1 ? (
-                                    <>
-                                        <ListItemIcon>
-                                            <img src={pedidoRecebidoBlack} 
-                                            style={{ width:'24px', height:'24px' }} />
-                                        </ListItemIcon>
-                                        <Typography variant="subtitle1" color="textSecondary">                
-                                            Pedido Recebido                                                    
-                                        </Typography>
-                                    </>
-                                    ): null}
-                                    {situacao === 2 ? (
-                                    <>
-                                        <ListItemIcon>
-                                            <img src={pagamentoConfirmadoBlack} 
-                                            style={{ width:'24px', height:'24px' }} />
-                                        </ListItemIcon>
-                                        <Typography variant="subtitle1" color="textSecondary">                
-                                            Pagamento Confirmado                                                    
-                                        </Typography>
-                                    </>
-                                    ):null}
-                                    {situacao === 3 ? (
-                                    <>
-                                        <ListItemIcon>
-                                            <img src={pedidoCanceladoBlack} 
-                                            style={{ width:'24px', height:'24px' }} />
-                                        </ListItemIcon>
-                                        <Typography variant="subtitle1" color="textSecondary">                
-                                            Pedido Cancelado                                                   
-                                        </Typography>
-                                    </>
-                                    ):null}
-                                    {situacao === 4 ? (
-                                    <>
-                                        <ListItemIcon>
-                                            <img src={pedidoRetiradoBlack} 
-                                            style={{ width:'24px', height:'24px' }} />
-                                        </ListItemIcon>
-                                        <Typography variant="subtitle1" color="textSecondary">                
-                                            Pedido Retirado                                                   
-                                        </Typography>
-                                    </>
-                                    ):null}
+                                <Grid item xs={8}>                                    
+                                <Box style={{ width:'80%' }}>
+                                    <Box display="flex">
+                                        <Box style={{ width:'50%', textAlign:'start', padding:'16px' }}>
+                                            {situacao === 1 ? (
+                                                <Button 
+                                                onClick={()=>handleAlter(1)} 
+                                                    variante="outlined"  
+                                                    className="btnNovo"
+                                                    startIcon={
+                                                            <img src={pedidoRecebidoWhite} 
+                                                            style={{ width:'24px', height:'24px' }} />}
+                                                    style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
+                                                            borderRadius:'50px', backgroundColor:'#2E8E61', width:"200px",
+                                                            marginBottom:'16px'  }}>
+                                                    <Typography variant="subtitle2">                
+                                                        Pedido Recebido                                                    
+                                                    </Typography>
+                                                </Button>
+                                                ):(
+                                                <Button  
+                                                    onClick={()=>handleAlter(1)} 
+                                                    variante="outlined"  
+                                                    className="btnNovo"
+                                                    startIcon={
+                                                        <img src={pedidoRecebidoBlack} 
+                                                        style={{ width:'24px', height:'24px' }} />}
+                                                    style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
+                                                        borderRadius:'50px', backgroundColor:'#FFFFFF', width:"200px",
+                                                        marginBottom:'16px'  }}>
+                                                    <Typography variant="subtitle2">                
+                                                        Pedido Recebido                                                    
+                                                    </Typography>
+                                                </Button>)}
+                                            {situacao === 3 ? (
+                                                <Button 
+                                                    onClick={()=>handleAlter(3)}  
+                                                    variante="outlined"  
+                                                    className="btnNovo"
+                                                    startIcon={
+                                                            <img src={pedidoCanceladoWhite} 
+                                                            style={{ width:'24px', height:'24px' }} />}
+                                                    style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
+                                                            borderRadius:'50px', backgroundColor:'#2E8E61', width:"200px",
+                                                            marginBottom:'16px'  }}>
+                                                    <Typography variant="subtitle2">                
+                                                        Pedido Cancelado                                                   
+                                                    </Typography>
+                                                </Button>
+                                                ):(
+                                                <Button  
+                                                    onClick={()=>handleAlter(3)} 
+                                                    variante="outlined"  
+                                                    className="btnNovo"
+                                                    startIcon={
+                                                            <img src={pedidoCanceladoBlack} 
+                                                            style={{ width:'24px', height:'24px' }} />}
+                                                    style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
+                                                            borderRadius:'50px', backgroundColor:'#FFFFFF', width:"200px"  }}>
+                                                    <Typography variant="subtitle2">                
+                                                        Pedido Cancelado                                                    
+                                                    </Typography>
+                                                </Button>)}
+                                        </Box>
+                                        <Box style={{ width:'50%', textAlign:'end', padding:'16px' }}>
+                                            {situacao === 2 ? (
+                                                <Button 
+                                                    onClick={()=>handleAlter(2)}  
+                                                    variante="outlined"  
+                                                    className="btnNovo"
+                                                    startIcon={
+                                                            <img src={pagamentoConfirmadoWhite} 
+                                                            style={{ width:'24px', height:'24px' }} />}
+                                                    style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
+                                                            borderRadius:'50px', backgroundColor:'#2E8E61', width:"200px",
+                                                            marginBottom:'16px'  }}>
+                                                    <Typography variant="subtitle2">                
+                                                        Pagamento Confirmado                                                   
+                                                    </Typography>
+                                                </Button>
+                                                ):(
+                                                <Button  
+                                                    onClick={()=>handleAlter(2)} 
+                                                    variante="outlined"  
+                                                    className="btnNovo"
+                                                    startIcon={
+                                                            <img src={pagamentoConfirmadoBlack} 
+                                                            style={{ width:'24px', height:'24px' }} />}
+                                                    style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
+                                                            borderRadius:'50px', backgroundColor:'#FFFFFF', width:"250px",
+                                                            marginBottom:'16px'  }}>
+                                                    <Typography variant="subtitle2">                
+                                                        Pagamento Confirmado                                                    
+                                                    </Typography>
+                                                </Button>)}
+                                            {situacao === 4 ? (
+                                                <Button 
+                                                    onClick={()=>handleAlter(4)}  
+                                                    variante="outlined"  
+                                                    className="btnNovo"
+                                                    startIcon={
+                                                            <img src={pedidoRetiradoWhite} 
+                                                            style={{ width:'24px', height:'24px' }} />}
+                                                    style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
+                                                            borderRadius:'50px', backgroundColor:'#2E8E61', width:"200px"  }}>
+                                                    <Typography variant="subtitle2">                
+                                                        Pedido Retirado                                                   
+                                                    </Typography>
+                                                </Button>
+                                                ):(
+                                                <Button  
+                                                    onClick={()=>handleAlter(4)}
+                                                    variante="outlined"  
+                                                    className="btnNovo"
+                                                    startIcon={
+                                                            <img src={pedidoRetiradoBlack} 
+                                                            style={{ width:'24px', height:'24px' }} />}
+                                                    style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
+                                                            borderRadius:'50px', backgroundColor:'#FFFFFF', width:"250px"  }}>
+                                                    <Typography variant="subtitle2">                
+                                                        Pedido Retirado                                                    
+                                                    </Typography>
+                                                </Button>)}
+                                        </Box>
+                                    </Box>
+                                </Box>
                                 </Grid>
                                 <Grid item xs={4}>
                                     <Typography variant="subtitle2" color="textSecondary">                
@@ -466,7 +477,19 @@ const Reservas = () => {
                                                 <hr style={{ width:'100%', color:'#000000' }} />
                                             </Box>
                                         );
-                                    })}
+                                    })}                                    
+                                    <Box display="flex">
+                                        <Box style={{ width:'50%', textAlign:'start', padding:'16px' }}>
+                                            <Typography variant="subtitle1" color="textSecondary">                
+                                                Total:                                                     
+                                            </Typography>
+                                        </Box>
+                                        <Box style={{ width:'50%', textAlign:'end', padding:'16px' }}>                                            
+                                            <Typography variant="subtitle1" style={{ fontWeight:'bold'}}>                
+                                                {(total).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}                                                    
+                                            </Typography>
+                                        </Box>
+                                    </Box>
                                 </Grid>
                             </Grid>
                         </Box>

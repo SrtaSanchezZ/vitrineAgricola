@@ -184,3 +184,87 @@ exports.cadastrar = async (req, res, next) => {
                 })
     }
 }
+//PUT rota => /reservas/:id
+//Atualiza situação da reserva
+exports.AtualizarSituacao = async (req, res, next) => {
+    try {
+
+        var  perfil = req.body.perfil;
+        
+        if(perfil === "master"){
+            perfil = 1;
+        }
+        if(perfil === "redator"){
+            perfil = 2;
+        }
+        if(perfil === "vendedor"){
+            perfil = 3;
+        }
+        
+        var reserva = {    
+            id: req.params.id,
+            situacao: req.body.situacao,
+            email: req.body.email,
+            perfil: perfil             
+        }
+
+        result = "";
+        result = val.grupo("validacao", reserva.email, reserva.perfil); 
+
+        if (result.retorno) { 
+
+            result = "";
+            result = await usuModel.obterEmail(reserva.email);  
+
+            if (result.retorno) {  
+
+                var usuId = result.retornoBD[0].usu_id; 
+
+                result = "";
+                result = await resModel.atualizarSituacaoReserva( reserva.id,  reserva.situacao, usuId);    
+            
+                console.log(result);    
+            
+                if (result.retorno) {  
+
+                    return res
+                            .status(200)
+                            .json({ 
+                                msg: result.msg,
+                                retorno: true
+                            })
+                }else{     
+                    return res
+                        .status(400)
+                        .json({ 
+                            msg: result.msg,
+                            retorno: false
+                        })
+                }   
+            }else{     
+                return res
+                    .status(400)
+                    .json({ 
+                        msg: result.msg,
+                        retorno: false
+                    })
+            }          
+        }else{
+            return res
+                    .status(400)
+                    .json({  
+                        msg: result.msg,
+                        retorno: false
+                     })
+        }
+    }
+    catch (e) {
+        return res
+                .status(400)
+                .json({ 
+                    msg: "Falha de conexão, revise seu acesso a internet.",
+                    retorno: false, 
+                    response: e 
+                })
+    }
+}
