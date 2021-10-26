@@ -84,6 +84,7 @@ const MontarVitrine = () => {
       setQtd(0);
 
       handleSubmit();
+      handleLoadV();
     };
     const handleClose = () => {
       setOpen(false);
@@ -136,7 +137,6 @@ const MontarVitrine = () => {
     const handleSubmit = () => {
 
         handleClickOpenL();
-        console.log(qtd)
 
         if (qtd >= 0 && valor !== ""){
 

@@ -130,7 +130,7 @@ const News = () => {
                                         <div style={Object.assign({}, styles.slide, styles.slide2) } 
                                         onClick={() => handleOpen(value.id, value.titulo, value.texto, value.autor, value.data, value.imagem)}>
                                             <div style={{ backgroundImage: `url(${"http://localhost:3001" + value.imagem})`, 
-                                                        backgroundRepeat: 'no-repeat', height:430, backgroundSize: '100%', 
+                                                        backgroundRepeat: 'no-repeat', height:450, backgroundSize: '100%', 
                                                         cursor:'pointer'  
                                                 }}>
                                             </div>
@@ -145,7 +145,7 @@ const News = () => {
                             ):(
                                 <div style={Object.assign({}, styles.slide, styles.slide2) }>
                                     <div style={{ backgroundImage: `url(${banner})`, backgroundRepeat: 'no-repeat', 
-                                                height: 430, backgroundAttachment: 'fixed', backgroundSize: 'cover',
+                                                height: 450, backgroundAttachment: 'fixed', backgroundSize: 'cover',
                                                 cursor:'pointer'   
                                     }}>
                                     </div>
