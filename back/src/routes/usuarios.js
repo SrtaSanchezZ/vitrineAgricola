@@ -5,6 +5,10 @@ routes.get(
     '/usuarios',
     usuController.obter
 );
+routes.get(
+    '/usuarios/:id',
+    usuController.obterId
+);
 routes.post(
     '/usuarios', 
     usuController.cadastrar

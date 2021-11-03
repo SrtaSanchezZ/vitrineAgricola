@@ -47,6 +47,24 @@ async function obterEmail(email) {
 }
 module.exports.obterEmail = obterEmail
 
+async function obterId(id) {
+    try {
+        sql = `SELECT * FROM usuarios WHERE usu_id = ?`
+        retornoBD = await mysql.execute(sql, id);
+
+        console.log(retornoBD);
+
+        if(retornoBD.length > 0){
+            return result = { retornoBD, retorno: true, msg: "Usuário."}
+        }else{
+            return result = { retorno: false, msg: "Não há usuário cadastrado com esse id."}
+        }            
+    } catch (e) {
+        return result = { retorno: false, msg: "Não há usuário cadastrado com esse id.", Erro: e }
+    }
+}
+module.exports.obterId = obterId
+
 async function cadastrar(nome, email, senha, perfil) {
     try {
         result = val.usuario(nome, email, senha, perfil);

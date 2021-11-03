@@ -32,8 +32,6 @@ const CourseReading = () => {
         // eslint-disable-next-line
       }, []);
 
-    console.log(curso);
-
     return(
         <div>
             <Header/>            

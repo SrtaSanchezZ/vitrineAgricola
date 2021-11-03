@@ -1,13 +1,9 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { AiOutlineInfoCircle, AiFillSave, AiOutlineCloseCircle } from "react-icons/ai";
-import { VscStarEmpty } from "react-icons/vsc";
-import { Button, Box, Grid, IconButton, TextField, List, Card, CardHeader, InputAdornment, ListItem, 
-       ListItemIcon, Checkbox, Divider, Typography } from '@material-ui/core';
-import { MdAdd } from "react-icons/md";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+import { Button, Box, Grid, TextField, List, Card, CardHeader, InputAdornment, ListItem, 
+       ListItemIcon, Typography } from '@material-ui/core';
 import Search from '@material-ui/icons/Search';
 import pedidoRecebidoBlack from '../../../assets/img/Icons/shopping_bag_black.png';
 import pedidoRecebidoWhite from '../../../assets/img/Icons/shopping_bag_white.png';
@@ -18,11 +14,10 @@ import pedidoCanceladoWhite from '../../../assets/img/Icons/highlight_off_white.
 import pedidoRetiradoBlack from '../../../assets/img/Icons/delivery_dining_black.png';
 import pedidoRetiradoWhite from '../../../assets/img/Icons/delivery_dining_white.png';
 import next from '../../../assets/img/Icons/navigate_next_black.png';
-import { DialogAlert, DialogLoading } from '../../../components/Dialog';
+import { DialogAlert, DialogLoading, DialogMain } from '../../../components/Dialog';
 //#endregion
 const Reservas = () => { 
     //#region Variáveis e Variáveis de Estado 
-    const [checked, setChecked] = useState([]);
     const [infos, setInfos] = useState([]);
     const [infosI, setInfosI] = useState([]);
     const [filtro, setFiltro] = useState([]);
@@ -31,16 +26,16 @@ const Reservas = () => {
     const [semF, setSemF] = useState("block");
     const [open, setOpen] = useState(false);
     const [openA, setOpenA] = useState(false);
-    const [openE, setOpenE] = useState(false);
     const [openL, setOpenL] = useState(false);
     const [alerta, setAlerta] = useState("");
     const [id, setId] = useState("");
     const [cliente, setCliente] = useState("");
     const [contato, setContato] = useState("");
-    const [dataSituacao, setDataSituacao] = useState("");
-    const [usuario, setUsuario] = useState("");
     const [data, setData] = useState("");
+    const [dataSituacao, setDataSituacao] = useState("");
+    const [responsavel, setResponsavel] = useState("");
     const [situacao, setSituacao] = useState("");
+    const [situacaoE, setSituacaoE] = useState("");
     const [total, setTotal] = useState("");
     const [perfil, setPerfil] = useState(localStorage.getItem("perfil")); 
     const [email, setEmail] = useState(localStorage.getItem("email")); 
@@ -74,15 +69,22 @@ const Reservas = () => {
 
       handleLoad();
     };
-    const handleClickOpen = (id, data, situacao, cliente, contato, total) => {
-      setId(id);
-      setData(data);
-      setSituacao(situacao);
-      setCliente(cliente);
-      setContato(contato);
-      setTotal(total);
+    const handleClickOpen = (id, data, dataSituacao, usuario, situacao, cliente, contato, total) => {
+        setId(id);
+        setData(data);
+        setDataSituacao(dataSituacao)
+        setSituacao(situacao);
+        setCliente(cliente);
+        setContato(contato);
+        setTotal(total);
+        setResponsavel("");
+        
+        handleLoadItens(id);
 
-      handleLoadItens(id);
+        if(usuario !== null){
+            handleLoadUsuario(usuario);
+        }
+
     };
     const handleClickOpenL = () => {
       setOpenL(true);
@@ -90,14 +92,39 @@ const Reservas = () => {
     const handleCloseL = () => {
       setOpenL(false);
     };
+    const handleClickOpenE = (situa) => {
+      setOpen(true);
+      setSituacaoE(situa);
+    };
+    const handleClose = () => {
+      setOpen(false);
+    };
     
-    const handleAlter = (situa) => {
+    const handleAlter = () => {
 
+        handleClose();
         handleClickOpenL();
-
-        axios
+        
+        if(situacao === 3){
+            handleCloseL();                                                 
+            msg = "Não é possível alterar um pedido cancelado.";
+            handleClickOpenA(msg);
+        }else if(situacao === situacaoE){ 
+            handleCloseL();                                                 
+            msg = "Não é possível alterar um pedido para a mesma situação que a atual.";
+            handleClickOpenA(msg);
+        }else if(situacao === 4){ 
+            handleCloseL();                                                 
+            msg = "Esse pedido já foi retirado pelo cliente.";
+            handleClickOpenA(msg);
+        }else if(situacao === 2 && situacaoE === 1 || situacao === 2 && situacaoE === 3){ 
+            handleCloseL();                                                 
+            msg = "Não é possível desfazer o recebimento de um pedido.";
+            handleClickOpenA(msg);
+        }else{
+            axios
             .put(`http://` + back + `/reservas/` + id, {
-                situacao: situa,
+                situacao: situacaoE,
                 email: email,
                 perfil: perfil,
             })
@@ -105,11 +132,13 @@ const Reservas = () => {
 
                 if(res.data.retorno){ 
                     handleCloseL();                                                    
-                    msg = res.data.msg
+                    msg = res.data.msg;
+                    setInfosI([]);
                     handleClickOpenA(msg);
                 }else{    
                     handleCloseL();                                                 
-                    msg = res.data.msg
+                    msg = res.data.msg;
+                    setInfosI([]);
                     handleClickOpenA(msg);
                 }
 
@@ -119,6 +148,7 @@ const Reservas = () => {
                 msg = "Não foi possível atualizar a situação dessa reserva, selecione novamente o Pedido desejado e refaça a ação.";
                 handleClickOpenA(msg);
             })
+        }
     };
     const handleLoad = () =>{
         axios
@@ -140,6 +170,17 @@ const Reservas = () => {
 
           }).catch((res) =>{    
             msg = "Não foi possível localizar reservas."; 
+          })  
+    };
+    const handleLoadUsuario = (id) =>{
+        axios
+          .get(`http://`+ back + `/usuarios/` + id)
+          .then((res) => {         
+            
+            setResponsavel(res.data.response.usuario[0].nome);
+
+          }).catch((res) =>{    
+            msg = "Não foi possível localizar esse usuário."; 
           })  
     };
     const handleFiltro = () => {
@@ -201,17 +242,17 @@ const Reservas = () => {
                     </Box>       
                 </Box>
             </Box> 
-            <div className="noticias">
+            <Box className="noticias">
                 <Box style={{ display:"inline-flex", alignItems: "center", textAlign: "left", fontsize: "16px" }} >
                     <Card>
                         <Box display={semF}>
                             <List className="bxLista" container wrap="nowrap" 
-                                  style={{ width: "100%", height: "57vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
+                                  style={{height: "57vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
                                 dense component="div" role="list">
-                                {infos.map((item) => {
+                                {infos.sort((a, b) => b.id - a.id).map((item) => {
                                     return (
                                         <ListItem key={item.id} role="listitem" 
-                                                  button onClick={()=>handleClickOpen(item.id, item.data, item.situacao, item.cliente, item.contato, item.total)}>
+                                                  button onClick={()=>handleClickOpen(item.id, item.data, item.dataSituacao, item.usuario, item.situacao, item.cliente, item.contato, item.total)}>
                                             <ListItemIcon>
                                                 {item.situacao === 1 ? (
                                                     <img src={pedidoRecebidoBlack} 
@@ -245,12 +286,12 @@ const Reservas = () => {
                         </Box>
                         <Box display={comF}>
                             <List className="bxLista" container wrap="nowrap" 
-                                  style={{ width: "100%", height: "57vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
+                                  style={{ height: "57vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
                                 dense component="div" role="list">
-                                {filtro.map((item) => {
+                                {filtro.sort((a, b) => b.id - a.id).map((item) => {
                                     return (
                                         <ListItem key={item.id} role="listitem" 
-                                                  button onClick={()=>handleClickOpen(item.id, item.data, item.situacao, item.cliente, item.contato, item.total)}>
+                                                  button onClick={()=>handleClickOpen(item.id, item.data, item.dataSituacao, item.usuario, item.situacao, item.cliente, item.contato, item.total)}>
                                             <ListItemIcon>
                                                 {item.situacao === 1 ? (
                                                     <img src={pedidoRecebidoBlack} 
@@ -284,221 +325,265 @@ const Reservas = () => {
                         </Box>
                     </Card>
                 </Box>
-                <div className="bxLeitura" style={{ height: "54vh", backgroundColor: "#ffffff", overflow: 'auto'}}>                         
-                    {infosI.length > 0 ? (
-                        <Box>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <Typography variant="h6">                
-                                        Pedido #0{id}                                                     
+                <Box className="bxLeitura" style={{ width:'96%', height: "54vh", backgroundColor: "#ffffff", overflow: 'auto'}}>                         
+                    {infosI.length > 0 ? (                        
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <Typography variant="h6">                
+                                    Pedido #0{id}                                                     
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12} style={{ display:'flex', padding:'16px' }}>
+                                <Grid item xs={3}>
+                                    <Typography variant="subtitle2" color="textSecondary">                
+                                        Data da reserva                                                     
+                                    </Typography>
+                                    <Typography variant="subtitle1" color="textSecondary">                
+                                        {(data.slice(0,10).split('-').reverse().join()).replace(/,/g,'/')}                                                     
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} style={{ display:'flex' }}>
-                                    <Grid item xs={4}>
-                                        <Typography variant="subtitle2" color="textSecondary">                
-                                            Data da reserva                                                     
-                                        </Typography>
-                                        <Typography variant="subtitle1" color="textSecondary">                
-                                            {(data.slice(0,10).split('-').reverse().join()).replace(/,/g,'/')}                                                     
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <Typography variant="subtitle2" color="textSecondary">                
-                                            Nome do Cliente                                                     
-                                        </Typography>
-                                        <Typography variant="subtitle1" color="textSecondary">                
-                                            {cliente}                                                     
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <Typography variant="subtitle2" color="textSecondary">                
-                                            Telefone de Contato                                                     
-                                        </Typography>
-                                        <Typography variant="subtitle1" color="textSecondary">                
-                                            {contato}                                                     
-                                        </Typography>
-                                    </Grid>
+                                <Grid item xs={3}>
+                                    <Typography variant="subtitle2" color="textSecondary">                
+                                        Nome do Cliente                                                     
+                                    </Typography>
+                                    <Typography variant="subtitle1" color="textSecondary">                
+                                        {cliente}                                                     
+                                    </Typography>
                                 </Grid>
-                                <Grid item xs={12} style={{ display:"flex" }}>     
-                                    <Grid item xs={3} style={{ textAlign:'center' }}>
+                                <Grid item xs={3}>
+                                    <Typography variant="subtitle2" color="textSecondary">                
+                                        Telefone de Contato                                                     
+                                    </Typography>
+                                    <Typography variant="subtitle1" color="textSecondary">                
+                                        {contato}                                                     
+                                    </Typography>
+                                </Grid>
+                                {responsavel !== "" ? (
+                                <Grid item xs={3}>
+                                    <Typography variant="subtitle2" color="textSecondary">                
+                                        Última atualização                                                     
+                                    </Typography>
+                                    <Typography variant="subtitle1" color="textSecondary">                
+                                       {responsavel.split(' ').slice(0, 2).join(' ')} - {(dataSituacao.slice(0,10).split('-').reverse().join()).replace(/,/g,'/')}                                                     
+                                    </Typography>
+                                </Grid>):null}
+                            </Grid>
+                            <Grid container spacing={2} columns={12}>     
+                                <Grid item xs={3} sm={4} style={{ textAlign:'center' }}>
                                     {situacao === 1 ? (
                                         <Button 
-                                        onClick={()=>handleAlter(1)} 
+                                        onClick={()=>handleClickOpenE(1)} 
                                             variante="outlined"  
                                             className="btnNovo"
                                             startIcon={
                                                     <img src={pedidoRecebidoWhite} 
                                                     style={{ width:'24px', height:'24px' }} />}
                                             style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
-                                                    borderRadius:'50px', backgroundColor:'#2E8E61', width:"200px" }}>
-                                            <Typography variant="subtitle2">                
+                                                    borderRadius:'50px', backgroundColor:'#2E8E61', width:"220px" }}>
+                                            <Typography variant="subtitle2" style={{ fontSize:'12px' }}>                
                                                 Pedido Recebido                                                    
                                             </Typography>
                                         </Button>
                                         ):(
                                         <Button  
-                                            onClick={()=>handleAlter(1)} 
+                                            onClick={()=>handleClickOpenE(1)} 
                                             variante="outlined"  
                                             className="btnNovo"
                                             startIcon={
                                                 <img src={pedidoRecebidoBlack} 
                                                 style={{ width:'24px', height:'24px' }} />}
                                             style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
-                                                borderRadius:'50px', backgroundColor:'#FFFFFF', width:"200px" }}>
-                                            <Typography variant="subtitle2">                
+                                                borderRadius:'50px', backgroundColor:'#FFFFFF', width:"220px" }}>
+                                            <Typography variant="subtitle2" style={{ fontSize:'12px' }}>                
                                                 Pedido Recebido                                                    
                                             </Typography>
-                                        </Button>)}
-                                    </Grid>
-                                    <Grid item xs={3} style={{ textAlign:'center' }}>
-                                        {situacao === 3 ? (
-                                            <Button 
-                                                onClick={()=>handleAlter(3)}  
-                                                variante="outlined"  
-                                                className="btnNovo"
-                                                startIcon={
-                                                        <img src={pedidoCanceladoWhite} 
-                                                        style={{ width:'24px', height:'24px' }} />}
-                                                style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
-                                                        borderRadius:'50px', backgroundColor:'#2E8E61', width:"200px" }}>
-                                                <Typography variant="subtitle2">                
-                                                    Pedido Cancelado                                                   
-                                                </Typography>
-                                            </Button>
-                                            ):(
-                                            <Button  
-                                                onClick={()=>handleAlter(3)} 
-                                                variante="outlined"  
-                                                className="btnNovo"
-                                                startIcon={
-                                                        <img src={pedidoCanceladoBlack} 
-                                                        style={{ width:'24px', height:'24px' }} />}
-                                                style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
-                                                        borderRadius:'50px', backgroundColor:'#FFFFFF', width:"200px" }}>
-                                                <Typography variant="subtitle2">                
-                                                    Pedido Cancelado                                                    
-                                                </Typography>
-                                            </Button>)}
-                                    </Grid>
-                                    <Grid item xs={3} style={{ textAlign:'center' }}>
-                                        {situacao === 2 ? (
-                                            <Button 
-                                                onClick={()=>handleAlter(2)}  
-                                                variante="outlined"  
-                                                className="btnNovo"
-                                                startIcon={
-                                                        <img src={pagamentoConfirmadoWhite} 
-                                                        style={{ width:'24px', height:'24px' }} />}
-                                                style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
-                                                        borderRadius:'50px', backgroundColor:'#2E8E61', width:"250px" }}>
-                                                <Typography variant="subtitle2">                
-                                                    Pagamento Confirmado                                                   
-                                                </Typography>
-                                            </Button>
-                                            ):(
-                                            <Button  
-                                                onClick={()=>handleAlter(2)} 
-                                                variante="outlined"  
-                                                className="btnNovo"
-                                                startIcon={
-                                                        <img src={pagamentoConfirmadoBlack} 
-                                                        style={{ width:'24px', height:'24px' }} />}
-                                                style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
-                                                        borderRadius:'50px', backgroundColor:'#FFFFFF', width:"250px" }}>
-                                                <Typography variant="subtitle2">                
-                                                    Pagamento Confirmado                                                    
-                                                </Typography>
-                                            </Button>)}
-                                    </Grid> 
-                                    <Grid item xs={3} style={{ textAlign:'center' }}>
-                                        {situacao === 4 ? (
-                                            <Button 
-                                                onClick={()=>handleAlter(4)}  
-                                                variante="outlined"  
-                                                className="btnNovo"
-                                                startIcon={
-                                                        <img src={pedidoRetiradoWhite} 
-                                                        style={{ width:'24px', height:'24px' }} />}
-                                                style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
-                                                        borderRadius:'50px', backgroundColor:'#2E8E61', width:"250px" }}>
-                                                <Typography variant="subtitle2">                
-                                                    Pedido Retirado                                                   
-                                                </Typography>
-                                            </Button>
-                                            ):(
-                                            <Button  
-                                                onClick={()=>handleAlter(4)}
-                                                variante="outlined"  
-                                                className="btnNovo"
-                                                startIcon={
-                                                        <img src={pedidoRetiradoBlack} 
-                                                        style={{ width:'24px', height:'24px' }} />}
-                                                style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
-                                                        borderRadius:'50px', backgroundColor:'#FFFFFF', width:"250px" }}>
-                                                <Typography variant="subtitle2">                
-                                                    Pedido Retirado                                                    
-                                                </Typography>
-                                            </Button>)}
-                                    </Grid>                               
+                                        </Button>
+                                    )}
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Typography variant="subtitle1" style={{ fontWeight:'bold'}}>                
-                                        Itens do Pedido                                                     
-                                    </Typography>
-                                    {infosI.map((item) => {
-                                        return (
-                                            <Box style={{ width:'100%' }}>
-                                                <Box display="flex">
-                                                    <Box style={{ width:'50%', textAlign:'start', padding:'16px' }}>
-                                                        <Typography variant="subtitle1" style={{ fontWeight:'bold'}}>                
-                                                            {item.produtoNome}                                                    
-                                                        </Typography>
-                                                        <Typography variant="subtitle2" color="textSecondary">                
-                                                            {item.produtoDescricao}                                                     
-                                                        </Typography>
-                                                    </Box>
-                                                    <Box style={{ width:'50%', textAlign:'end', padding:'16px' }}>
-                                                        <Typography variant="subtitle1">                
-                                                            x {item.quantidade}                                                    
-                                                        </Typography>
-                                                        <Typography variant="subtitle2" color="textSecondary">                
-                                                            {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}                                                     
-                                                        </Typography>
-                                                    </Box>
-                                                </Box>
-                                                <hr style={{ width:'100%', color:'#000000' }} />
-                                            </Box>
-                                        );
-                                    })}                                    
-                                    <Box display="flex">
-                                        <Box style={{ width:'50%', textAlign:'start', padding:'16px' }}>
-                                            <Typography variant="subtitle1" color="textSecondary">                
-                                                Total:                                                     
+                                <Grid item xs={3} sm={4} style={{ textAlign:'center' }}>
+                                    {situacao === 3 ? (
+                                        <Button 
+                                            onClick={()=>handleClickOpenE(3)}  
+                                            variante="outlined"  
+                                            className="btnNovo"
+                                            startIcon={
+                                                    <img src={pedidoCanceladoWhite} 
+                                                    style={{ width:'24px', height:'24px' }} />}
+                                            style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
+                                                    borderRadius:'50px', backgroundColor:'#2E8E61', width:"220px" }}>
+                                            <Typography variant="subtitle2" style={{ fontSize:'12px' }}>                
+                                                Pedido Cancelado                                                   
                                             </Typography>
-                                        </Box>
-                                        <Box style={{ width:'50%', textAlign:'end', padding:'16px' }}>                                            
-                                            <Typography variant="subtitle1" style={{ fontWeight:'bold'}}>                
-                                                {(total).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}                                                    
+                                        </Button>
+                                        ):(
+                                        <Button  
+                                            onClick={()=>handleClickOpenE(3)} 
+                                            variante="outlined"  
+                                            className="btnNovo"
+                                            startIcon={
+                                                    <img src={pedidoCanceladoBlack} 
+                                                    style={{ width:'24px', height:'24px' }} />}
+                                            style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
+                                                    borderRadius:'50px', backgroundColor:'#FFFFFF', width:"220px" }}>
+                                            <Typography variant="subtitle2" style={{ fontSize:'12px' }}>                
+                                                Pedido Cancelado                                                    
                                             </Typography>
-                                        </Box>
-                                    </Box>
+                                        </Button>
+                                    )}
                                 </Grid>
+                                <Grid item xs={3} sm={4} style={{ textAlign:'center' }}>
+                                    {situacao === 2 ? (
+                                        <Button 
+                                            onClick={()=>handleClickOpenE(2)}  
+                                            variante="outlined"  
+                                            className="btnNovo"
+                                            startIcon={
+                                                    <img src={pagamentoConfirmadoWhite} 
+                                                    style={{ width:'24px', height:'24px' }} />}
+                                            style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
+                                                    borderRadius:'50px', backgroundColor:'#2E8E61', width:"220px" }}>
+                                            <Typography variant="subtitle2" style={{ fontSize:'12px' }}>                
+                                                Pagamento Confirmado                                                   
+                                            </Typography>
+                                        </Button>
+                                        ):(
+                                        <Button  
+                                            onClick={()=>handleClickOpenE(2)} 
+                                            variante="outlined"  
+                                            className="btnNovo"
+                                            startIcon={
+                                                    <img src={pagamentoConfirmadoBlack} 
+                                                    style={{ width:'24px', height:'24px' }} />}
+                                            style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
+                                                    borderRadius:'50px', backgroundColor:'#FFFFFF', width:"220px" }}>
+                                            <Typography variant="subtitle2" style={{ fontSize:'12px' }}>                
+                                                Pagamento Confirmado                                                    
+                                            </Typography>
+                                        </Button>
+                                    )}
+                                </Grid> 
+                                <Grid item xs={3} sm={4} style={{ textAlign:'center' }}>
+                                    {situacao === 4 ? (
+                                        <Button 
+                                            onClick={()=>handleClickOpenE(4)}  
+                                            variante="outlined"  
+                                            className="btnNovo"
+                                            startIcon={
+                                                    <img src={pedidoRetiradoWhite} 
+                                                    style={{ width:'24px', height:'24px' }} />}
+                                            style={{ color:"#FFFFFF", border:'2px solid #2E8E61', textAlign:'left',
+                                                    borderRadius:'50px', backgroundColor:'#2E8E61', width:"220px" }}>
+                                            <Typography variant="subtitle2" style={{ fontSize:'12px' }}>                
+                                                Pedido Retirado                                                   
+                                            </Typography>
+                                        </Button>
+                                        ):(
+                                        <Button  
+                                            onClick={()=>handleClickOpenE(4)}
+                                            variante="outlined"  
+                                            className="btnNovo"
+                                            startIcon={
+                                                    <img src={pedidoRetiradoBlack} 
+                                                    style={{ width:'24px', height:'24px' }} />}
+                                            style={{ color:"#000000", border:'2px solid #000000', textAlign:'left',
+                                                    borderRadius:'50px', backgroundColor:'#FFFFFF', width:"220px" }}>
+                                            <Typography variant="subtitle2" style={{ fontSize:'12px' }}>                
+                                                Pedido Retirado                                                    
+                                            </Typography>
+                                        </Button>
+                                    )}
+                                </Grid>                               
                             </Grid>
-                        </Box>
+                            <Grid item xs={12}>
+                                <Typography variant="subtitle1" style={{ fontWeight:'bold'}}>                
+                                    Itens do Pedido                                                     
+                                </Typography>
+                                {infosI.map((item) => {
+                                    return (
+                                        <Box style={{ width:'100%' }}>
+                                            <Box display="flex">
+                                                <Box style={{ width:'50%', textAlign:'start', padding:'16px' }}>
+                                                    <Typography variant="subtitle1" style={{ fontWeight:'bold'}}>                
+                                                        {item.produtoNome}                                                    
+                                                    </Typography>
+                                                    <Typography variant="subtitle2" color="textSecondary">                
+                                                        {item.produtoDescricao}                                                     
+                                                    </Typography>
+                                                </Box>
+                                                <Box style={{ width:'50%', textAlign:'end', padding:'16px' }}>
+                                                    <Typography variant="subtitle1">                
+                                                        x {item.quantidade}                                                    
+                                                    </Typography>
+                                                    <Typography variant="subtitle2" color="textSecondary">                
+                                                        {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}                                                     
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                            <hr style={{ width:'100%', color:'#000000' }} />
+                                        </Box>
+                                    );
+                                })}                                    
+                                <Box display="flex">
+                                    <Box style={{ width:'50%', textAlign:'start', padding:'16px' }}>
+                                        <Typography variant="subtitle1" color="textSecondary">                
+                                            Total:                                                     
+                                        </Typography>
+                                    </Box>
+                                    <Box style={{ width:'50%', textAlign:'end', padding:'16px' }}>                                            
+                                        <Typography variant="subtitle1" style={{ fontWeight:'bold'}}>                
+                                            {(total).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}                                                    
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </Grid>
+                        </Grid>
                     ):
                     (<CardHeader subheader={
                         <Box p={1} display="flex" style={{ paddingLeft:'25%'}} >                                
                             <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
                             <Typography variant="body2" color="textSecondary">                
-                                Para visualizar selecione uma reserva/ pedido na lateral                                                      
+                                Para visualizar selecione uma reserva / pedido na lateral                                                      
                             </Typography>
                         </Box> }
                     />)}
-                </div>
-            </div>
+                </Box>
+            </Box>
                        
             <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>            
-            <DialogLoading open={openL} />  
+            <DialogLoading open={openL} />            
+            <DialogMain
+                open={open}
+                close={handleClose}
+                title={"ATUALIZA SITUAÇÃO"}
+                info={(
+                    <Box>
+                        <Typography variant="subtitle2">                
+                            Você tem certeza que deseja atualizar o pedido #{id} com a situação 
+                            "{situacao === 1 ? (
+                                <b>Pedido Recebido</b>
+                            ): null }
+                            {situacao === 2 ? (
+                                <b>Pagamento Confirmado</b>
+                            ): null }{situacao === 3 ? (
+                                <b>Pedido Cancelado</b>
+                            ): null }{situacao === 4 ? (
+                                <b>Pedido Retirado</b>
+                            ): null }" para a situação 
+                            "{situacaoE === 1 ? (
+                                <b>Pedido Recebido</b>
+                            ): null }
+                            {situacaoE === 2 ? (
+                                <b>Pagamento Confirmado</b>
+                            ): null }{situacaoE === 3 ? (
+                                <b>Pedido Cancelado</b>
+                            ): null }{situacaoE === 4 ? (
+                                <b>Pedido Retirado</b>
+                            ): null }"?
+                        </Typography>
+                    </Box>)}
+                click={()=>handleAlter()}
+                label={"SIM"}
+            />   
         </Grid>
     );
 }

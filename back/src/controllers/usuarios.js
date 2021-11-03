@@ -50,6 +50,56 @@ exports.obter = async (req, res, next) => {
                 })
     }
 }
+//GET rota => /usuarios/:id
+//obtem suario por id
+exports.obterId = async (req, res, next) => {
+    try {
+
+        var id = req.params.id;
+        result = await usuModel.obterId(id);
+
+        if (result.retorno) {
+
+            console.log(result.retornoBD)
+
+            response = {
+                usuario: result.retornoBD.map(usu => {
+                    return{        
+                        id: usu.usu_id,
+                        nome: usu.usu_nome,
+                        email: usu.usu_email,
+                        senha: usu.usu_senha,
+                        perfil: usu.usu_perfil
+                    }
+                })
+            }
+
+            return res
+                    .status(200)
+                    .json({ 
+                        msg: result.msg,
+                        retorno: true,
+                        response 
+                    })
+        }else{
+            return res
+                    .status(400)
+                    .json({  
+                        msg: result.msg,
+                        retorno: false
+                     })
+        }
+    }
+    catch (e) {
+        return res
+                .status(400)
+                .json({ 
+                    msg: "Falha de conexão, revise seu acesso a internet.",
+                    retorno: false, 
+                    response: e 
+                })
+    }
+}
 //POST rota => /usuarios
 //cadastra um usuario
 exports.cadastrar = async (req, res, next) => {

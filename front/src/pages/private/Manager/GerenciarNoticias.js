@@ -431,7 +431,7 @@ const GerenciarNoticias = () => {
                         <Box display={semF}>
                             <List className="bxLista" container wrap="nowrap" style={{ width: "100%", height: "50vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
                                 dense component="div" role="list">
-                                {infos.map((value) => {
+                                {infos.sort((a, b) => b.id - a.id).map((value) => {
                                     return (
                                         <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
                                             <ListItemIcon>
@@ -457,7 +457,7 @@ const GerenciarNoticias = () => {
                         <Box display={comF}>
                             <List className="bxLista" container wrap="nowrap" style={{ width: "100%", height: "50vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
                                 dense component="div" role="list">
-                                {filtro.map((value) => {
+                                {filtro.sort((a, b) => b.id - a.id).map((value) => {
                                     return (
                                         <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
                                             <ListItemIcon>
