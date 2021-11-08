@@ -4,6 +4,102 @@ const val = require('../services/utils');
 
 var result = "";
 
+//GET rota => /vitrine/grupos
+//obtem todos os grupos da vitrine
+exports.obterGrupo = async (req, res, next) => {
+    try {
+        result = await vitModel.obterGrupo();
+
+        if (result.retorno) {
+
+            response = {
+                grupos: result.retornoBD.map(gru => {
+                    return{        
+                        id: gru.gru_id,
+                        nome: gru.gru_nome,                
+                    }
+                })
+            }
+
+            return res
+                .status(200)
+                .json({ 
+                    msg: result.msg,
+                    retorno: true,
+                    response 
+                })           
+        }else{
+            return res
+                    .status(400)
+                    .json({  
+                        msg: result.msg,
+                        retorno: false
+                     })
+        }
+    }
+    catch (e) {
+        return res
+                .status(400)
+                .json({ 
+                    msg: "Falha de conexão, revise seu acesso a internet.",
+                    retorno: false, 
+                    response: e 
+                })
+    }
+}
+//GET rota => /vitrine/:id
+//obtem todos os produtos da vitrine segundo o id de certo grupo
+exports.obterVitrineGrupo = async (req, res, next) => {
+    try {
+
+        const id = req.params.id;
+
+        result = await vitModel.obterVitrineGrupo(id);
+
+        if (result.retorno) {
+
+            response = {
+                vitrine: result.retornoBD.map(vit => {
+                    return{        
+                        id: vit.vit_id,
+                        produtoId: vit.vit_pro_id,
+                        produtoNome: vit.pro_nome,
+                        produtoDescricao: vit.pro_descricao,
+                        produtoMetrica: vit.pro_metrica,
+                        produtoImg: vit.pro_imagem,
+                        produtoGrupo: vit.pro_grupo,
+                        quantidade: vit.vit_pro_qtd,
+                        valor: vit.vit_pro_val,                 
+                    }
+                })
+            }
+
+            return res
+                .status(200)
+                .json({ 
+                    msg: result.msg,
+                    retorno: true,
+                    response 
+                })           
+        }else{
+            return res
+                    .status(400)
+                    .json({  
+                        msg: result.msg,
+                        retorno: false
+                     })
+        }
+    }
+    catch (e) {
+        return res
+                .status(400)
+                .json({ 
+                    msg: "Falha de conexão, revise seu acesso a internet.",
+                    retorno: false, 
+                    response: e 
+                })
+    }
+}
 //GET rota => /vitrine
 //obtem todos os itens da vitrine
 exports.obter = async (req, res, next) => {

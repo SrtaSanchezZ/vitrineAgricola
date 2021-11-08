@@ -26,6 +26,53 @@ async function obter() {
 }
 module.exports.obter = obter
 
+async function obterGrupo() {
+    try {
+        sql = `SELECT DISTINCT g.gru_id, g.gru_nome
+               FROM grupos g 
+               INNER JOIN 
+                produtos p ON g.gru_id = p.pro_grupo
+               INNER JOIN 
+                vitrine v ON v.vit_pro_id = p.pro_id`
+        retornoBD = await mysql.execute(sql);
+
+        if(retornoBD.length > 0){
+            return result = { retornoBD, retorno: true, msg: "Relação de grupo da vitrine."}
+        }else{
+            return result = { retorno: false, msg: "Não há grupo na vitrine." }
+        }
+        
+    } catch (e) {
+        return result = { retorno: false, msg: "Não há grupo na vitrine.", Erro: e }
+    }
+}
+module.exports.obterGrupo = obterGrupo
+
+async function obterVitrineGrupo(id) {
+    try {
+        sql = `SELECT DISTINCT v.vit_pro_id, p.pro_nome, p.pro_descricao, p.pro_metrica,
+                               p.pro_imagem, p.pro_grupo, v.vit_pro_qtd, v.vit_pro_val
+               FROM grupos g 
+               INNER JOIN 
+                produtos p ON g.gru_id = p.pro_grupo
+               INNER JOIN 
+                vitrine v ON v.vit_pro_id = p.pro_id
+               WHERE v.vit_pro_qtd > 0
+               AND p.pro_grupo = ?`
+        retornoBD = await mysql.execute(sql, id);
+
+        if(retornoBD.length > 0){
+            return result = { retornoBD, retorno: true, msg: "Relação de itens por grupo da vitrine."}
+        }else{
+            return result = { retorno: false, msg: "Não há itens por esse grupo na vitrine." }
+        }
+        
+    } catch (e) {
+        return result = { retorno: false, msg: "Não há itens por esse grupo na vitrine.", Erro: e }
+    }
+}
+module.exports.obterVitrineGrupo = obterVitrineGrupo
+
 async function obterItemPorProdutoId(produto) {
     try {
         sql = `SELECT * FROM vitrine WHERE vit_pro_id = ?`
