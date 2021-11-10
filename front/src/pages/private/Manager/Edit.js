@@ -7,6 +7,7 @@ import { HeaderAdm } from '../../../components/Header';
 import { MenuPrivate } from '../../../components/Menu';
 import redator from '../../../assets/img/Icons/perfilEdit.png';
 import GerenciarNoticias from './GerenciarNoticias';
+import HomePrivate from './Home';
 //#endregion
 const Edit = () => {
     //#region Variáveis e Variáveis de Estado
@@ -50,9 +51,7 @@ const Edit = () => {
                         news={()=>handleStep(5)} />
                     <Box  className="conteudo">               
                         <DialogPerfil open={open} close={handleClose} img={redator} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        <div style={{ marginTop:"20%" }}>
-                            <h1>Página Inicial</h1>
-                        </div>
+                        <HomePrivate/>
                     </Box>
                 </Box>
             </div>

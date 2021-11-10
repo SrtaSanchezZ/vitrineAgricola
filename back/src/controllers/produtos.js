@@ -1,3 +1,4 @@
+const vitModel = require('../models/vitrine');
 const proModel = require('../models/produtos');
 const val = require('../services/utils');
 
@@ -231,13 +232,11 @@ exports.atualizar = async (req, res, next) => {
         if(result.retorno){
             
             result = "";
-
             result = await proModel.obterProdutoPorNome(produto.nome);
 
             if(!result.retorno){    
 
-                result = "";
-                    
+                result = "";                    
                 result = await proModel.atualizar(produto.nome, produto.descricao, produto.grupo, produto.metrica, produto.id);
 
                 if(result.retorno){
@@ -338,16 +337,45 @@ exports.apagar = async (req, res, next) => {
 
                 result = val.apagaImagem(img[1]);
 
-                result = "";
-                
-                result = await proModel.apagar(produto.id);
+                result = "";                
+                result = await vitModel.obterItemPorProdutoId(produto.id);
 
-                return res
-                    .status(200)
-                    .json({ 
-                        msg: result.msg,
-                        retorno: true
-                    })
+                if(result.retorno){
+
+                    result = "";   
+                    result = await vitModel.apagar(produto.id);
+
+                    if(result.retorno){
+
+                        result = "";   
+                        result = await proModel.apagar(produto.id);
+        
+                        return res
+                            .status(200)
+                            .json({ 
+                                msg: result.msg,
+                                retorno: true
+                            })
+                    }else{
+                        return res
+                            .status(400)
+                            .json({  
+                                msg: result.msg,
+                                retorno: false
+                                })
+                    }
+                }else{
+
+                    result = "";   
+                    result = await proModel.apagar(produto.id);
+    
+                    return res
+                        .status(200)
+                        .json({ 
+                            msg: result.msg,
+                            retorno: true
+                        })
+                }
             }else{
                 return res
                     .status(400)

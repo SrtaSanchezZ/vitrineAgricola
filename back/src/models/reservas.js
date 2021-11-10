@@ -57,7 +57,7 @@ async function cadastrarReserva(cliente, contato, total) {
         retornoBD = await mysql.execute(sql, [cliente, contato, total, data])
 
         if(retornoBD.affectedRows > 0){
-            return result = { retorno: true, msg: "Reserva cadastrada com sucesso!", retornoBD}
+            return result = { retornoBD, retorno: true, msg: "Reserva cadastrada com sucesso!"}
         }else{
             return result = { retorno: false, msg: "Não foi possível cadastrar essa Reserva, revise os dados informados."}
         }
@@ -75,7 +75,7 @@ async function cadastrarSituacaoReserva(id, situacao) {
         retornoBD = await mysql.execute(sql, [id, situacao, data])
 
         if(retornoBD.affectedRows > 0){
-            return result = { retorno: true, msg: "Situação da Reserva cadastrada com sucesso!", retornoBD}
+            return result = { retorno: true, msg: "Situação da Reserva cadastrada com sucesso!"}
         }else{
             return result = { retorno: false, msg: "Não foi possível cadastrar essa Situação da Reserva, revise os dados informados."}
         }
@@ -92,7 +92,7 @@ async function cadastrarItemReserva(id, proId, proQtd, proValor) {
         retornoBD = await mysql.execute(sql, [id, proId, proQtd, proValor])
 
         if(retornoBD.affectedRows > 0){
-            return result = { retorno: true, msg: "Item da Reserva cadastrado com sucesso!", retornoBD}
+            return result = { retornoBD, retorno: true, msg: "Item da Reserva cadastrado com sucesso!"}
         }else{
             return result = { retorno: false, msg: "Não foi possível cadastrar esse Item da Reserva, revise os dados informados."}
         }

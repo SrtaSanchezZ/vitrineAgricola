@@ -60,8 +60,6 @@ exports.obterId = async (req, res, next) => {
 
         if (result.retorno) {
 
-            console.log(result.retornoBD)
-
             response = {
                 usuario: result.retornoBD.map(usu => {
                     return{        

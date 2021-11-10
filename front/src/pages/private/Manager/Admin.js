@@ -11,6 +11,7 @@ import MontarVitrine from './MontarVitrine';
 import GerenciarProdutos from './GerenciarProdutos';
 import GerenciarUsuarios from './GerenciarUsuarios';
 import GerenciarNoticias from './GerenciarNoticias';
+import HomePrivate from './Home';
 //#endregion
 const Admin = () => {
     //#region Variáveis e Variáveis de Estado
@@ -58,9 +59,7 @@ const Admin = () => {
                         users={()=>handleStep(6)} />
                     <Box className="conteudo">                    
                         <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        <div style={{ marginTop:"20%" }}>
-                            <h1>Página Inicial</h1>
-                        </div>
+                        <HomePrivate/>
                     </Box>
                 </Box>
             </Box>

@@ -1,5 +1,6 @@
 const resModel = require('../models/reservas');
 const usuModel = require('../models/usuarios');
+const vitModel = require('../models/vitrine');
 const val = require('../services/utils');
 
 var result = "";
@@ -111,44 +112,55 @@ exports.obterPorId = async (req, res, next) => {
 //cadastra reserva, situação da reserva e itens da reserva
 exports.cadastrar = async (req, res, next) => {
     try {
-
         var reservas = {    
             cliente: req.body.cliente,
             contato: req.body.contato,
             total: req.body.total,
             itens: req.body.itens               
         }
+        var itens = [];
+        itens = reservas.itens;
 
         result = "";
         result = await resModel.cadastrarReserva(reservas.cliente, reservas.contato, reservas.total);
 
         if (result.retorno) {
-            var resId = result.retornoBD[0].res_id;
+            
+            var resId = result.retornoBD.insertId;
             var proId = "";
             var qtd = "";
             var valor = "";
 
             result = "";
             result = await resModel.cadastrarSituacaoReserva(resId, 1);
-            
-            if (result.retorno) {
 
-                for(let i=0; i < reservas.itens.length(); i++){
-                    proId = parseInt(reservas.itens[i].id);
-                    qtd = parseInt(reservas.itens[i].qtd);
-                    valor = parseFloat(reservas.itens[i].valor);
-    
+            if (result.retorno) {
+                
+                var i=0;
+
+                while(i < itens.length){
+                    proId = parseInt(itens[i].id);
+                    qtd = parseInt(itens[i].qtd);
+                    valor = parseFloat(itens[i].valor);
+
                     result = "";
                     result = await resModel.cadastrarItemReserva(resId, proId, qtd, valor);
+
+                    if(result.retorno){
+                        result = "";
+                        result = await vitModel.reservaItemVitrine(proId, qtd);
+                    }
+                    
+                    i++;
                 }
 
                 if(result.retorno){
                     return res
-                            .status(200)
-                            .json({ 
-                                msg: result.msg,
-                                retorno: true
-                            })
+                        .status(200)
+                        .json({ 
+                            msg: result.msg,
+                            retorno: true
+                        })
                 }else{     
                     return res
                         .status(400)
@@ -223,22 +235,63 @@ exports.AtualizarSituacao = async (req, res, next) => {
                 result = "";
                 result = await resModel.atualizarSituacaoReserva( reserva.id,  reserva.situacao, usuId);    
             
-                console.log(result);    
-            
-                if (result.retorno) {  
+                if (reserva.situacao === 3) {  
 
-                    return res
-                            .status(200)
+                    result = "";
+                    result = await resModel.obterItemReservaPorReservaId(reserva.id); 
+
+                    if (result.retorno) {             
+
+                        const itens = result.retornoBD.map(res => {
+                                return{ 
+                                    produtoId: res.itr_pro_id,
+                                    produtoNome: res.pro_nome,
+                                    produtoDescricao: res.pro_descricao,
+                                    produtoMetrica: res.pro_metrica,
+                                    produtoImg: res.pro_imagem,
+                                    produtoGrupo: res.pro_grupo,
+                                    quantidade: res.itr_pro_qtd,
+                                    valor: res.itr_pro_valor
+                                }            
+                            });
+
+                        if(itens.length > 0){                                                        
+                
+                            var i=0;
+
+                            while(i < itens.length){
+                                proId = parseInt(itens[i].produtoId);
+                                qtd = parseInt(itens[i].quantidade);
+
+                                result = "";
+                                result = await vitModel.cancelaReserva(proId, qtd);
+
+                                i++;
+                            }
+            
+                            return res
+                                .status(200)
+                                .json({ 
+                                    msg: result.msg,
+                                    retorno: true,
+                                    response 
+                                })
+                        }           
+                    }else{
+                        return res
+                            .status(400)
                             .json({ 
-                                msg: result.msg,
-                                retorno: true
+                                msg: "Não foi possível atualizar o estoque após o cancelamento da reserva.",
+                                retorno: false
                             })
-                }else{     
+                    }
+                }else{  
                     return res
-                        .status(400)
+                        .status(200)
                         .json({ 
                             msg: result.msg,
-                            retorno: false
+                            retorno: true,
+                            response 
                         })
                 }   
             }else{     

@@ -18,8 +18,6 @@ const MontarVitrine = () => {
     const [infosV, setInfosV] = useState([]);
     const [filtro, setFiltro] = useState([]);
     const [filtroG, setFiltroG] = useState([]);
-    const [itens, setItens] = useState([]);
-    const [vitrine, setVitrine] = useState([]);
     const [state, setState] = useState({right: false});
     const [valorF, setValorF] = useState("");
     const [valorFG, setValorFG] = useState("");
@@ -77,18 +75,6 @@ const MontarVitrine = () => {
       setOpenA(false);
       setAlerta("");
     };
-    const handleClickOpen = (id, valor) => {
-      setOpen(true);
-      setId(id);
-      setValor(valor);
-      setQtd(0);
-
-      handleSubmit();
-      handleLoadV();
-    };
-    const handleClose = () => {
-      setOpen(false);
-    };
     const handleClickOpenE = (id, nome, descricao, metrica, imagem) =>{
         setOpenE(true);
         setId(id);
@@ -134,41 +120,78 @@ const MontarVitrine = () => {
     
     const handleChange = (set) => (event) => set(event.target.value);
     
-    const handleSubmit = () => {
+    const handleSubmit = (id, qtd, valor) => {
 
         handleClickOpenL();
 
-        if (qtd >= 0 && valor !== ""){
+      
+            if(qtd > 0 ){
 
-            item = {
-                id: id,
-                qtd: qtd,
-                valor: valor
+                item = {
+                    id: id,
+                    qtd: qtd,
+                    valor: valor
+                }
+    
+                axios
+                    .post(`http://` + back + `/vitrine`, {
+                        email: email,
+                        perfil: perfil,
+                        itens: item
+                    })
+                    .then((res) => {                                                   
+                        msg = "Vitrine atualizada com sucesso!";
+                        handleClickOpenA(msg);                    
+                        handleCloseL();
+                        handleCloseE();
+                        setInfosV([]);
+                        handleLoadV();
+                    })
+                    .catch((error) => {
+                        handleCloseL();
+                        msg = "Não foi possível cadastrar esse item na vitrine, revise os dados e tente novamente.";
+                        handleClickOpenA(msg);
+                        handleLoadV();
+                    })
+
+            }else{
+                if (valor !== ""){
+                    item = {
+                        id: id,
+                        qtd: 0,
+                        valor: valor
+                    }
+        
+                    axios
+                        .post(`http://` + back + `/vitrine`, {
+                            email: email,
+                            perfil: perfil,
+                            itens: item
+                        })
+                        .then((res) => {                                                   
+                            msg = "Vitrine atualizada com sucesso!";
+                            handleClickOpenA(msg);                    
+                            handleCloseL();
+                            handleCloseE();
+                            setInfosV([]);
+                            handleLoadV();
+                        })
+                        .catch((error) => {
+                            handleCloseL();
+                            msg = "Não foi possível cadastrar esse item na vitrine, revise os dados e tente novamente.";
+                            handleClickOpenA(msg);
+                            handleLoadV();
+                        })
+                }else{                                
+                    handleCloseL();
+                    msg = "Informe as o valor e a quantidade para apresentar na vitrine.";
+                    handleClickOpenA(msg);
+                }     
             }
 
-            axios
-                .post(`http://` + back + `/vitrine`, {
-                    email: email,
-                    perfil: perfil,
-                    itens: item
-                })
-                .then((res) => {                                                   
-                    msg = "Vitrine atualizada com sucesso!";                    
-                    handleCloseL();
-                    handleCloseE();
-                    handleLoadV();
-                    handleClickOpenA(msg);
-
-                })
-                .catch((error) => {
-                    handleCloseL();
-                    msg = "Não foi possível cadastrar esse item na vitrine, revise os dados e tente novamente.";
-                    handleClickOpenA(msg);
-                    handleLoadV();
-                })
-        };        
         handleCloseL();
-        handleLoadV();            
+        setInfosV([]);
+        handleLoadV();           
     };
     const handleLoad = (id) =>{
         axios
@@ -217,6 +240,7 @@ const MontarVitrine = () => {
     };
     const handleFiltroG = () => {
       setFiltroG(infosG.filter(info => info.nome.toUpperCase().indexOf(valorFG.toUpperCase()) !== -1));
+      
       if(filtroG.length > 1){
         setSemFG("none");
         setComFG("block");
@@ -233,14 +257,14 @@ const MontarVitrine = () => {
         handleLoadG();
         handleLoadV();
         if(infos.length > 0){
-            handleLoad();
+            handleLoad(grupoId);
         }
         // eslint-disable-next-line
       }, []);
     //#endregion
 
     return(
-        <Grid display="block" style={{ paddingLeft:'24px', paddingRight:'24px' }}>
+        <Grid display="block" style={{ paddingLeft:'24px', paddingRight:'24px', height:'80vh' }}>
             <Box display={semG}>
                 <Box p={1} display="flex" align="right">                      
                     <Box style={{width:'50%', textAlign:'start', paddingTop:'20px'}}>                         
@@ -308,89 +332,6 @@ const MontarVitrine = () => {
                                 </Card>
                             </Grid> 
                         ))}
-                        <Box p={1} style={{ width:'90%', textAlign:'end', marginTop:'50vh', position:'absolute'  }}>      
-                            <Box style={{ textAlign:'end' }}>
-                                <Button  
-                                    onClick={toggleDrawer('right', true)}
-                                    variante="outlined" 
-                                    className="btnVoltar"
-                                    startIcon={
-                                        <Avatar style={{ backgroundColor:'#3A5E4E', padding:'10px' }}>
-                                            <img src={vitrineImg} style={{ width:'24px', height:'auto' }} /> 
-                                        </Avatar>
-                                        }
-                                    style={{ position:"unset" }}>
-                                </Button>
-                            </Box>       
-                        </Box>
-                        <Fragment>
-                            <Drawer
-                                anchor={'right'}
-                                open={state['right']}
-                                onClose={toggleDrawer('right', false)}
-                            >
-                            <Box
-                                sx={{ width: 450, padding:'10px' }}
-                                role="presentation"
-                                onClick={toggleDrawer('right', false)}
-                                onKeyDown={toggleDrawer('right', false)}
-                                >
-                                <Box style={{ textAlign:'center' }}>
-                                    <Button  
-                                        variante="outlined" 
-                                        className="btnVoltar"
-                                        startIcon={
-                                            <Avatar style={{ backgroundColor:'#ffffff', padding:'5px' }}>
-                                                <img src={vitrineBlack} style={{ width:'24px', height:'auto' }} /> 
-                                            </Avatar>
-                                            }
-                                        style={{ position:"unset" }}>
-                                        <Typography variant="subtitle1" style={{ color:'#000000', textTransform:'capitalize', fontWeight:'bold' }}>
-                                            Vitrine
-                                        </Typography>
-                                    </Button>
-                                </Box> 
-                                <Typography variant="subtitle1" style={{ textTransform:'capitalize' }}>
-                                    Lista de Produtos Adicionados
-                                </Typography>             
-                                <CardHeader subheader={
-                                    <Box p={1} display="flex">                                
-                                        <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
-                                        <Typography variant="body2" color="textSecondary">                
-                                            Clique no ícone negativo para remover o produto da vitrine.                                                      
-                                        </Typography>
-                                    </Box> }
-                                />
-                                 {infosV.map((item, index) => (  
-                                    <Grid item style={{ padding:"10px" }}>                                                               
-                                        <Card onClick={() => handleClickOpen(item.id, item.valor)}
-                                              sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>                                            
-                                            <Avatar style={{ color:'#000000', backgroundColor:'#ffffff', padding:'5px', marginTop:'15px' }}>
-                                                <MdRemoveCircleOutline style={{ width:'20px', height:'20px' }} /> 
-                                            </Avatar>
-                                            <CardContent wrap="nowrap" style={{ textAlign:'left', width:'100%' }}>     
-                                                <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
-                                                    {item.nome}
-                                                </Typography>
-                                                <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
-                                                    {item.descricao}
-                                                </Typography>
-                                            </CardContent>
-                                            <Box style={{ width:'100%', paddingRight:'10px' }}>
-                                                <Typography variant="subtitle2" style={{ textTransform:'capitalize', textAlign:'end', width:'100%' }}>
-                                                    QTD. {item.qtd}
-                                                </Typography> <br/>
-                                                <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold', textAlign:'end' }}>
-                                                    {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
-                                                </Typography>
-                                            </Box>
-                                        </Card>
-                                        <Divider/>
-                                    </Grid> 
-                                ))}
-                            </Box>
-                            </Drawer>
-                        </Fragment>
                     </Grid>                    
                 </Box>
                 <Box p={1} display={comFG} sx={{ flexGrow: 1 }}>
@@ -413,90 +354,7 @@ const MontarVitrine = () => {
                                     </CardContent>
                                 </Card>
                             </Grid> 
-                        ))}                        
-                        <Box p={1} style={{ width:'90%', textAlign:'end', marginTop:'50vh', position:'absolute'  }}>      
-                            <Box style={{ textAlign:'end' }}>
-                                <Button  
-                                    onClick={toggleDrawer('right', true)}
-                                    variante="outlined" 
-                                    className="btnVoltar"
-                                    startIcon={
-                                        <Avatar style={{ backgroundColor:'#3A5E4E', padding:'10px' }}>
-                                            <img src={vitrineImg} style={{ width:'24px', height:'auto' }} /> 
-                                        </Avatar>
-                                        }
-                                    style={{ position:"unset" }}>
-                                </Button>
-                            </Box>       
-                        </Box>
-                        <Fragment>
-                            <Drawer
-                                anchor={'right'}
-                                open={state['right']}
-                                onClose={toggleDrawer('right', false)}
-                            >
-                            <Box
-                                sx={{ width: 450, padding:'10px' }}
-                                role="presentation"
-                                onClick={toggleDrawer('right', false)}
-                                onKeyDown={toggleDrawer('right', false)}
-                                >
-                                <Box style={{ textAlign:'center' }}>
-                                    <Button  
-                                        variante="outlined" 
-                                        className="btnVoltar"
-                                        startIcon={
-                                            <Avatar style={{ backgroundColor:'#ffffff', padding:'5px' }}>
-                                                <img src={vitrineBlack} style={{ width:'24px', height:'auto' }} /> 
-                                            </Avatar>
-                                            }
-                                        style={{ position:"unset" }}>
-                                        <Typography variant="subtitle1" style={{ color:'#000000', textTransform:'capitalize', fontWeight:'bold' }}>
-                                            Vitrine
-                                        </Typography>
-                                    </Button>
-                                </Box> 
-                                <Typography variant="subtitle1" style={{ textTransform:'capitalize' }}>
-                                    Lista de Produtos Adicionados
-                                </Typography>             
-                                <CardHeader subheader={
-                                    <Box p={1} display="flex">                                
-                                        <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
-                                        <Typography variant="body2" color="textSecondary">                
-                                            Clique no ícone negativo para remover o produto da vitrine.                                                      
-                                        </Typography>
-                                    </Box> }
-                                />
-                                 {infosV.map((item, index) => (  
-                                    <Grid item style={{ padding:"10px" }}>                                                               
-                                        <Card onClick={() => handleClickOpen(item.id, item.valor)}
-                                              sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>                                            
-                                            <Avatar style={{ color:'#000000', backgroundColor:'#ffffff', padding:'5px', marginTop:'15px' }}>
-                                                <MdRemoveCircleOutline style={{ width:'20px', height:'20px' }} /> 
-                                            </Avatar>
-                                            <CardContent wrap="nowrap" style={{ textAlign:'left', width:'100%' }}>     
-                                                <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
-                                                    {item.nome}
-                                                </Typography>
-                                                <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
-                                                    {item.descricao}
-                                                </Typography>
-                                            </CardContent>
-                                            <Box style={{ width:'100%', paddingRight:'10px' }}>
-                                                <Typography variant="subtitle2" style={{ textTransform:'capitalize', textAlign:'end', width:'100%' }}>
-                                                    QTD. {item.qtd}
-                                                </Typography> <br/>
-                                                <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold', textAlign:'end' }}>
-                                                    {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
-                                                </Typography>
-                                            </Box>
-                                        </Card>
-                                        <Divider/>
-                                    </Grid> 
-                                ))}
-                            </Box>
-                            </Drawer>
-                        </Fragment>
+                        ))}  
                     </Grid>
                 </Box>
             </Box>
@@ -588,89 +446,6 @@ const MontarVitrine = () => {
                                         </Card>
                                     </Grid> 
                                 ))}
-                                <Box p={1} style={{ width:'90%', textAlign:'end', marginTop:'50vh', position:'absolute'  }}>      
-                                    <Box style={{ textAlign:'end' }}>
-                                        <Button  
-                                            onClick={toggleDrawer('right', true)}
-                                            variante="outlined" 
-                                            className="btnVoltar"
-                                            startIcon={
-                                                <Avatar style={{ backgroundColor:'#3A5E4E', padding:'10px' }}>
-                                                    <img src={vitrineImg} style={{ width:'24px', height:'auto' }} /> 
-                                                </Avatar>
-                                                }
-                                            style={{ position:"unset" }}>
-                                        </Button>
-                                    </Box>       
-                                </Box>
-                                <Fragment>
-                                    <Drawer
-                                        anchor={'right'}
-                                        open={state['right']}
-                                        onClose={toggleDrawer('right', false)}
-                                    >
-                                    <Box
-                                        sx={{ width: 450, padding:'10px' }}
-                                        role="presentation"
-                                        onClick={toggleDrawer('right', false)}
-                                        onKeyDown={toggleDrawer('right', false)}
-                                        >
-                                        <Box style={{ textAlign:'center' }}>
-                                            <Button  
-                                                variante="outlined" 
-                                                className="btnVoltar"
-                                                startIcon={
-                                                    <Avatar style={{ backgroundColor:'#ffffff', padding:'5px' }}>
-                                                        <img src={vitrineBlack} style={{ width:'24px', height:'auto' }} /> 
-                                                    </Avatar>
-                                                    }
-                                                style={{ position:"unset" }}>
-                                                <Typography variant="subtitle1" style={{ color:'#000000', textTransform:'capitalize', fontWeight:'bold' }}>
-                                                    Vitrine
-                                                </Typography>
-                                            </Button>
-                                        </Box> 
-                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize' }}>
-                                            Lista de Produtos Adicionados
-                                        </Typography>             
-                                        <CardHeader subheader={
-                                            <Box p={1} display="flex">                                
-                                                <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
-                                                <Typography variant="body2" color="textSecondary">                
-                                                    Clique no ícone negativo para remover o produto da vitrine.                                                      
-                                                </Typography>
-                                            </Box> }
-                                        />
-                                         {infosV.map((item, index) => (  
-                                            <Grid item style={{ padding:"10px" }}>                                                               
-                                                <Card onClick={() => handleClickOpen(item.id, item.valor)}
-                                                      sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>                                            
-                                                    <Avatar style={{ color:'#000000', backgroundColor:'#ffffff', padding:'5px', marginTop:'15px' }}>
-                                                        <MdRemoveCircleOutline style={{ width:'20px', height:'20px' }} /> 
-                                                    </Avatar>
-                                                    <CardContent wrap="nowrap" style={{ textAlign:'left', width:'100%' }}>     
-                                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
-                                                            {item.nome}
-                                                        </Typography>
-                                                        <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
-                                                            {item.descricao}
-                                                        </Typography>
-                                                    </CardContent>
-                                                    <Box style={{ width:'100%', paddingRight:'10px' }}>
-                                                        <Typography variant="subtitle2" style={{ textTransform:'capitalize', textAlign:'end', width:'100%' }}>
-                                                            QTD. {item.qtd}
-                                                        </Typography> <br/>
-                                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold', textAlign:'end' }}>
-                                                            {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
-                                                        </Typography>
-                                                    </Box>
-                                                </Card>
-                                                <Divider/>
-                                            </Grid> 
-                                        ))}
-                                    </Box>
-                                    </Drawer>
-                                </Fragment>
                             </Grid>
                         </Box>
                         <Box p={1} display={comF} sx={{ flexGrow: 1 }}>
@@ -699,89 +474,6 @@ const MontarVitrine = () => {
                                         </Card>
                                     </Grid> 
                                 ))}
-                                <Box p={1} style={{ width:'90%', textAlign:'end', marginTop:'50vh', position:'absolute'  }}>      
-                                    <Box style={{ textAlign:'end' }}>
-                                        <Button  
-                                            onClick={toggleDrawer('right', true)}
-                                            variante="outlined" 
-                                            className="btnVoltar"
-                                            startIcon={
-                                                <Avatar style={{ backgroundColor:'#3A5E4E', padding:'10px' }}>
-                                                    <img src={vitrineImg} style={{ width:'24px', height:'auto' }} /> 
-                                                </Avatar>
-                                                }
-                                            style={{ position:"unset" }}>
-                                        </Button>
-                                    </Box>       
-                                </Box>
-                                <Fragment>
-                                    <Drawer
-                                        anchor={'right'}
-                                        open={state['right']}
-                                        onClose={toggleDrawer('right', false)}
-                                    >
-                                    <Box
-                                        sx={{ width: 450, padding:'10px' }}
-                                        role="presentation"
-                                        onClick={toggleDrawer('right', false)}
-                                        onKeyDown={toggleDrawer('right', false)}
-                                        >
-                                        <Box style={{ textAlign:'center' }}>
-                                            <Button  
-                                                variante="outlined" 
-                                                className="btnVoltar"
-                                                startIcon={
-                                                    <Avatar style={{ backgroundColor:'#ffffff', padding:'5px' }}>
-                                                        <img src={vitrineBlack} style={{ width:'24px', height:'auto' }} /> 
-                                                    </Avatar>
-                                                    }
-                                                style={{ position:"unset" }}>
-                                                <Typography variant="subtitle1" style={{ color:'#000000', textTransform:'capitalize', fontWeight:'bold' }}>
-                                                    Vitrine
-                                                </Typography>
-                                            </Button>
-                                        </Box> 
-                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize' }}>
-                                            Lista de Produtos Adicionados
-                                        </Typography>             
-                                        <CardHeader subheader={
-                                            <Box p={1} display="flex">                                
-                                                <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
-                                                <Typography variant="body2" color="textSecondary">                
-                                                    Clique no ícone negativo para remover o produto da vitrine.                                                      
-                                                </Typography>
-                                            </Box> }
-                                        />
-                                         {infosV.map((item, index) => (  
-                                            <Grid item style={{ padding:"10px" }}>                                                               
-                                                <Card onClick={() => handleClickOpen(item.id, item.valor)}
-                                                      sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>                                            
-                                                    <Avatar style={{ color:'#000000', backgroundColor:'#ffffff', padding:'5px', marginTop:'15px' }}>
-                                                        <MdRemoveCircleOutline style={{ width:'20px', height:'20px' }} /> 
-                                                    </Avatar>
-                                                    <CardContent wrap="nowrap" style={{ textAlign:'left', width:'100%' }}>     
-                                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
-                                                            {item.nome}
-                                                        </Typography>
-                                                        <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
-                                                            {item.descricao}
-                                                        </Typography>
-                                                    </CardContent>
-                                                    <Box style={{ width:'100%', paddingRight:'10px' }}>
-                                                        <Typography variant="subtitle2" style={{ textTransform:'capitalize', textAlign:'end', width:'100%' }}>
-                                                            QTD. {item.qtd}
-                                                        </Typography> <br/>
-                                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold', textAlign:'end' }}>
-                                                            {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
-                                                        </Typography>
-                                                    </Box>
-                                                </Card>
-                                                <Divider/>
-                                            </Grid> 
-                                        ))}
-                                    </Box>
-                                    </Drawer>
-                                </Fragment>
                             </Grid>
                         </Box>
                     </Box>):(
@@ -794,92 +486,92 @@ const MontarVitrine = () => {
                                 </Typography>
                             </Box> }
                         />
-                        <Box p={1} style={{ width:'55%', textAlign:'end', marginTop:'50vh', position:'absolute'  }}>      
-                            <Box style={{ textAlign:'end' }}>
-                                <Button  
-                                    onClick={toggleDrawer('right', true)}
-                                    variante="outlined" 
-                                    className="btnVoltar"
-                                    startIcon={
-                                        <Avatar style={{ backgroundColor:'#3A5E4E', padding:'10px' }}>
-                                            <img src={vitrineImg} style={{ width:'24px', height:'auto' }} /> 
-                                        </Avatar>
-                                        }
-                                    style={{ position:"unset" }}>
-                                </Button>
-                            </Box>       
-                        </Box>
-                        <Fragment>
-                            <Drawer
-                                anchor={'right'}
-                                open={state['right']}
-                                onClose={toggleDrawer('right', false)}
-                            >
-                            <Box
-                                sx={{ width: 450, padding:'10px' }}
-                                role="presentation"
-                                onClick={toggleDrawer('right', false)}
-                                onKeyDown={toggleDrawer('right', false)}
-                                >
-                                <Box style={{ textAlign:'center' }}>
-                                    <Button  
-                                        variante="outlined" 
-                                        className="btnVoltar"
-                                        startIcon={
-                                            <Avatar style={{ backgroundColor:'#ffffff', padding:'5px' }}>
-                                                <img src={vitrineBlack} style={{ width:'24px', height:'auto' }} /> 
-                                            </Avatar>
-                                            }
-                                        style={{ position:"unset" }}>
-                                        <Typography variant="subtitle1" style={{ color:'#000000', textTransform:'capitalize', fontWeight:'bold' }}>
-                                            Vitrine
-                                        </Typography>
-                                    </Button>
-                                </Box> 
-                                <Typography variant="subtitle1" style={{ textTransform:'capitalize' }}>
-                                    Lista de Produtos Adicionados
-                                </Typography>             
-                                <CardHeader subheader={
-                                    <Box p={1} display="flex">                                
-                                        <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
-                                        <Typography variant="body2" color="textSecondary">                
-                                            Clique no ícone negativo para remover o produto da vitrine.                                                      
-                                        </Typography>
-                                    </Box> }
-                                />
-                                 {infosV.map((item, index) => (  
-                                    <Grid item style={{ padding:"10px" }}>                                                               
-                                        <Card onClick={() => handleClickOpen(item.id, item.valor)}
-                                              sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>                                            
-                                            <Avatar style={{ color:'#000000', backgroundColor:'#ffffff', padding:'5px', marginTop:'15px' }}>
-                                                <MdRemoveCircleOutline style={{ width:'20px', height:'20px' }} /> 
-                                            </Avatar>
-                                            <CardContent wrap="nowrap" style={{ textAlign:'left', width:'100%' }}>     
-                                                <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
-                                                    {item.nome}
-                                                </Typography>
-                                                <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
-                                                    {item.descricao}
-                                                </Typography>
-                                            </CardContent>
-                                            <Box style={{ width:'100%', paddingRight:'10px' }}>
-                                                <Typography variant="subtitle2" style={{ textTransform:'capitalize', textAlign:'end', width:'100%' }}>
-                                                    QTD. {item.qtd}
-                                                </Typography> <br/>
-                                                <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold', textAlign:'end' }}>
-                                                    {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
-                                                </Typography>
-                                            </Box>
-                                        </Card>
-                                        <Divider/>
-                                    </Grid> 
-                                ))}
-                            </Box>
-                            </Drawer>
-                        </Fragment>
                     </Grid>
                 )}                
             </Box>  
+
+            <Box p={1} style={{ width:'90%', minMarginTop:'10vh', maxMarginTop:'15vh', position:'absolute' }}>      
+                <Box style={{ textAlign:'end' }}>
+                    <Button  
+                        onClick={toggleDrawer('right', true)}
+                        variante="outlined" 
+                        className="btnVoltar"
+                        startIcon={
+                            <Avatar style={{ backgroundColor:'#3A5E4E', padding:'10px' }}>
+                                <img src={vitrineImg} style={{ width:'24px', height:'auto' }} /> 
+                            </Avatar>
+                            }
+                        style={{ position:"unset" }}>
+                    </Button>
+                </Box>       
+            </Box>
+            <Fragment>
+                <Drawer
+                    anchor={'right'}
+                    open={state['right']}
+                    onClose={toggleDrawer('right', false)}
+                >
+                <Box
+                    sx={{ width: 450, padding:'10px' }}
+                    role="presentation"
+                    >
+                    <Box style={{ textAlign:'center' }}>
+                        <Button  
+                            variante="outlined" 
+                            className="btnVoltar"
+                            startIcon={
+                                <Avatar style={{ backgroundColor:'#ffffff', padding:'5px' }}>
+                                    <img src={vitrineBlack} style={{ width:'24px', height:'auto' }} /> 
+                                </Avatar>
+                                }
+                            style={{ position:"unset" }}>
+                            <Typography variant="subtitle1" style={{ color:'#000000', textTransform:'capitalize', fontWeight:'bold' }}>
+                                Vitrine
+                            </Typography>
+                        </Button>
+                    </Box> 
+                    <Typography variant="subtitle1" style={{ textTransform:'capitalize' }}>
+                        Lista de Produtos Adicionados
+                    </Typography>             
+                    <CardHeader subheader={
+                        <Box p={1} display="flex">                                
+                            <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                            <Typography variant="body2" color="textSecondary">                
+                                Clique no ícone negativo para remover o produto da vitrine.                                                      
+                            </Typography>
+                        </Box> }
+                    />
+                        {infosV.map((item, index) => (  
+                        <Grid item style={{ padding:"10px" }}>                                                               
+                            <Card onClick={()=>handleSubmit(item.id, 0, item.valor)}
+                                    sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>                                            
+                                <Avatar style={{ color:'#000000', backgroundColor:'#ffffff', padding:'5px', marginTop:'15px' }}>
+                                    <MdRemoveCircleOutline style={{ width:'20px', height:'20px' }} /> 
+                                </Avatar>
+                                <CardContent wrap="nowrap" style={{ textAlign:'left', width:'100%' }}>     
+                                    <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                        {item.nome}
+                                    </Typography>
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
+                                        {item.descricao}
+                                    </Typography>
+                                </CardContent>
+                                <Box style={{ width:'100%', paddingRight:'10px' }}>
+                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', textAlign:'end', width:'100%' }}>
+                                        QTD. {item.qtd}
+                                    </Typography> <br/>
+                                    <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold', textAlign:'end' }}>
+                                        {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
+                                    </Typography>
+                                </Box>
+                            </Card>
+                            <Divider/>
+                        </Grid> 
+                    ))}
+                </Box>
+                </Drawer>
+            </Fragment>
+
             <DialogMain
                 open={openE}
                 close={handleCloseE}
@@ -946,11 +638,12 @@ const MontarVitrine = () => {
                         </div>
                     </div>
                     </Box>)}
-                click={()=>handleSubmit()}
+                click={()=>handleSubmit(id, qtd, valor)}
                 label={"ADICIONAR"}
             />          
             <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>            
-            <DialogLoading open={openL} />    
+            <DialogLoading open={openL} />  
+               
         </Grid>
     );
 }

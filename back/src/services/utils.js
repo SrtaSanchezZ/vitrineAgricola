@@ -55,7 +55,7 @@ function produto(nome, descricao, grupo, email, perfil) {
         if(descricao.length > 0 && descricao.length < 200){
             if(email.length < 81 && email.length > 5 && rgxEmail.test(email)){
                 if(perfil == 1 || perfil == 3){
-                    if(grupo.length > 0 && grupo.length < 200){                           
+                    if(grupo.length !== 0){                           
                         result = { msg: "Dados validados com sucesso!", retorno: true }
                     }else{
                         result = { msg: "Todos produtos deve ser vinculado a um grupo padrão.", retorno: false } 

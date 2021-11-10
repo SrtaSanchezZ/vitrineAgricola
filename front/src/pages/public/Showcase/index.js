@@ -2,22 +2,18 @@
 import React, { useState, useEffect, Fragment } from "react";
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Avatar, Button, ButtonGroup, Box, Card, CardContent, CardHeader, CardMedia, Drawer, 
-        Divider, Grid, InputAdornment, Tabs, Tab, TextField, ListItem, Typography, List } from '@material-ui/core';
+import { Avatar, Button, ButtonGroup, Box, Card, CardContent, CardMedia, Drawer, 
+        Divider, Grid, InputAdornment, Tabs, Tab, TextField, Typography, List } from '@material-ui/core';
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import SwipeableViews from 'react-swipeable-views';
-import { autoPlay } from 'react-swipeable-views-utils';
 import {Header} from '../../../components/Header';
 import Footer from '../../../components/Footer';
 import banner from '../../../assets/img/bannerv.png';
-import { MdArrowBack, MdRemoveCircleOutline } from "react-icons/md";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import vitrineImg from '../../../assets/img/Icons/shoppingCart.png';
 import vitrineBlack from '../../../assets/img/Icons/shoppingCartB.png';
-import ImgProduto from '../../../assets/img/Icons/shopping_basket_black_24dp.png';
-import { DialogAlert, DialogLoading, DialogMain } from '../../../components/Dialog';
+import { DialogAlert, DialogMain } from '../../../components/Dialog';
 //#endregion
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -46,28 +42,21 @@ function TabPanel(props) {
 //#endregion
 const Showcase = () => {
     //#region Variáveis e Variáveis de Estado 
-    const [infos, setInfos] = useState([]);
     const [infosG, setInfosG] = useState([]);
     const [infosV, setInfosV] = useState([]);
     const [filtro, setFiltro] = useState([]);
-    const [itens, setItens] = useState([]);
     const [cesta, setCesta] = useState([]);
     const [valor, setValor] = useState(""); 
     const [valorF, setValorF] = useState(""); 
     const [value, setValue] = useState(0);
-    const [comFG, setComFG] = useState("none"); 
-    const [semFG, setSemFG] = useState("block");
     const [comF, setComF] = useState("none"); 
-    const [semF, setSemF] = useState("block");
-    const [comG, setComG] = useState("none"); 
-    const [semG, setSemG] = useState("block");
+    const [semF, setSemF] = useState("block"); 
     const [open, setOpen] = useState(false);
     const [openA, setOpenA] = useState(false);
     const [openE, setOpenE] = useState(false);
     const [openL, setOpenL] = useState(false);
     const [state, setState] = useState({right: false});
     const [alerta, setAlerta] = useState("");
-    const [grupo, setGrupo] = useState("");
     const [grupoId, setGrupoId] = useState("");
     const [grupoNome, setGrupoNome] = useState("");
     const [id, setId] = useState("");
@@ -76,14 +65,11 @@ const Showcase = () => {
     const [metrica, setMetrica] = useState("");
     const [img, setImg] = useState(""); 
     const [qtd, setQtd] = useState(0); 
-    const [idP, setIdP] = useState(0);
-    const [idC, setIdC] = useState(0); 
+    const [qtdd, setQtdd] = useState(0); 
+    const [idP, setIdP] = useState(0); 
     const [qtdC, setQtdC] = useState(1); 
-    const [prodC, setProdC] = useState(""); 
-    const [descC, setDescC] = useState(""); 
-    const [valorC, setValorC] = useState("");
-    const [valorM, setValorM] = useState("");
-    const [imgC, setImgC] = useState(""); 
+    const [soma, setSoma] = useState(0);  
+    const [cliente, setCliente] = useState(""); 
     const [telefone, setTelefone] = useState(""); 
  
     const ArrPro = (arr) =>
@@ -120,15 +106,6 @@ const Showcase = () => {
             var msg = "Não foi possível localizar grupos.";  
           })  
     };
-    const handleLoadV = () =>{
-        axios
-          .get(`http://`+ back +`/vitrine`)
-          .then((res) => {               
-            setInfosV(ArrVit(res.data.response.vitrine)); 
-          }).catch((res) =>{ 
-            var msg = "Não foi possível localizar produtos da vitrine.";  
-          })  
-    };
     const handleLoad = (id) =>{
         axios
           .get(`http://`+ back +`/vitrine/`+ id)
@@ -138,23 +115,15 @@ const Showcase = () => {
             var msg = "Não foi possível localizar produtos para esse grupo."; 
           })  
     };
+    const handleClickOpenA = (alerta) => {
+      setOpenA(true);
+      setAlerta(alerta);
+    };
     const handleCloseA = () => {
       setOpenA(false);
       setAlerta("");
     };
-    const handleClickOpen = (id, valor) => {
-      setOpen(true);
-      setId(id);
-      setValor(valor);
-      setQtd(0);
-
-      handleSubmit();
-      handleLoadV();
-    };
-    const handleClose = () => {
-      setOpen(false);
-    };
-    const handleClickOpenE = (id, nome, descricao, metrica, imagem, valor) =>{
+    const handleClickOpenE = (id, nome, descricao, metrica, imagem, valor, qtd) =>{
         setOpenE(true);
 
         setId(id);
@@ -163,390 +132,216 @@ const Showcase = () => {
         setMetrica(metrica);
         setImg(imagem);
         setValor(valor);
+        setQtdd(qtd);
     };
-    const handleClickCesta = (id, nome, descricao, valor, qtdC, img) => {
+    const handleClickCesta = (id, nome, descricao, metrica, valor, qtaad, img ) => {
         
-      setValorM("Item adicionado a Cesta!");
-
       aux = "";
   
       var ces = {
-        id: 0,
-        prodid: 0,
-        qtde: 0,
-        nome: '',
-        descricao: '',
-        valor: 0,
-        obs: ''
-      };
+        id: idP,
+        prodid: id,
+        nome: nome,
+        descricao: descricao,
+        metrica: metrica, 
+        qtd: qtaad,
+        qtdMax: qtdd,
+        valor: valor,
+        valorT: (valor * qtaad),
+        img: img
+      };   
   
-      if(tipo === "prod"){    
-        ces = {
-          id: idP,
-          prodid: id,
-          promoid: null,
-          ite_qtde: qtd,
-          nome: nome,
-          ite_valor_total: (valor * qtd),
-          obs: obs
-        };      
-  
-        if(qtd > 0){
-          i = 0;
-  
-          for(i; i < cesta.length; i++){
-            aux = cesta[i].nome;
-  
-            if(nome === aux){
-  
-              ces = {
-                id: cesta[i].id,
-                prodid: cesta[i].prodid,
-                promoid: null,
-                ite_qtde: qtd + cesta[i].ite_qtde,
-                nome: cesta[i].nome,
-                ite_valor_total: (valor * qtd) + cesta[i].ite_valor_total,
-                obs: cesta[i].obs
-              };
-  
-              narray = cesta.splice(i,1);
-              setCesta([...cesta, ces]);
-              setQdd(qdd + qtd);
-              setSoma(soma + (valor * qtd));
-              setOpenB(false);
-              setQddC(1);
-            }
-          }
-          
-        }else{     
-  
-          for(i = 0; i < cesta.length; i++){
-            aux = cesta[i].nome;
-  
-            if(nome === aux){
-  
-              ces = {
-                id: cesta[i].id,
-                prodid: cesta[i].prodid,
-                promoid: null,
-                ite_qtde: cesta[i].ite_qtde - 1,
-                nome: cesta[i].nome,
-                ite_valor_total: cesta[i].ite_valor_total - valor,
-                obs: cesta[i].obs
-              };
-  
-              narray = cesta.splice(i,1);
-              
-              setCesta([...cesta, ces]);
-              setQdd(qdd - 1);
-              setSoma(soma - valor);
-              setOpenB(false);
-              setQddC(1);
-            }
+      if(qtaad > 0){
+        i = 0;
+
+        for(i; i < cesta.length; i++){
+
+          if(id === cesta[i].prodid){
+            
+            ces = {
+              id: cesta[i].id,
+              prodid: cesta[i].prodid,
+              nome: cesta[i].nome,
+              descricao: cesta[i].descricao,
+              metrica: cesta[i].metrica,
+              qtd: cesta[i].qtd + qtaad,
+              qtdMax: cesta[i].qtdMax,
+              valor: cesta[i].valor,
+              valorT: cesta[i].valorT + (valor * qtaad),
+              img: cesta[i].img
+            }; 
+
+            narray = cesta.splice(i,1);
+            setCesta([...cesta, ces]);
+            setQtd(qtd + qtaad);
+            setSoma(soma + (valor * qtaad));
+            setOpenE(false);
+            setQtdC(1);
           }
         }
-      }
-      if(tipo === "promo"){    
-        ces = {
-          id: idP,
-          prodid: null,
-          promoid: id,
-          ite_qtde: qtd,
-          nome: nome,
-          ite_valor_total: (valor * qtd),
-          obs: obs
-        };           
-  
-        if(qtd > 0){
-          i = 0;
-  
-          for(i; i < cesta.length; i++){
-            aux = cesta[i].nome;
-  
-            if(nome === aux){
-  
-              ces = {
-                id: cesta[i].id,
-                prodid: null,
-                promoid: cesta[i].promoid,
-                ite_qtde: qtd + cesta[i].ite_qtde,
-                nome: cesta[i].nome,
-                ite_valor_total: (valor * qtd) + cesta[i].ite_valor_total,
-                obs: cesta[i].obs
-              };
-  
-              narray = cesta.splice(i,1);
-              setCesta([...cesta, ces]);
-              setQdd(qdd + qtd);
-              setSoma(soma + (valor * qtd));
-              setOpenB(false);
-              setQddC(1);
-            }
-          }
-          
-        }else{     
-  
-          for(i = 0; i < cesta.length; i++){
-            aux = cesta[i].nome;
-  
-            if(nome === aux){
-  
-              ces = {
-                id: cesta[i].id,
-                prodid: null,
-                promoid: cesta[i].promoid,
-                ite_qtde: cesta[i].ite_qtde - 1,
-                nome: cesta[i].nome,
-                ite_valor_total: cesta[i].ite_valor_total - valor,
-                obs: cesta[i].obs
-              };
-  
-              narray = cesta.splice(i,1);
-              
-              setCesta([...cesta, ces]);
-              setQdd(qdd - 1);
-              setSoma(soma - valor);
-              setOpenB(false);
-              setQddC(1);
-            }
-          }
-        }
-      }
-      if(tipo === "meia"){
-        aux = meia.length-1;
-  
-          mId =  meia[aux].prodid;
-          mQtd = meia[aux].ite_qtde;
-          mValor = meia[aux].ite_valor_total + meia[aux-1].ite_valor_total;
-  
-          ces = {
-            id: idP,
-            prodid: mId,
-            promoid: null,
-            ite_qtde: mQtd,
-            nome: nome,
-            ite_valor_total: mValor,
-            obs: obs
-          };          
-  
-        if(qtd > 0){
-          i = 0;
-  
-          for(i; i < cesta.length; i++){
-            aux = cesta[i].nome;
-  
-            if(nome === aux){
-  
-              ces = {
-                id: cesta[i].id,
-                prodid: cesta[i].prodid,
-                promoid: null,
-                ite_qtde: qtd + cesta[i].ite_qtde,
-                nome: cesta[i].nome,
-                ite_valor_total: (valor * qtd) + cesta[i].ite_valor_total,
-                obs: cesta[i].obs
-              };
-  
-              narray = cesta.splice(i,1);
-              setCesta([...cesta, ces]);
-              setQdd(qdd + qtd);
-              setSoma(soma + (valor * qtd));
-              setOpenB(false);
-              setQddC(1);
-            }
-          }
-          
-        }else{     
-  
-          for(i = 0; i < cesta.length; i++){
-            aux = cesta[i].nome;
-  
-            if(nome === aux){
-  
-              ces = {
-                id: cesta[i].id,
-                prodid: cesta[i].prodid,
-                promoid: null,
-                ite_qtde: cesta[i].ite_qtde - 1,
-                nome: cesta[i].nome,
-                ite_valor_total: cesta[i].ite_valor_total - valor,
-                obs: cesta[i].obs
-              };
-  
-              narray = cesta.splice(i,1);
-              
-              setCesta([...cesta, ces]);
-              setQdd(qdd - 1);
-              setSoma(soma - valor);
-              setOpenB(false);
-              setQddC(1);
-            }
+        
+      }else{     
+
+        for(i = 0; i < cesta.length; i++){
+
+          if(id === cesta[i].prodid){
+            
+            ces = {
+              id: cesta[i].id,
+              prodid: cesta[i].prodid,
+              nome: cesta[i].nome,
+              descricao: cesta[i].descricao,
+              metrica: cesta[i].metrica,
+              qtd: cesta[i].qtd - 1,
+              qtdMax: cesta[i].qtdMax,
+              valor: cesta[i].valor,
+              valorT: cesta[i].valorT - valor,
+              img: cesta[i].img
+            }; 
+
+            narray = cesta.splice(i,1);
+            
+            setCesta([...cesta, ces]);
+            setQtd(qtd - 1);
+            setSoma(soma - valor);
+            setOpen(false);
+            setQtdC(1);
           }
         }
       }
   
       setCesta([...cesta, ces]);
-      setQdd(qdd + qtd);
-      setSoma(soma + (valor * qtd));
-      setOpenB(false);
-      setQddC(1);
+      setQtd(qtd + qtaad);
+      setSoma(soma + (valor * qtaad));
+      setOpenE(false);
+      setQtdC(1);
       setIdP(idP + 1);
   
       narray = [];
       
     };
     const handleClickRemCesta = (id) => {
-      aux = [];
       var ct = 0;
-      var aux1 = '';
-      
+            
       var ces = {
         id: 0,
         prodid: 0,
-        promoid: 0,
-        ite_qtde: 0,
-        nome: '',
-        ite_valor_total: 0,
-        obs: ''
-      };
+        nome: "",
+        descricao: "",
+        metrica: "",
+        qtd: 0,
+        qtdMax: 0,
+        valor: 0,
+        valorT: 0,
+        img:""
+      }; 
   
       for(i = 0; i < cesta.length; i++){
-  
+            
         ces = {
           id: cesta[i].id,
           prodid: cesta[i].prodid,
-          promoid: null,
-          ite_qtde: cesta[i].ite_qtde,
           nome: cesta[i].nome,
-          ite_valor_total: cesta[i].ite_valor_total,
-          obs: cesta[i].obs
-        };
+          descricao: cesta[i].descricao,
+          metrica: cesta[i].metrica,
+          qtd: cesta[i].qtd,
+          qtdMax: cesta[i].qtdMax,
+          valor: cesta[i].valor,
+          valorT: cesta[i].valorT,
+          img: cesta[i].img
+        }; 
   
-        if(id === cesta[i].id){
-  
-          aux1 = cesta[i].prodid;
-  
-          if(aux1 === null){
-  
-            ct = cesta[i].ite_valor_total / cesta[i].ite_qtde;
-  
-            ces = {
-              id: cesta[i].id,
-              prodid: null,
-              promoid: cesta[i].promoid,
-              ite_qtde: cesta[i].ite_qtde - 1,
-              nome: cesta[i].nome,
-              ite_valor_total: cesta[i].ite_valor_total - ct,
-              obs: cesta[i].obs
-            };
-  
-            aux = cesta.splice(i,1);
-            if(ces.ite_qtde === 0){
-              handleClickDelCesta(id);
-            }else{
-              setCesta([...cesta, ces]);
-            }
-  
-            setQdd(qdd - 1);
-            setSoma(soma - ct);
+        if(id === cesta[i].prodid){
+
+          ct = cesta[i].valor;
+
+          ces = {
+            id: cesta[i].id,
+            prodid: cesta[i].prodid,
+            nome: cesta[i].nome,
+            descricao: cesta[i].descricao,
+            metrica: cesta[i].metrica,
+            qtd: cesta[i].qtd - 1,
+            qtdMax: cesta[i].qtdMax,
+            valor: cesta[i].valor,
+            valorT: cesta[i].valorT - ct,
+            img: cesta[i].img
+          }; 
+
+          aux = cesta.splice(i,1);
+
+          if(ces.qtd === 0){
+            handleClickDelCesta(id);
           }else{
-            ct = cesta[i].ite_valor_total / cesta[i].ite_qtde;
-  
-            ces = {
-              id: cesta[i].id,
-              prodid: cesta[i].prodid,
-              promoid: null,
-              ite_qtde: cesta[i].ite_qtde - 1,
-              nome: cesta[i].nome,
-              ite_valor_total: cesta[i].ite_valor_total - ct,
-              obs: cesta[i].obs
-            };
-  
-            aux = cesta.splice(i,1);
-            if(ces.ite_qtde === 0){
-              handleClickDelCesta(id);
-            }else{
-              setCesta([...cesta, ces]);
-            }
-  
-            setQdd(qdd - 1);
-            setSoma(soma - ct);        
+            setCesta([...cesta, ces]);
           }
+
+          setQtd(qtd - 1);
+          setSoma(soma - ct);        
         }
       }
     }; 
     const handleClickAddCesta = (id) => {
       aux = [];
       var ct = 0;
-      var aux1 = '';
-      
+            
       var ces = {
         id: 0,
         prodid: 0,
-        promoid: 0,
-        ite_qtde: 0,
-        nome: '',
-        ite_valor_total: 0,
-        obs: ''
-      };
+        nome: "",
+        descricao: "",
+        metrica: "",
+        qtd: 0,
+        qtdMax: 0,
+        valor: 0,
+        valorT: 0,
+        img:""
+      }; 
   
       for(i = 0; i < cesta.length; i++){
-  
+            
         ces = {
           id: cesta[i].id,
           prodid: cesta[i].prodid,
-          promoid: null,
-          ite_qtde: cesta[i].ite_qtde,
           nome: cesta[i].nome,
-          ite_valor_total: cesta[i].ite_valor_total,
-          obs: cesta[i].obs
-        };
+          descricao: cesta[i].descricao,
+          metrica: cesta[i].metrica,
+          qtd: cesta[i].qtd,
+          qtdMax: cesta[i].qtdMax,
+          valor: cesta[i].valor,
+          valorT: cesta[i].valorT,
+          img: cesta[i].img
+        }; 
   
-        if(id === cesta[i].id){
-  
-          aux1 = cesta[i].prodid;
-  
-          if(aux1 === null){
+        if(id === cesta[i].prodid){
+        
+          ct = cesta[i].valor;
             
-            ct = cesta[i].ite_valor_total / cesta[i].ite_qtde;
-  
-            ces = {
-              id: cesta[i].id,
-              prodid: null,
-              promoid: cesta[i].promoid,
-              ite_qtde: cesta[i].ite_qtde + 1,
-              nome: cesta[i].nome,
-              ite_valor_total: cesta[i].ite_valor_total + ct,
-              obs: cesta[i].obs
-            };
-  
-            aux = cesta.splice(i,1);
-            setCesta([...cesta, ces]);
-  
-            setQdd(qdd + 1);
-            setSoma(soma + ct);
-  
-          }else{
-            
-            ct = cesta[i].ite_valor_total / cesta[i].ite_qtde;
-  
             ces = {
               id: cesta[i].id,
               prodid: cesta[i].prodid,
-              promoid: null,
-              ite_qtde: cesta[i].ite_qtde + 1,
               nome: cesta[i].nome,
-              ite_valor_total: cesta[i].ite_valor_total + ct,
-              obs: cesta[i].obs
-            };
+              descricao: cesta[i].descricao,
+              metrica: cesta[i].metrica,
+              qtd: cesta[i].qtd + 1,
+              qtdMax: cesta[i].qtdMax,
+              valor: cesta[i].valor,
+              valorT: cesta[i].valorT + ct,
+              img: cesta[i].img
+            }; 
+
+            if(ces.qtd > ces.qtdMax){
+              var msg = "A quantidade disponível deste item é de " + ces.qtdMax + " x " + ces.metrica;
+              handleClickOpenA(msg);
+            }else{
   
-            aux = cesta.splice(i,1);
-            setCesta([...cesta, ces]);
+              aux = cesta.splice(i,1);
+
+              setCesta([...cesta, ces]);
   
-            setQdd(qdd + 1);
-            setSoma(soma + ct);
-  
-          }
+              setQtd(qtd + 1);
+              setSoma(soma + ct);
+            }
         }
       }
     }; 
@@ -555,9 +350,9 @@ const Showcase = () => {
       var ct = 0;
   
       for(i = 0; i < cesta.length; i++){
-        if(id === cesta[i].id){
-          setQdd(qdd - cesta[i].ite_qtde);
-          setSoma(soma - cesta[i].ite_valor_total);
+        if(id === cesta[i].prodid){
+          setQtd(qtd - cesta[i].qtd);
+          setSoma(soma - cesta[i].valorT);
         }else{
           aux[ct] = cesta[i];
           ct++;
@@ -569,21 +364,13 @@ const Showcase = () => {
     };
     const handleCloseE = () => {
         setOpenE(false);
+        setQtdC(1);
     };
     const handleComG = (id, nome) =>{
         setGrupoId(id);
         setGrupoNome(nome);
 
         handleLoad(id);
-    };
-    const handleCloseComG = () => {
-        setSemG("block");
-        setComG("none");
-
-        setGrupoId("");
-        setGrupoNome("");
-        setInfos([]);
-        handleLoadG();
     };
     const handleClickOpenL = () => {
       setOpenL(true);
@@ -608,8 +395,82 @@ const Showcase = () => {
 
         handleClickOpenL();
 
-        handleCloseL();
-        handleLoadV();            
+        var produtos2 = "";
+        var produtos1 = "";
+        aux = "";   
+        let numeros = /[0-9]+/g;
+        var itens = [];
+    
+        var info = {
+          id: 0,
+          qtd: 0,
+          valor: 0,
+        };
+    
+        for(i=0;i<cesta.length;i++){
+          info = {
+            id: cesta[i].prodid,
+            qtd: cesta[i].qtd,
+            valor: cesta[i].valor,
+          };
+          
+          itens[i] = info;
+          
+          produtos2 = `
+          ${produtos2} *${cesta[i].qtd}* - *${cesta[i].nome}*
+          
+          `;
+          
+          produtos1 = `${produtos1} ${cesta[i].qtd} - ${cesta[i].nome}`;
+        }
+        
+        if(cliente !== "" && telefone !== ""){      
+          aux = "";  
+    
+          var msg = `       
+          *COOPERATIVA ESCOLA - COLÉGIO AGRÍCOLA*
+    
+          *=============================*
+    
+          Os itens escolhidos são:
+          ${produtos2}     
+          Totalizando: *${(soma).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}*
+    
+          *=============================* 
+    
+          Nome: *${cliente}* 
+          Telefone: *${telefone}*
+    
+          *=============================*
+    
+          Agradecemos a preferência!
+
+          http://localhost:3000/vitrineagricola
+    
+          `;
+    
+          aux = encodeURI(msg); 
+          axios
+          .post(`http://`+ back +`/reservas`, {              
+              cliente: cliente,
+              contato: telefone.match(numeros).join([]),
+              total: soma,
+              itens: itens
+            })
+          .then((res) => { 
+            return window.location.href = 'https://wa.me/55018981842531?text=' + aux; 
+          })
+          .catch((error) =>{
+            msg = "Por gentileza, informe ou revise os dados do formulário e tente novamente.";
+            handleClickOpenA(msg); 
+          })    
+    
+        }else{        
+          msg = "Você será redirecionada(o) ao nosso WhatsApp. Feche esse aviso e confirme novamente seu pedido para prosseguir.";
+          handleClickOpenA(msg);     
+        }
+
+        handleCloseL();            
     }; 
     const handleChangeFiltro = (set) => (event) => {
         set(event.target.value);
@@ -650,7 +511,7 @@ const Showcase = () => {
                                 'aria-label': 'search',
                                 disableUnderline: true
                             }}
-                            placeholder="Busque por um produto"
+                            placeholder="Busque por um produto dentro do grupo selecionado"
                             className="search"
                             variant="standard"
                             value={valorF}
@@ -658,14 +519,14 @@ const Showcase = () => {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <List container wrap="nowrap" style={{ width: "100%", height: "60vh", backgroundColor: "#ffffff", overflow: 'auto', paddingTop:'50px' }} >
+                        <List container wrap="nowrap" style={{ width: "100%", height: "65vh", backgroundColor: "#ffffff", overflow: 'auto', paddingTop:'50px' }} >
                             <img src={banner} alt="Banner Vitrine" style={{ width:"100%", height: "auto" }} />                             
                             <Box p={1} sx={{ flexGrow: 1 }}>
                                 <Tabs value={value} centered
                                     onChange={handleChangeMenu}>
                                     {infosG.map((grup)=>(
                                         <Tab label={grup.nome} 
-                                            onClick={()=>handleComG(grup.id, grup.nome)} />
+                                            onClick={()=>handleComG(grup.id, grup.nome)} style={{ fontWeight:'bold' }} />
                                     ))}
                                 </Tabs><br/>                  
                             </Box> 
@@ -673,7 +534,7 @@ const Showcase = () => {
                                 <Grid container>
                                     {infosV.map((item, index) => (  
                                         <Grid item xs={2} key={item.id}>                                                               
-                                            <Card onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.metrica, item.imagem, item.valor)}
+                                            <Card onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.metrica, item.imagem, item.valor, item.qtd)}
                                                 sx={{ width: 150, height: 220, cursor:'pointer', textAlign:'center' }}>
                                                 <CardContent wrap="nowrap" style={{ textAlign:'center'}}>
                                                     <CardMedia
@@ -699,7 +560,7 @@ const Showcase = () => {
                                 <Grid container>
                                     {filtro.map((item, index) => (  
                                         <Grid item xs={2} key={item.id}>                                                               
-                                            <Card onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.metrica, item.imagem, item.valor)}
+                                            <Card onClick={() => handleClickOpenE(item.id, item.nome, item.descricao, item.metrica, item.imagem, item.valor, item.qtd)}
                                                 sx={{ width: 150, height: 220, cursor:'pointer', textAlign:'center' }}>
                                                 <CardContent wrap="nowrap" style={{ textAlign:'center'}}>
                                                     <CardMedia
@@ -746,12 +607,7 @@ const Showcase = () => {
                     open={state['right']}
                     onClose={toggleDrawer('right', false)}
                 >
-                <Box
-                    sx={{ width: 450, padding:'10px' }}
-                    role="presentation"
-                    onClick={toggleDrawer('right', false)}
-                    onKeyDown={toggleDrawer('right', false)}
-                    >
+                <Box sx={{ width: 450, padding:'10px' }} role="presentation">
                     <Box style={{ textAlign:'center' }}>
                         <Button  
                             variante="outlined" 
@@ -763,52 +619,112 @@ const Showcase = () => {
                                 }
                             style={{ position:"unset" }}>
                             <Typography variant="subtitle1" style={{ color:'#000000', textTransform:'capitalize', fontWeight:'bold' }}>
-                                Vitrine
+                                Meu Carrinho
                             </Typography>
                         </Button>
-                    </Box> 
-                    <Typography variant="subtitle1" style={{ textTransform:'capitalize' }}>
-                        Lista de Produtos Adicionados
-                    </Typography>             
-                    <CardHeader subheader={
-                        <Box p={1} display="flex">                                
-                            <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
-                            <Typography variant="body2" color="textSecondary">                
-                                Clique no ícone negativo para remover o produto da vitrine.                                                      
-                            </Typography>
-                        </Box> }
-                    />
-                    {infosV.map((item, index) => (  
-                        <Grid item style={{ padding:"10px" }}>                                                               
-                            <Card onClick={() => handleClickOpen(item.id, item.valor)}
-                                sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}>                                            
-                                <Avatar style={{ color:'#000000', backgroundColor:'#ffffff', padding:'5px', marginTop:'15px' }}>
-                                    <MdRemoveCircleOutline style={{ width:'20px', height:'20px' }} /> 
-                                </Avatar>
-                                <CardContent wrap="nowrap" style={{ textAlign:'left', width:'100%' }}>     
-                                    <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
-                                        {item.nome}
-                                    </Typography>
-                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', color:'#B8B8B5' }}>
-                                        {item.descricao}
-                                    </Typography>
-                                </CardContent>
-                                <Box style={{ width:'100%', paddingRight:'10px' }}>
-                                    <Typography variant="subtitle2" style={{ textTransform:'capitalize', textAlign:'end', width:'100%' }}>
-                                        QTD. {item.qtd}
-                                    </Typography> <br/>
-                                    <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold', textAlign:'end' }}>
-                                        {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
-                                    </Typography>
-                                </Box>
-                            </Card>
-                            <Divider/>
-                        </Grid> 
-                    ))}
+                    </Box>  
+                      {cesta.length > 0 ? (
+                        <>
+                        <List container wrap="nowrap" style={{ width: "100%", height: "30vh", backgroundColor: "#ffffff", overflow: 'auto', paddingTop:'50px' }} >
+                          {cesta.sort((a, b) => a.id - b.id).map((item, index) => (  
+                            <Grid item style={{ padding:"10px" }}>                                                               
+                                <Card sx={{ display: 'flex', maxHeight: 80, padding:'5px', cursor:'pointer' }}> 
+                                    <Box style={{ width: "100%", height: 'auto', paddingTop:'22px', paddingRight:'10px', textAlign:'center' }}>                                                                           
+                                      <ButtonGroup style={{ width:'100px', height:'36px', cursor:'pointer', textAlign:'center' }}>
+                                          <Button
+                                              aria-label="reduce"
+                                              style={{ backgroundColor:'#4A4E8A', color:'#FFFFFF' }}
+                                              onClick={() => handleClickRemCesta(item.prodid)}
+                                          >
+                                              <RemoveIcon style={{ width:'20px', height:'auto' }} />
+                                          </Button>
+                                          <Button>
+                                              <Typography variant="subtitle2"
+                                              style={{ color:'#000000' }}>
+                                                  {item.qtd}
+                                              </Typography>
+                                          </Button>
+                                          <Button
+                                              aria-label="increase"
+                                              style={{ backgroundColor:'#4A4E8A', color:'#FFFFFF' }}
+                                              onClick={() => handleClickAddCesta(item.prodid)}
+                                          >
+                                              <AddIcon style={{ width:'20px', height:'auto' }} />
+                                          </Button>
+                                      </ButtonGroup>
+                                    </Box>
+                                    <CardContent wrap="nowrap" style={{ textAlign:'left', width:'100%' }}>     
+                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                            {item.nome}
+                                        </Typography>
+                                        <Typography variant="subtitle1" style={{ textTransform:'capitalize', fontWeight:'bold' }}>
+                                            {(item.valor).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})} / {item.metrica}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                <Divider/>
+                            </Grid> 
+                          ))}
+                        </List>                                   
+                        <Box display="flex">
+                            <Box style={{ width:'50%', textAlign:'start', padding:'16px' }}>
+                                <Typography variant="subtitle1" color="textSecondary">                
+                                    Total:                                                     
+                                </Typography>
+                            </Box>
+                            <Box style={{ width:'50%', textAlign:'end', padding:'16px' }}>                                            
+                                <Typography variant="subtitle1" style={{ fontWeight:'bold'}}>                
+                                    {(soma).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}                                                    
+                                </Typography>
+                            </Box>
+                        </Box>          
+                        <Box p={1} style={{ textAlign:'justify', padding:'20px' }}>                                
+                            <Typography variant="body2" color="textSecondary"> 
+                               Para finalizar a reserva de itens, preencha os dados abaixo. Ao clicar em 'Enviar Reserva', sua solicitação será encaminhada para prosseguir com o atendimento no WhatsApp.                                                      
+                            </Typography> <br/>                       
+                            <TextField 
+                                className="inp"
+                                type="text" 
+                                onChange={handleChange(setCliente)}
+                                value={cliente}
+                                maxLength="75"
+                                minLength="6"
+                                label="Informe seu nome"
+                                variant="outlined"
+                                style={{ marginBottom:'10px' }}
+                            /><br/>
+                            <TextField 
+                                className="inp"
+                                type="number" 
+                                onChange={handleChange(setTelefone)}
+                                value={telefone}
+                                maxLength="15"
+                                minLength="9"
+                                label="Telefone"
+                                variant="outlined"
+                            />
+                            <Box style={{ width: "100%", textAlign:'center', paddingTop:'30px' }}>
+                                <Button onClick={() => handleSubmit()}
+                                    variante="contained" 
+                                    style={{ backgroundColor:"#2E8E61", color:"#FFFFFF" }}>
+                                      ENVIAR RESERVA
+                                </Button>
+                            </Box>        
+                        </Box>
+                      </>
+                      ):(           
+                          <Box p={1} style={{ textAlign:'center', padding:'50px' }}>                                
+                              <AiOutlineInfoCircle style={{ width:'48px', height:'48px', marginRight:'10px', padding:'20px' }} /> 
+                              <Typography variant="body2" color="textSecondary">                
+                                  O carrinho está vazio no momento, adicione itens para reservar.                                                      
+                              </Typography>
+                          </Box> 
+                      )}            
                 </Box>
                 </Drawer>
             </Fragment> 
             <Footer/>
+            <DialogAlert open={openA} close={handleCloseA} alert={alerta}/>  
             <DialogMain
                 open={openE}
                 close={handleCloseE}
@@ -852,7 +768,7 @@ const Showcase = () => {
                                     aria-label="reduce"
                                     style={{ backgroundColor:'#4A4E8A', color:'#FFFFFF' }}
                                     onClick={() => {
-                                        setQtdC(Math.max(qddC - 1, 1));
+                                        setQtdC(Math.max(qtdC - 1, 1));
                                     }}
                                 >
                                     <RemoveIcon style={{ width:'20px', height:'auto' }} />
@@ -867,15 +783,20 @@ const Showcase = () => {
                                     aria-label="increase"
                                     style={{ backgroundColor:'#4A4E8A', color:'#FFFFFF' }}
                                     onClick={() => {
-                                        setQtdC(qddC + 1);
-                                    }}
+                                      if(qtdC < qtdd){
+                                        setQtdC(qtdC + 1);
+                                      }else{
+                                        var msg = "A quantidade disponível deste item é de " + qtdd + " x " + metrica;
+                                        handleClickOpenA(msg);
+                                        setQtdC(1);
+                                      }}}
                                 >
                                     <AddIcon style={{ width:'20px', height:'auto' }} />
                                 </Button>
                             </ButtonGroup>
                         </Box>
                     </Box>)}
-                click={()=>handleClickCesta(id, nome, descricao, valor, qtdC, img)}
+                click={()=>handleClickCesta(id, nome, descricao, metrica, valor, qtdC, img)}
                 label={"ADICIONAR AO CARRINHO"}
             />
         </div>

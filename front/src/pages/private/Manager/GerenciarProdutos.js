@@ -127,6 +127,7 @@ const GerenciarProdutos = () => {
       setDescricaoE(descricao);
       setMetricaE(metrica);
       setImg(imagem);
+      setGrupo(grupoId);
     };
     const handleCloseE = () => {
       setOpenE(false);
@@ -203,6 +204,10 @@ const GerenciarProdutos = () => {
                             handleClickOpenA(msg);
                         }
 
+                        if(infos.length > 0){
+                            handleLoad(grupoId);
+                        }
+
                         handleClose();
 
                     })
@@ -243,6 +248,11 @@ const GerenciarProdutos = () => {
                             handleClickOpenA(msg);
                         }
                         
+
+                        if(infos.length > 0){
+                            handleLoad(grupoId);
+                        }
+
                         handleClose();
 
                       })
@@ -276,6 +286,7 @@ const GerenciarProdutos = () => {
                         handleClickOpenA(msg);
                     }
                     
+                    handleLoadG();
                     handleCloseG();
                 })
                 .catch((error) => {
@@ -311,7 +322,7 @@ const GerenciarProdutos = () => {
     };
     const handleAlter = () =>{       
 
-        if (nomeE !== "" || descricaoE !== ""){
+        if (nomeE !== "" && descricaoE !== ""){
             axios
                 .put(`http://`+ back +`/produtos/`+id,{
                     nome: nomeE,
@@ -328,6 +339,11 @@ const GerenciarProdutos = () => {
                     }else{                                                     
                         msg = res.data.msg
                         handleClickOpenA(msg);
+                    }
+
+                    if(infos.length > 0){
+                        handleLoad(grupoId);
+                        handleCloseE();
                     }
                 })
                 .catch((res) =>{    
@@ -359,6 +375,11 @@ const GerenciarProdutos = () => {
                         msg = res.data.msg
                         handleClickOpenA(msg);
                     }
+
+                    if(infos.length > 0){
+                        handleLoadG();
+                        handleCloseGE();
+                    }
                 })
                 .catch((res) =>{    
                     msg = "Não foi possível atualizar esse grupo.";
@@ -387,6 +408,11 @@ const GerenciarProdutos = () => {
                         msg = res.data.msg
                         handleClickOpenA(msg);
                     }
+
+                    if(infos.length > 0){
+                        handleLoad(grupoId);
+                        handleCloseE();
+                    }
                 })
                 .catch((res) =>{    
                     msg = "Não foi possível apagar esse produto.";
@@ -409,6 +435,7 @@ const GerenciarProdutos = () => {
                         msg = res.data.msg
                         handleClickOpenA(msg);
                     }
+                    handleLoadG();
                     handleCloseGE();
                     handleCloseComG();
                 })
@@ -448,7 +475,7 @@ const GerenciarProdutos = () => {
     useEffect(() => {
         handleLoadG();
         if(infos.length > 0){
-            handleLoad();
+            handleLoad(grupoId);
         }
         // eslint-disable-next-line
       }, []);

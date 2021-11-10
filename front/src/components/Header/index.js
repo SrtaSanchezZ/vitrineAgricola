@@ -32,13 +32,13 @@ export const Header = () => {
                         </a>
                     </Typography>
                 </Box>
-                <Box p={1}  style={{width:'14%', textAlign:'center'}}>
+                {/* <Box p={1}  style={{width:'14%', textAlign:'center'}}>
                     <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}> 
                         <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/gestao" rel="gestao" alt="gestao">
                             <span className="hMenuText">GESTÃO</span>
                         </a>
                     </Typography>
-                </Box>
+                </Box> */}
                 <Box p={1}  style={{width:'14%', textAlign:'center'}}>
                     <Typography variant="subtitle2" style={{ textAlign:'center', textTransform:"capitalize", marginTop:'10px' }}>
                         <a style={{ textDecoration:"none", color:"#FFFFFF" }} href="/noticias" rel="noticias" alt="noticias">

@@ -4,6 +4,10 @@ const multerConfig = require('../services/multer');
 const proController = require('../controllers/produtos');
 
 routes.get(
+    '/produtos',
+    proController.obter
+);
+routes.get(
     '/produtos/:id',
     proController.obterPorGrupoId
 );

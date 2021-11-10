@@ -126,3 +126,71 @@ async function atualizarItemVitrine(produto, quantidade, valor, usuario) {
     }
 }
 module.exports.atualizarItemVitrine = atualizarItemVitrine
+
+async function reservaItemVitrine(produto, quantidade) {
+    try {
+
+        result = await obterItemPorProdutoId(produto);
+
+        if(result.retorno){            
+            var qtd = result.retornoBD[0].vit_pro_qtd;
+            qtd = qtd - quantidade;
+
+            sql = `UPDATE vitrine SET vit_pro_qtd = ? WHERE vit_pro_id = ?`
+            retornoBD = await mysql.execute(sql, [qtd, produto])
+
+            if(retornoBD.affectedRows > 0){
+                return result = { retorno: true, msg: "Item da Vitrine atualizado com sucesso!"}
+            }else{
+                return result = { retorno: false, msg: "Não foi possível atualizado este Item da Vitrine, revise os dados informados."}
+            }
+        }
+        
+    } catch (e) {
+        return result = { retorno: false, msg: "Não foi possível atualizado este Item da Vitrine.", Erro: e }
+    }
+}
+module.exports.reservaItemVitrine = reservaItemVitrine
+
+async function cancelaReserva(produto, quantidade) {
+    try {
+
+        result = await obterItemPorProdutoId(produto);
+
+        if(result.retorno){            
+            var qtd = result.retornoBD[0].vit_pro_qtd;
+            qtd = qtd + quantidade;
+
+            sql = `UPDATE vitrine SET vit_pro_qtd = ? WHERE vit_pro_id = ?`
+            retornoBD = await mysql.execute(sql, [qtd, produto])
+
+            if(retornoBD.affectedRows > 0){
+                return result = { retorno: true, msg: "Item da Vitrine atualizado com sucesso!"}
+            }else{
+                return result = { retorno: false, msg: "Não foi possível atualizado este Item da Vitrine, revise os dados informados."}
+            }
+        }
+        
+    } catch (e) {
+        return result = { retorno: false, msg: "Não foi possível atualizado este Item da Vitrine.", Erro: e }
+    }
+}
+module.exports.cancelaReserva = cancelaReserva
+
+async function apagar(id) {
+    try {        
+            sql = `DELETE FROM vitrine WHERE vit_pro_id = ?`;
+            retornoBD = await mysql.execute(sql, [id])
+
+            if(retornoBD.affectedRows > 0){
+                return result = { retorno: true, msg: "Produto excluido com sucesso!"}
+            }else{
+                return result = { retorno: false, msg: "Não foi possível excluir esse produto, tente novamente."}
+            }
+        
+    } catch (e) {
+        console.log(e)
+        return result = { retorno: false, msg: "Não foi possível excluir esse produto.", Erro: e }
+    }
+}
+module.exports.apagar = apagar

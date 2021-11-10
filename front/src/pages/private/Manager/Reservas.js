@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { AiOutlineInfoCircle } from "react-icons/ai";
-import { Button, Box, Grid, TextField, List, Card, CardHeader, InputAdornment, ListItem, 
+import { Button, Box, Divider, Grid, TextField, List, Card, CardHeader, InputAdornment, ListItem, 
        ListItemIcon, Typography } from '@material-ui/core';
 import Search from '@material-ui/icons/Search';
 import pedidoRecebidoBlack from '../../../assets/img/Icons/shopping_bag_black.png';
@@ -184,9 +184,7 @@ const Reservas = () => {
           })  
     };
     const handleFiltro = () => {
-      setFiltro(infos.filter(infos => infos.cliente.toUpperCase().indexOf(valorF.toUpperCase()) !== -1 
-                            || infos.contato.toUpperCase().indexOf(valorF.toUpperCase()) !== -1
-                            || infos.id.indexOf(valorF.toUpperCase()) !== -1));
+      setFiltro(infos.filter(infos => infos.cliente.toUpperCase().indexOf(valorF.toUpperCase()) !== -1));
       if(filtro.length > 1){
         setSemF("none");
         setComF("block");
@@ -232,7 +230,7 @@ const Reservas = () => {
                                 'aria-label': 'search',
                                 disableUnderline: true
                             }}
-                            placeholder="Busque por um número de reserva"
+                            placeholder="Busque pelo nome de um cliente"
                             className="search"
                             variant="standard"
                             value={valorF}
@@ -251,6 +249,7 @@ const Reservas = () => {
                                 dense component="div" role="list">
                                 {infos.sort((a, b) => b.id - a.id).map((item) => {
                                     return (
+                                        <>
                                         <ListItem key={item.id} role="listitem" 
                                                   button onClick={()=>handleClickOpen(item.id, item.data, item.dataSituacao, item.usuario, item.situacao, item.cliente, item.contato, item.total)}>
                                             <ListItemIcon>
@@ -279,6 +278,8 @@ const Reservas = () => {
                                                     style={{ width:'24px', height:'24px' }} />
                                             </Typography>
                                         </ListItem>
+                                        <Divider/>
+                                       </>
                                     );
                                 })}
                                 <ListItem />
@@ -290,6 +291,7 @@ const Reservas = () => {
                                 dense component="div" role="list">
                                 {filtro.sort((a, b) => b.id - a.id).map((item) => {
                                     return (
+                                        <>
                                         <ListItem key={item.id} role="listitem" 
                                                   button onClick={()=>handleClickOpen(item.id, item.data, item.dataSituacao, item.usuario, item.situacao, item.cliente, item.contato, item.total)}>
                                             <ListItemIcon>
@@ -318,6 +320,8 @@ const Reservas = () => {
                                                     style={{ width:'24px', height:'24px' }} />
                                             </Typography>
                                         </ListItem>
+                                        <Divider/>
+                                       </>
                                     );
                                 })}
                                 <ListItem />
