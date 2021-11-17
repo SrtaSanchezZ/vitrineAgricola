@@ -1,9 +1,10 @@
 //#region Dependências
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Avatar, Box, Button, Card, CardContent, InputAdornment, FormControl, 
+import { Avatar, Box, Button, Card, CardHeader, CardContent, InputAdornment, FormControl, 
          Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import Search from '@material-ui/icons/Search';
+import { AiOutlineInfoCircle } from "react-icons/ai";
 import { MdAdd } from "react-icons/md";
 import { DialogAlert, DialogMain } from '../../../components/Dialog';
 //#endregion
@@ -210,6 +211,32 @@ const GerenciarUsuarios = () => {
                     </Box>       
                 </Box>
             </Box>
+            <Grid item xs={12} style={{ paddingLeft:'28%' }}>              
+                <CardHeader subheader={
+                    <Box p={1} display="flex">                                
+                        <AiOutlineInfoCircle style={{ width:'40px', height:'auto', marginRight:'10px' }} /> 
+                        <Typography variant="body2" color="textSecondary">                
+                            Clique no botão "NOVO USUÁRIO" para cadastrar ou sobre um dos usuários abaixo para editar.<br/>
+                            CLIQUE AQUI PARA SABER MAIS SOBRE OS NÍVEIS DE ACESSO DE CADA PERFIL DE USUÁRIO.
+                        </Typography>
+                    </Box> }
+                    style={{ cursor:'pointer' }}
+                    onClick={()=>handleClickOpenA(<Box>
+                        <Typography variant="subtitle1" style={{ fontWeight:'bold', textAlign:'center' }}>
+                            Sobre os Níveis de usuário
+                        </Typography><br/>
+                        <Typography variant="subtitle1" style={{ textAlign:'justify' }}>
+                            <b>Redator: </b> Esse perfil pode gerenciar as notícias que ficarão visiveis na área pública do site, sendo possível cadastrar novas, editar, excluir ou destacar as existentes.
+                        </Typography>
+                        <Typography variant="subtitle1" style={{ textAlign:'justify' }}>
+                            <b>Vendedor: </b>Esse perfil pode gerenciar as grupos e seus produtos, sendo possível cadastrar novos, editar e excluir os existentes. Também gerenciar os itens que serão apresentados na vitrine (área pública do site), alterando suas quantidades e valores, por fim, também gerencia as reservas/ pedidos, podendo atualizar as situações de reserva.
+                        </Typography>
+                        <Typography variant="subtitle1" style={{ textAlign:'justify' }}>
+                            <b>Master: </b> Também conhecido como "Administrador" ou "Gerenciador", esse perfil pode executar todas as funções dos anteriores e também gerenciar os usuários que terão acesso a essa área privada do site, cadastrando novos, editando ou excluindo os existentes.
+                        </Typography>
+                    </Box>)}
+                />
+            </Grid>
             <Box p={1} display="flex">           
                 <Box style={{ width:'50%', textAlign:'start', paddingTop:'20px' }}>  
                     <Typography variant="subtitle1" style={{ textAlign:'left' }} >
@@ -228,7 +255,7 @@ const GerenciarUsuarios = () => {
                                 'aria-label': 'search',
                                 disableUnderline: true
                             }}
-                            placeholder="Busque por um usuário"
+                            placeholder="Busque pelas letras iniciais do nome de um usuário"
                             className="search"
                             variant="standard"
                             value={valorF}
@@ -316,7 +343,19 @@ const GerenciarUsuarios = () => {
                 title={"NOVO USUÁRIO"}
                 info={(
                     <Box>
-                        <Box display="flex" style={{ paddingBottom:'15px' }}>
+                        <Grid item xs={12} style={{ paddingLeft:'5%', paddingBottom:'20px' }}>              
+                            <CardHeader subheader={
+                                <Box p={1} display="flex">                                
+                                    <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                                    <Typography variant="body2" color="textSecondary">                
+                                        Preencha todos os campos e clique em "SALVAR".<br/>
+                                        Caso não queira executar nenhuma ação, clique em "CANCELAR".
+                                    </Typography>
+                                </Box> }
+                            />
+                        </Grid>
+                        <Box display="flex" 
+                            style={{ paddingBottom:'15px', paddingRight:'10px' }}>
                             <TextField 
                                 className="inp"
                                 type="nome" 
@@ -324,9 +363,9 @@ const GerenciarUsuarios = () => {
                                 value={nome}
                                 maxLength="75"
                                 minLength="6"
-                                label="Nome de Usuário"
+                                label="Nome (de 6 a 70 caracteres)"
                                 variant="outlined"
-                                style={{ marginRight:'10px' }}
+                                style={{ minWidth: '270px', marginRight:'10px' }}
                             />
                             <TextField 
                                 className="inp"
@@ -335,13 +374,14 @@ const GerenciarUsuarios = () => {
                                 value={emailU}
                                 maxLength="75"
                                 minLength="6"
-                                label="E-mail"
+                                label="E-mail (de 6 a 70 caracteres)"
                                 variant="outlined"
+                                style={{ minWidth: '270px' }}
                             />
                         </Box>
-                        <Box display="flex" style={{ paddingBottom:'7.5px' }}>                                                                   
-                            <FormControl sx={{ minWidth: 245 }}>
-                                <InputLabel>Nível de Acesso</InputLabel>
+                        <Box display="flex" style={{ paddingBottom:'7.5px', paddingTop:'15px' }}>                                                                   
+                            <FormControl sx={{ minWidth: 270 }}>
+                                <InputLabel>Selecione o Nível de Acesso</InputLabel>
                                 <Select
                                     value={perfilU}
                                     label="Nível de Acesso"
@@ -362,7 +402,7 @@ const GerenciarUsuarios = () => {
                                 value={senha}
                                 maxLength="10"
                                 minLength="5"
-                                label="Senha"
+                                label="Senha (de 5 a 10 caracteres)"
                                 variant="outlined"
                                 style={{ marginLeft:'10px' }}
                             />
@@ -377,7 +417,20 @@ const GerenciarUsuarios = () => {
                 title={"EDITAR USUÁRIO"}
                 info={(
                     <Box>
-                        <Box display="flex" style={{ paddingBottom:'15px' }}>
+                        <Grid item xs={12} style={{ paddingLeft:'5%', paddingBottom:'20px' }}>              
+                            <CardHeader subheader={
+                                <Box p={1} display="flex">                                
+                                    <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                                    <Typography variant="body2" color="textSecondary">                
+                                        Preencha todos os campos e clique em "SALVAR".<br/>
+                                        Caso queira excluir este usuário, clique em "EXCLUIR".<br/>
+                                        Caso não queira executar nenhuma ação, clique em "CANCELAR".
+                                    </Typography>
+                                </Box> }
+                            />
+                        </Grid>
+                        <Box display="flex"
+                            style={{ paddingBottom:'15px', paddingRight:'10px' }}>
                             <TextField 
                                 className="inp"
                                 type="nome" 
@@ -385,9 +438,9 @@ const GerenciarUsuarios = () => {
                                 value={nomeE}
                                 maxLength="75"
                                 minLength="6"
-                                label="Nome de Usuário"
+                                label="Nome (de 6 a 70 caracteres)"
                                 variant="outlined"
-                                style={{ marginRight:'10px' }}
+                                style={{ minWidth: '270px', marginRight:'10px' }}
                             />
                             <TextField 
                                 className="inp"
@@ -396,16 +449,17 @@ const GerenciarUsuarios = () => {
                                 value={emailE}
                                 maxLength="75"
                                 minLength="6"
-                                label="E-mail"
+                                label="E-mail (de 6 a 70 caracteres)"
                                 variant="outlined"
+                                style={{ minWidth: '270px' }}
                             />
                         </Box>
-                        <Box display="flex" style={{ paddingBottom:'7.5px' }}>                                                                   
-                            <FormControl sx={{ minWidth: 245 }}>
-                                <InputLabel>Nível de Acesso</InputLabel>
+                        <Box display="flex" style={{ paddingBottom:'7.5px', paddingTop:'15px' }}>                                                                   
+                            <FormControl sx={{ minWidth: 270 }}>
+                                <InputLabel>Selecione o Nível de Acesso</InputLabel>
                                 <Select
                                     value={perfilU}
-                                    label="Nível de Acesso"
+                                    label="Selecione o Nível de Acesso"
                                     onChange={handleChange(setPerfilU)}
                                     >
                                     {perfilU === 1?(
@@ -432,7 +486,7 @@ const GerenciarUsuarios = () => {
                                 value={senhaE}
                                 maxLength="10"
                                 minLength="5"
-                                label="Senha"
+                                label="Senha (de 5 a 10 caracteres)"
                                 variant="outlined"
                                 style={{ marginLeft:'10px' }}
                             />

@@ -273,16 +273,31 @@ const MontarVitrine = () => {
                         </Typography>
                     </Box>
                 </Box> 
-                <Grid item xs={12} style={{ paddingLeft:'35%' }}>              
+                <Grid item xs={12} style={{ paddingLeft:'28%' }}>              
                     <CardHeader subheader={
                         <Box p={1} display="flex">                                
-                            <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
-                            <Typography variant="body2" color="textSecondary">                
-                                Clique sobre um dos grupos para visualizar seus produtos.                                                      
+                            <AiOutlineInfoCircle style={{ width:'40px', height:'auto', marginRight:'10px' }} /> 
+                            <Typography variant="body2" color="textSecondary" style={{ textAlign:'left' }}>                
+                                Clique sobre um dos grupos para visualizar os produtos relacionados a este. <br/>
+                                CLIQUE AQUI PARA SABER MAIS SOBRE A MONTAGEM DA VITRINE.
                             </Typography>
                         </Box> }
+                        style={{ cursor:'pointer' }}
+                        onClick={()=>handleClickOpenA(<Box>
+                            <Typography variant="subtitle1" style={{ fontWeight:'bold', textAlign:'center' }}>
+                                Como utilizar o recurso de Montar Vitrine
+                            </Typography><br/>
+                            <Typography variant="subtitle1" style={{ textAlign:'left' }}>
+                                Com grupos e produtos previamente cadastrados, serão listados os grupos nesta interface.<br/>
+                                Clique sobre um dos grupos, localize um produto e clique sobre ele.<br/>
+                                Será aberto um módulo para a inclusão da quantidade (baseando-se na métrica cadastrada para o produto em questão) e o valor.<br/>
+                                Ao Salvar, será possível visualizar os produtos no botão flutuate "ITENS NA VITRINE".<br/>
+                                Os itens na vitrine são todos os produtos com valor adicionado e quantidade maior que 1. <br/>
+                                Para que um produto deixe de ser apresentado na vitrine (página pública do site), é necessário que a quantidade do mesmo seja 0.
+                            </Typography>
+                        </Box>)}
                     />
-                </Grid>
+                </Grid> 
                 <Box p={1} display="flex">           
                     <Box style={{ width:'50%', textAlign:'start', paddingTop:'15px' }}>  
                         <Typography variant="subtitle1" style={{ textAlign:'left' }} >
@@ -496,12 +511,15 @@ const MontarVitrine = () => {
                         onClick={toggleDrawer('right', true)}
                         variante="outlined" 
                         className="btnVoltar"
-                        startIcon={
+                        endIcon={
                             <Avatar style={{ backgroundColor:'#3A5E4E', padding:'10px' }}>
                                 <img src={vitrineImg} style={{ width:'24px', height:'auto' }} /> 
                             </Avatar>
                             }
                         style={{ position:"unset" }}>
+                        <Typography variant="subtitle1" style={{ color:'#3A5E4E', fontWeight:'bold' }}>
+                            Itens na Vitrine
+                        </Typography>
                     </Button>
                 </Box>       
             </Box>
@@ -577,6 +595,17 @@ const MontarVitrine = () => {
                 close={handleCloseE}
                 title={"ADICIONAR PRODUTO Á VITRINE"}
                 info={(<Box >
+                    <Grid item xs={12} style={{ paddingLeft:'5%', paddingBottom:'20px' }}>              
+                        <CardHeader subheader={
+                            <Box p={1} display="flex">                                
+                                <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                                <Typography variant="body2" color="textSecondary">                
+                                    Preencha todos os campos e clique em "ADICIONAR".<br/>
+                                    Caso não queira executar nenhuma ação, clique em "CANCELAR".
+                                </Typography>
+                            </Box> }
+                        />
+                    </Grid>
                     <Box display="flex">                                               
                         <CardMedia
                             component="img"

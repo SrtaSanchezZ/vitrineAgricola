@@ -59,7 +59,11 @@ const Admin = () => {
                         users={()=>handleStep(6)} />
                     <Box className="conteudo">                    
                         <DialogPerfil open={open} close={handleClose} img={perfilManager} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        <HomePrivate/>
+                        <HomePrivate
+                            docs={()=>handleStep(2)}
+                            views={()=>handleStep(3)} 
+                            products={()=>handleStep(4)} 
+                            news={()=>handleStep(5)} />
                     </Box>
                 </Box>
             </Box>

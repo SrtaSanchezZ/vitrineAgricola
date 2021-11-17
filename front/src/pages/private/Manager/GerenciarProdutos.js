@@ -149,11 +149,10 @@ const GerenciarProdutos = () => {
         var file = e.target.files[0].size;
         var error = "";
         
-        if(file > 512000){
-            error = "Arquivo deve ter até 512KB";
+        if(file > 1024000){
+            error = "Arquivo deve ter até 1MB";
             handleClickOpenA(error);
             setImagem([]);
-            document.getElementById("file").value = "";
         }else{
             setImagem([]);
             var fileArray = Array.from(e.target.files);
@@ -509,7 +508,31 @@ const GerenciarProdutos = () => {
                             </Button>
                         </Box>       
                     </Box>
-                </Box>  
+                </Box>
+                <Grid item xs={12} style={{ paddingLeft:'28%' }}>              
+                    <CardHeader subheader={
+                        <Box p={1} display="flex">                                
+                            <AiOutlineInfoCircle style={{ width:'40px', height:'auto', marginRight:'10px' }} /> 
+                            <Typography variant="body2" color="textSecondary" style={{ textAlign:'left' }}>                
+                                Clique no botão "NOVO GRUPO" ou "NOVO PRODUTO" para cadastrar ou sobre um dos grupos abaixo para editar.<br/>
+                                Clique sobre um dos grupos para visualizar os produtos relacionados a este. <br/>
+                                CLIQUE AQUI PARA SABER MAIS SOBRE A FINALIDADE DESSES CADASTROS.
+                            </Typography>
+                        </Box> }
+                        style={{ cursor:'pointer' }}
+                        onClick={()=>handleClickOpenA(<Box>
+                            <Typography variant="subtitle1" style={{ fontWeight:'bold', textAlign:'center' }}>
+                                Como utilizar o recurso de grupos e produtos
+                            </Typography><br/>
+                            <Typography variant="subtitle1" style={{ textAlign:'left' }}>
+                                Cadastre grupos para organizar a apresentação dos produtos para seus clientes na vitrine e para catalogar os diferentes tipos de produtos cadastrados.<br/>
+                                Para disponibilizar os produtos na vitrine, é necessário cadastrá-los neste menu opções, porém os produtos que são cadastrados, só serão disponibilizados através do menu "VITRINE".<br/>
+                                Essa separação existe afim de que se possa a qualquer momento atualizar o valor de dado produto ofertado, sem que se perca o registro do valor registrado em dada oferta que já tenha sido reservada anteriomente.<br/>
+                                É possível acompanhar esse histórico de reservas e os valores dos produtos reservados através do menu "RESERVAS".
+                            </Typography>
+                        </Box>)}
+                    />
+                </Grid>  
                 <Box p={1} display="flex">           
                     <Box style={{ width:'50%', textAlign:'start', paddingTop:'15px' }}>  
                         <Typography variant="subtitle1" style={{ textAlign:'left' }} >
@@ -607,14 +630,15 @@ const GerenciarProdutos = () => {
                                 onClick={()=>handleClickOpenGE()} 
                                 variante="outlined" 
                                 className="btnEditGrupo"
-                                endIcon={
+                                startIcon={
                                     <EditIcon style={{ color:'#21222D' }}/>
                                 }
                                 style={{ color:"#000000", position:"unset"}}>
+                                    EDITAR
                             </Button>
                         </Box> 
                     </Box>  
-                    <Box p={1} display="flex" justifyContent="flex-end" style={{width:'50%', textAlign:'end'}}>      
+                    <Box p={1} style={{width:'50%', textAlign:'end'}}>      
                         <Box style={{textAlign:'end'}}>
                             <Button 
                                 onClick={()=>handleClickOpen()} 
@@ -626,7 +650,18 @@ const GerenciarProdutos = () => {
                             </Button>
                         </Box>       
                     </Box>
-                </Box>  
+                </Box>
+                <Grid item xs={12} style={{ paddingLeft:'28%' }}>              
+                    <CardHeader subheader={
+                        <Box p={1} display="flex">                                
+                            <AiOutlineInfoCircle style={{ width:'40px', height:'auto', marginRight:'10px' }} /> 
+                            <Typography variant="body2" color="textSecondary" style={{ textAlign:'left' }}>                
+                                Clique no botão "NOVO PRODUTO" para cadastrar ou sobre um dos produtos abaixo para editar.<br/>
+                                Clique em "EDITAR" para editar o nome deste grupo.<br/>
+                            </Typography>
+                        </Box> }
+                    />
+                </Grid>  
                 {infos.length !== 0 ?(
                     <Box>
                         <Box p={1} display="flex">           
@@ -732,19 +767,30 @@ const GerenciarProdutos = () => {
                 close={handleClose}
                 title={"NOVO PRODUTO"}
                 info={(<Box>
-                    <div style={{ display:"block", textAlign:'center' }}>
-                    <TextField 
-                        className="inpImg"
-                        type="file" 
-                        name="imagem"
-                        onChange={handleChageImg}
-                    /><br/>
-                    <label htmlFor="file" className="label">
-                        <i className="material-icons">Imagem (até 512KB) - formatos suportados (png, jpg ou jpeg)</i>
-                    </label>
-                    </div><br/>
-                    <div className="noticias">
-                        <div className="esquerda">
+                    <Grid item xs={12} style={{ paddingLeft:'5%', paddingBottom:'20px' }}>              
+                        <CardHeader subheader={
+                            <Box p={1} display="flex">                                
+                                <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                                <Typography variant="body2" color="textSecondary">                
+                                    Preencha todos os campos e clique em "CADASTRAR".<br/>
+                                    Caso não queira executar nenhuma ação, clique em "CANCELAR".
+                                </Typography>
+                            </Box> }
+                        />
+                    </Grid>
+                    <Box style={{ display:"block", textAlign:'center' }}>
+                        <TextField 
+                            className="inpImg"
+                            type="file" 
+                            name="imagem"
+                            onChange={handleChageImg}
+                        /><br/>
+                        <Typography variant="body2" color="textSecondary" style={{ textAlign:'center' }}>                
+                            Imagem (até 1MB - 400 x 400 - Formatos: png, jpg ou jpeg)
+                        </Typography>
+                    </Box>
+                    <Box display="flex" 
+                        style={{ paddingBottom:'15px', paddingRight:'10px', paddingTop:'30px' }}>
                             <TextField 
                                 className="inp"
                                 type="text" 
@@ -753,9 +799,25 @@ const GerenciarProdutos = () => {
                                 maxLength="75"
                                 minLength="6"
                                 label="Nome (min 6 - max 75)"
-                                variant="outlined" /><br/><br/>                                        
-                            <FormControl sx={{ minWidth: 250 }}>
-                                <InputLabel >Grupo</InputLabel>
+                                variant="outlined" 
+                                style={{ minWidth: '270px', marginRight:'10px' }}
+                            /><br/>  
+                            <TextField 
+                                className="inp"
+                                type="text" 
+                                onChange={handleChange(setDescricao)}
+                                value={descricao}
+                                maxLength="250"
+                                minLength="6"
+                                label="Descrição (min 6 - max 250)"
+                                multiline
+                                variant="outlined"
+                                style={{ minWidth: '270px' }}
+                            /><br/>
+                        </Box>
+                        <Box display="flex" style={{ paddingBottom:'7.5px', paddingTop:'10px' }}>                                       
+                            <FormControl sx={{ minWidth: 270, marginRight:'10px' }}>
+                                <InputLabel>Selecione o Grupo</InputLabel>
                                 <Select
                                 value={grupo}
                                 label="Grupo"
@@ -768,21 +830,9 @@ const GerenciarProdutos = () => {
                                     <MenuItem value={item.id} style={{ color:"#000000", textAlign:'center'}}>{item.nome}</MenuItem>
                                 ))}
                                 </Select>
-                            </FormControl>
-                        </div>
-                        <div className="direita">
-                            <TextField 
-                                className="inp"
-                                type="text" 
-                                onChange={handleChange(setDescricao)}
-                                value={descricao}
-                                maxLength="250"
-                                minLength="6"
-                                label="Descrição (min 6 - max 250)"
-                                multiline
-                                variant="outlined" /><br/><br/>                                        
-                            <FormControl sx={{ minWidth: 250 }}>
-                                <InputLabel>Métrica</InputLabel>
+                            </FormControl>                                     
+                            <FormControl sx={{ minWidth: 270 }}>
+                                <InputLabel>Selecione a Métrica</InputLabel>
                                 <Select
                                     value={metrica}
                                     label="Métrica"
@@ -805,8 +855,7 @@ const GerenciarProdutos = () => {
                                     </MenuItem>  
                                 </Select>
                             </FormControl>
-                        </div>
-                    </div>
+                        </Box>
                     </Box>)}
                 click={()=>handleSubmit()}
                 label={"CADASTRAR"}
@@ -815,10 +864,23 @@ const GerenciarProdutos = () => {
                 open={openE}
                 close={handleCloseE}
                 title={"EDITAR PRODUTO"}
-                info={(<Box>                                                 
-                    <div className="result">{renderPhotos(img)}</div><br/>
-                    <div className="noticias">
-                        <div className="esquerda">
+                info={(<Box>
+                    <Grid item xs={12} style={{ paddingBottom:'10px' }}>              
+                        <CardHeader subheader={
+                            <Box p={1} display="flex">                                
+                                <AiOutlineInfoCircle style={{ width:'40px', height:'auto', marginRight:'10px' }} /> 
+                                <Typography variant="body2" color="textSecondary">                    
+                                    Preencha o nome do grupo e clique em "ATUALIZAR".<br/>
+                                    Caso queira excluir este grupo, clique em "EXCLUIR".<br/>
+                                    Caso não queira executar nenhuma ação, clique em "CANCELAR".<br/><br/>
+                                    <b>OBS. </b> NÃO É POSSÍVEL EXCLUIR PRODUTOS DISPONIBILIZADOS NA VITRINE.
+                                </Typography>
+                            </Box> }
+                        />
+                    </Grid>                                                 
+                    <Box className="result">{renderPhotos(img)}</Box>                    
+                    <Box display="flex" 
+                        style={{ paddingBottom:'15px', paddingRight:'10px', paddingTop:'30px' }}>
                             <TextField 
                                 className="inp"
                                 type="text" 
@@ -827,9 +889,25 @@ const GerenciarProdutos = () => {
                                 maxLength="75"
                                 minLength="6"
                                 label="Nome (min 6 - max 75)"
-                                variant="outlined" /><br/><br/>                                        
-                            <FormControl sx={{ minWidth: 250 }}>
-                                <InputLabel >Grupo</InputLabel>
+                                variant="outlined"
+                                style={{ minWidth: '270px', marginRight:'10px' }}
+                            /><br/>
+                            <TextField 
+                                className="inp"
+                                type="text" 
+                                onChange={handleChange(setDescricaoE)}
+                                value={descricaoE}
+                                maxLength="250"
+                                minLength="6"
+                                label="Descrição (min 6 - max 250)"
+                                multiline
+                                variant="outlined"
+                                style={{ minWidth: '270px' }}
+                            /><br/>  
+                    </Box>
+                    <Box display="flex" style={{ paddingBottom:'7.5px', paddingTop:'10px' }}>                                          
+                            <FormControl sx={{ minWidth: 270, marginRight:'10px' }}>
+                                <InputLabel>Selecione o Grupo</InputLabel>
                                 <Select
                                     value={grupoNome}
                                     label="Grupo"
@@ -842,21 +920,9 @@ const GerenciarProdutos = () => {
                                     <MenuItem value={item.id} style={{ color:"#000000", textAlign:'center'}}>{item.nome}</MenuItem>
                                 ))}
                                 </Select>
-                            </FormControl>
-                        </div>
-                        <div className="direita">
-                            <TextField 
-                                className="inp"
-                                type="text" 
-                                onChange={handleChange(setDescricaoE)}
-                                value={descricaoE}
-                                maxLength="250"
-                                minLength="6"
-                                label="Descrição (min 6 - max 250)"
-                                multiline
-                                variant="outlined" /><br/><br/>                                        
-                            <FormControl sx={{ minWidth: 250 }}>
-                                <InputLabel>Métrica</InputLabel>
+                            </FormControl>                                      
+                            <FormControl sx={{ minWidth: 270 }}>
+                                <InputLabel>Selecione a Métrica</InputLabel>
                                 <Select
                                     value={metricaE}
                                     label="Métrica"
@@ -882,8 +948,7 @@ const GerenciarProdutos = () => {
                                     </MenuItem>  
                                 </Select>
                             </FormControl>
-                        </div>
-                        </div>
+                        </Box>
                     </Box>)}
                 click={()=>handleAlter()}
                 delete={()=>handleDelete()}
@@ -893,17 +958,31 @@ const GerenciarProdutos = () => {
                 open={openG}
                 close={handleCloseG}
                 title={"NOVO GRUPO"}
-                info={(<Box>
-                    <TextField 
-                        className="inp"
-                        type="text" 
-                        onChange={handleChange(setGrupoNome)}
-                        value={grupoNome}
-                        maxLength="75"
-                        minLength="6"
-                        label="Nome (min 6 - max 75)"
-                        variant="outlined" />
-                        <br/><br/><br/>
+                info={(<Box p={1}>
+                    <Grid item xs={12} style={{ paddingBottom:'10px' }}>              
+                        <CardHeader subheader={
+                            <Box p={1} display="flex">                                
+                                <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                                <Typography variant="body2" color="textSecondary">                
+                                    Preencha o nome do grupo e clique em "CADASTRAR".<br/>
+                                    Caso não queira executar nenhuma ação, clique em "CANCELAR".
+                                </Typography>
+                            </Box> }
+                        />
+                    </Grid>
+                    <Box p={1} m={1}>
+                        <TextField 
+                            className="inp"
+                            type="text" 
+                            onChange={handleChange(setGrupoNome)}
+                            value={grupoNome}
+                            maxLength="75"
+                            minLength="6"
+                            label="Nome (min 6 - max 75)"
+                            variant="outlined"
+                            style={{ minWidth: '500px' }}
+                        />
+                    </Box>
                     </Box>)}
                 click={()=>handleSubmitG()}
                 label={"CADASTRAR"}
@@ -912,17 +991,33 @@ const GerenciarProdutos = () => {
                 open={openGE}
                 close={handleCloseGE}
                 title={"EDITAR GRUPO"}
-                info={(<Box>
-                    <TextField 
-                        className="inp"
-                        type="text" 
-                        onChange={handleChange(setGrupoNomeE)}
-                        value={grupoNomeE}
-                        maxLength="75"
-                        minLength="6"
-                        label="Nome (min 6 - max 75)"
-                        variant="outlined" />
-                        <br/><br/><br/>
+                info={(<Box p={1}>
+                    <Grid item xs={12} style={{ paddingBottom:'10px' }}>              
+                        <CardHeader subheader={
+                            <Box p={1} display="flex">                                
+                                <AiOutlineInfoCircle style={{ width:'40px', height:'auto', marginRight:'10px' }} /> 
+                                <Typography variant="body2" color="textSecondary">                    
+                                    Preencha o nome do grupo e clique em "ATUALIZAR".<br/>
+                                    Caso queira excluir este grupo, clique em "EXCLUIR".<br/>
+                                    Caso não queira executar nenhuma ação, clique em "CANCELAR".<br/><br/>
+                                    <b>OBS. </b> NÃO É POSSÍVEL EXCLUIR GRUPOS SEM EXCLUIR OS PRODUTOS DEPENDENTES E NÃO É POSSÍVEL EXCLUIR PRODUTOS DISPONIBILIZADOS NA VITRINE.
+                                </Typography>
+                            </Box> }
+                        />
+                    </Grid>
+                    <Box p={1} m={1}>
+                        <TextField 
+                            className="inp"
+                            type="text" 
+                            onChange={handleChange(setGrupoNomeE)}
+                            value={grupoNomeE}
+                            maxLength="75"
+                            minLength="6"
+                            label="Nome (min 6 - max 75)"
+                            variant="outlined" 
+                            style={{ minWidth: '500px' }}
+                        />
+                    </Box>
                     </Box>)}
                 click={()=>handleAlterG()}
                 delete={()=>handleDeleteG()}

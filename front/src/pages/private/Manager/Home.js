@@ -13,7 +13,7 @@ import produto from '../../../assets/img/Icons/shopping_basket_black_24dp.png';
 import store from '../../../assets/img/Icons/store.png';
 import next from '../../../assets/img/Icons/navigate_next_black.png';
 //#endregion
-const HomePrivate = () => { 
+const HomePrivate = (props) => { 
     const [infos, setInfos] = useState([]);
     const [prod, setProd] = useState([]);
     const [vit, setVit] = useState([]);
@@ -110,7 +110,8 @@ const HomePrivate = () => {
                             <List className="bxLista" container wrap="nowrap" 
                                     style={{height: "57vh", backgroundColor: "#ffffff", overflow: 'auto', }} 
                                     dense component="div" role="list">
-                                <ListItem key={1} role="listitem">
+                                <ListItem key={1} role="listitem" 
+                                    onClick={props.products}  style={{ cursor:'pointer' }}>
                                     <ListItemIcon>
                                         <img src={produto} style={{ width:'24px', height:'24px' }} />
                                     </ListItemIcon>
@@ -122,7 +123,8 @@ const HomePrivate = () => {
                                     </Typography>
                                 </ListItem>
                                 <Divider/>
-                                <ListItem key={2} role="listitem">
+                                <ListItem key={2} role="listitem" 
+                                    onClick={props.views} style={{ cursor:'pointer' }}>
                                     <ListItemIcon>
                                         <img src={vitrine} style={{ width:'24px', height:'24px' }} />
                                     </ListItemIcon>
@@ -139,7 +141,7 @@ const HomePrivate = () => {
                     </Grid>
                 )}
                 {perfil === 'vendedor'? null:(
-                    <Grid item xs={4}>
+                    <Grid item xs={4} onClick={props.news} style={{ cursor:'pointer' }}>
                         <Card style={{ padding:'10px', textAlign:'left' }}>                                      
                             <Typography variant="subtitle1" style={{ fontWeight:'bold'}}><br/>
                                 Últimas notícias
@@ -170,7 +172,7 @@ const HomePrivate = () => {
                     </Grid>
                 )}
                 {perfil === 'redator'? null:(
-                    <Grid item xs={4}>
+                    <Grid item xs={4} onClick={props.docs} style={{ cursor:'pointer' }}>
                         <Card style={{ padding:'10px', textAlign:'left' }}>                                      
                             <Typography variant="subtitle1" style={{ fontWeight:'bold'}}><br/>
                                 Últimos Pedidos

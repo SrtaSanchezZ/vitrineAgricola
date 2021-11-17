@@ -55,7 +55,10 @@ const Seller = () => {
                         products={()=>handleStep(4)} />
                     <Box className="conteudo">            
                         <DialogPerfil open={open} close={handleClose} img={vendedor} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        <HomePrivate/>                   
+                        <HomePrivate
+                            docs={()=>handleStep(2)}
+                            views={()=>handleStep(3)} 
+                            products={()=>handleStep(4)} />                   
                     </Box>
                 </Box>
             </div>

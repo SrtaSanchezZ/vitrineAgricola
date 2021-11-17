@@ -128,11 +128,10 @@ const GerenciarNoticias = () => {
         var file = e.target.files[0].size;
         var error = "";
         
-        if(file > 512000){
-            error = "Arquivo deve ter até 512KB";
+        if(file > 1024000){
+            error = "Arquivo deve ter até 1MB";
             handleClickOpenA(error);
             setImagem([]);
-            document.getElementById("file").value = "";
         }else{
             setImagem([]);
             var fileArray = Array.from(e.target.files);
@@ -141,7 +140,7 @@ const GerenciarNoticias = () => {
     };
     const renderPhotos = (img) => {
         var ima = "http://localhost:3001" + img;
-        return <img src={ima} alt="Imagem Notícia" style={{maxWidth:"200px", maxHeight: "130px", borderRadius: "5px"}} />
+        return <img src={ima} alt="Imagem Notícia" style={{ width:"400px", maxHeight: "200px", borderRadius: "5px"}} />
 	};
     const handleSubmit = () => {
 
@@ -392,6 +391,28 @@ const GerenciarNoticias = () => {
                     </Box>       
                 </Box>
             </Box>
+            <Grid item xs={12} style={{ paddingLeft:'28%' }}>              
+                <CardHeader subheader={
+                    <Box p={1} display="flex">                                
+                        <AiOutlineInfoCircle style={{ width:'40px', height:'auto', marginRight:'10px' }} /> 
+                        <Typography variant="body2" color="textSecondary">                
+                            Clique no botão "NOVA NOTÍCIA" para cadastrar ou sobre uma das listadas na "Lista de Notícias" para visualizar.<br/>
+                            CLIQUE AQUI PARA SABER MAIS SOBRE A FUNÇÃO "DESTACAR".
+                        </Typography>
+                    </Box> }
+                    style={{ cursor:'pointer' }}
+                    onClick={()=>handleClickOpenA(<Box>
+                        <Typography variant="subtitle1" style={{ fontWeight:'bold', textAlign:'center' }}>
+                            Notícias em Destaque
+                        </Typography><br/>
+                        <Typography variant="subtitle1" style={{ textAlign:'justify' }}>
+                            É possível selecionar até 3 notícias da lista para receberem destaque na tela de "Notícias" da área pública do site.<br/>
+                            Ao selecionar as notícias desejadas e clicar no botão "DESTACAR", o banner de destaque, que recebe as imagens das notícias destacadas, será atualizado com as imagens das notícias escolhidas.<br/><br/>
+                            <b>DICA: </b>Sempre opte por imagens com altura (450px) e largura (900px) ou proporcional a essas dimensões, respeitando o tamanho de 1MB e os formatos (png, jpg ou jpeg).
+                        </Typography>
+                    </Box>)}
+                />
+            </Grid>
             <Box p={1} display="flex">           
                 <Box style={{ width:'50%', textAlign:'start', paddingTop:'20px' }}>  
                     <Typography variant="subtitle1" style={{ textAlign:'left' }} >
@@ -482,22 +503,57 @@ const GerenciarNoticias = () => {
                         </Box>
                     </Card>
                 </div>
-                <div className="bxLeitura" style={{ width: "96%", height: "54vh", backgroundColor: "#ffffff", overflow: 'auto'}}>
+                <div className="bxLeitura" style={{ width: "96%", height: "53vh", backgroundColor: "#ffffff", overflow: 'auto'}}>
                     {open ? (                            
                         <Grid item xs container direction="column" spacing={2}>
-                            <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
-                                <Box p={1} style={{ width:"30%" }} >                                        
-                                    <input 
+                            <Box display="flex" p={1}> 
+                                <Box p={1} style={{ paddingLeft:'20%', width:"60%", textAlign:'center' }} > 
+                                    <Typography variant="subtitle1" style={{ fontWeight:'bold', textAlign:'center' }}>
+                                        Cadastrar Notícia
+                                    </Typography> 
+                                </Box>
+                                <Box p={1} style={{ width:"40%", textAlign:'end' }} > 
+                                    <Button onClick={()=>handleSubmit()}
+                                        startIcon={<AiFillSave/>}
+                                        style={{
+                                            color:"#2E8E61"
+                                        }}>
+                                        SALVAR
+                                    </Button>
+                                    <Button onClick={() => handleClose()}
+                                        startIcon={<AiOutlineCloseCircle/>}
+                                        style={{
+                                            color:"#2E8E61"
+                                        }}>
+                                        CANCELAR
+                                    </Button>      
+                                </Box>   
+                            </Box>
+                            <Box style={{ paddingLeft:'28%', marginTop:'-30px' }} >             
+                                <CardHeader subheader={
+                                    <Box p={1} display="flex">                                
+                                        <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                                        <Typography variant="body2" color="textSecondary" style={{ textAlign:'left' }}>                
+                                            Preencha todos os campos e clique em "SALVAR".<br/>
+                                            Caso não queira executar nenhuma ação, clique em "CANCELAR".
+                                        </Typography>
+                                    </Box> }
+                                        style={{ paddingLeft:'5%' }}
+                                /> 
+                             </Box>  
+                            <Box display="flex" p={1} > 
+                                <Box p={1} style={{ width:"50%" }} >                                        
+                                    <TextField 
                                         className="inpImg"
                                         type="file" 
                                         name="imagem"
                                         onChange={handleChageImg}
-                                    /><br/>
-                                    <label htmlFor="file" className="label">
-                                        <i className="material-icons">Imagem (até 512KB - 600 x 600) <br/> Formatos (png, jpg ou jpeg)</i>
-                                    </label>
+                                    />
+                                    <Typography variant="body2" color="textSecondary" style={{ textAlign:'left' }}>                
+                                        Imagem (até 1MB - 450 x 900 - Formatos: png, jpg ou jpeg
+                                    </Typography>
                                 </Box>            
-                                <Box p={1} style={{ width:"55%", textAlign:'center' }} >
+                                <Box p={1} style={{ width:"50%", textAlign:'center' }} >
                                     <TextField 
                                         className="inp"
                                         type="text" 
@@ -507,7 +563,7 @@ const GerenciarNoticias = () => {
                                         minLength="6"
                                         label="Título (min 6 - max 75)"
                                         variant="outlined"
-                                    /><br/><br/><br/>
+                                    /><br/><br/>
                                     <TextField 
                                         className="inp"
                                         type="text" 
@@ -518,54 +574,80 @@ const GerenciarNoticias = () => {
                                         label="Autor(a) (min 6 - max 75)"
                                         variant="outlined"
                                     />
-                                </Box>            
-                                <Box p={1} style={{ width:"15%" }} >
-                                    <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                        <IconButton size="small" style={{ padding:5, marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleSubmit()}>
-                                            <AiFillSave style={{ width:30, height:30 }} />
-                                        </IconButton>
-                                        <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClose()} >
-                                            <AiOutlineCloseCircle style={{ width:30, height:30 }} />
-                                        </IconButton>
-                                    </div>
-                                </Box>               
+                                </Box>           
                             </Box>
-                            <TextField 
-                                className="inp"
-                                type="text" 
-                                onChange={handleChange(setTexto)}
-                                value={texto}
-                                maxLength="1990"
-                                minLength="6"
-                                label="Texto (min 6 - max 1990)"
-                                multiline
-                                variant="outlined"
-                            />
+                            <Box p={1} m={1}>
+                                <TextField 
+                                    className="inp"
+                                    type="text" 
+                                    onChange={handleChange(setTexto)}
+                                    value={texto}
+                                    maxLength="1990"
+                                    minLength="6"
+                                    label="Texto (min 6 - max 1990)"
+                                    multiline
+                                    rows={10}
+                                    variant="outlined" 
+                                />
+                            </Box>
                         </Grid>
                         ) : (!openE && checked.length ? (                                                                
                         <Grid item xs container direction="column" spacing={2}>
+                            <Box display="flex" p={1}> 
+                                <Box p={1} style={{ paddingLeft:'20%', width:"40%", textAlign:'center', margin:'5px' }} > 
+                                    <Typography variant="subtitle1" style={{ fontWeight:'bold', textAlign:'center' }}>
+                                        Visualização de Notícia
+                                    </Typography> 
+                                </Box>
+                                <Box p={1} style={{ width:"60%", textAlign:'end' }} > 
+                                    <Button onClick={() => handleClickOpenE(titulo, texto)}
+                                        startIcon={<EditIcon/>}
+                                        style={{
+                                            color:"#2E8E61", margin:'5px'
+                                        }}>
+                                        EDITAR
+                                    </Button>
+                                    <Button onClick={() => handleDelete()}
+                                        startIcon={<DeleteIcon/>}
+                                        style={{
+                                            color:"#2E8E61", margin:'5px'
+                                        }}>
+                                        EXCLUIR
+                                    </Button> 
+                                    <Button onClick={() => handleClose()}
+                                        startIcon={<AiOutlineCloseCircle/>}
+                                        style={{
+                                            color:"#2E8E61", margin:'5px'
+                                        }}>
+                                        CANCELAR
+                                    </Button>      
+                                </Box>   
+                            </Box>
+                            <Box style={{ paddingLeft:'25%', marginTop:'-80px' }} >             
+                                <CardHeader subheader={
+                                    <Box p={1} display="flex">                                
+                                        <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                                        <Typography variant="body2" color="textSecondary" style={{ textAlign:'left' }}>                
+                                            Caso queira editar esta notícia, clique em "EDITAR".<br/>
+                                            Caso queira excluir esta notícia, clique em "EXCLUIR".<br/>
+                                            Caso não queira executar nenhuma ação, clique em "CANCELAR".
+                                        </Typography>
+                                    </Box> }
+                                        style={{ paddingLeft:'5%' }}
+                                /> 
+                             </Box>
                             <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
                                 <Box p={1} style={{ width:"30%" }} >
                                     <div className="result">{renderPhotos(img)}</div>
                                 </Box>            
-                                <Box p={1} style={{ width:"55%", textAlign:'center' }} >
-                                    <Typography variant="subtitle1" id={id}>
+                                <Box p={6} style={{ width:"60%", textAlign:'center' }} >
+                                    <Typography variant="subtitle1" id={id} style={{ fontWeight:'bold' }}>
                                         {titulo}
                                     </Typography><br/>
                                     <Typography variant="subtitle1" id={id}>
-                                        {autor}
+                                       Autor(a): {autor}
                                     </Typography>
-                                </Box>            
-                                <Box p={1} style={{ width:"15%" }} >
-                                    <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "90px", height: 'auto', align: "center" }} >
-                                        <IconButton size="small" style={{ marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleClickOpenE(titulo, texto)}>
-                                            <EditIcon />
-                                        </IconButton>
-                                        <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleDelete()} >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </div>
-                                </Box>               
+                                </Box>                  
                             </Box>
                             <Typography variant="body2" style={{ textAlign:'justify', paddingLeft:'20px' }} color="textSecondary">                                                
                                 {texto}                                                          
@@ -582,11 +664,46 @@ const GerenciarNoticias = () => {
                                 />   
                         ) : (                                                              
                         <Grid item xs container direction="column" spacing={2}>
+                            <Box display="flex" p={1}> 
+                                <Box p={1} style={{ paddingLeft:'20%', width:"60%", textAlign:'center' }} > 
+                                    <Typography variant="subtitle1" style={{ fontWeight:'bold', textAlign:'center' }}>
+                                        Editar Notícia
+                                    </Typography> 
+                                </Box>
+                                <Box p={1} style={{ width:"40%", textAlign:'end' }} > 
+                                    <Button onClick={()=>handleAlter()}
+                                        startIcon={<AiFillSave/>}
+                                        style={{
+                                            color:"#2E8E61"
+                                        }}>
+                                        SALVAR
+                                    </Button>
+                                    <Button onClick={() => handleClose()}
+                                        startIcon={<AiOutlineCloseCircle/>}
+                                        style={{
+                                            color:"#2E8E61"
+                                        }}>
+                                        CANCELAR
+                                    </Button>      
+                                </Box>   
+                            </Box>
+                            <Box style={{ paddingLeft:'25%', marginTop:'-80px' }} >             
+                                <CardHeader subheader={
+                                    <Box p={1} display="flex">                                
+                                        <AiOutlineInfoCircle style={{ width:'20px', height:'auto', marginRight:'10px' }} /> 
+                                        <Typography variant="body2" color="textSecondary" style={{ textAlign:'left' }}>                
+                                            Edite o Título e o Texto, clique em "SALVAR".<br/>
+                                            Caso não queira executar nenhuma ação, clique em "CANCELAR".
+                                        </Typography>
+                                    </Box> }
+                                        style={{ paddingLeft:'5%' }}
+                                /> 
+                             </Box>
                             <Box display="flex" p={1} m={1} style={{ width:"96%" }} > 
                                 <Box p={1} style={{ width:"30%" }} >
                                     <div className="result">{renderPhotos(img)}</div>
                                 </Box>            
-                                <Box p={1} style={{ width:"55%", textAlign:'center' }} >
+                                <Box p={1} m={3} style={{ width:"60%", textAlign:'center' }} >
                                     <TextField 
                                         className="inp"
                                         type="text" 
@@ -598,31 +715,24 @@ const GerenciarNoticias = () => {
                                         variant="outlined"
                                     /><br/><br/><br/>
                                     <Typography variant="subtitle1" id={id}>
-                                        {autor}
+                                        Autor(a): {autor}
                                     </Typography>
-                                </Box>            
-                                <Box p={1} style={{ width:"15%" }} >
-                                    <div className="actions-button" style={{ marginRight: 0, marginTop: -4, width: "100px", height: 'auto', align: "center" }} >
-                                        <IconButton size="small" style={{ padding:5, marginRight: 16, backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={()=>handleAlter()}>
-                                            <AiFillSave style={{ width:30, height:30 }} />
-                                        </IconButton>
-                                        <IconButton size="small" style={{ backgroundColor: "#2E8E61", color: "#ffffff", position:"unset" }} onClick={() => handleCloseE()} >
-                                            <AiOutlineCloseCircle style={{ width:30, height:30 }} />
-                                        </IconButton>
-                                    </div>
-                                </Box>               
+                                </Box>              
                             </Box>
-                            <TextField 
-                                className="inp"
-                                type="text" 
-                                onChange={handleChange(setTextoE)}
-                                value={textoE}
-                                maxLength="1990"
-                                minLength="6"
-                                label="Texto (min 6 - max 1990)"
-                                multiline
-                                variant="outlined"
-                            />
+                            <Box p={1} m={1}>
+                                <TextField 
+                                    className="inp"
+                                    type="text" 
+                                    onChange={handleChange(setTextoE)}
+                                    value={textoE}
+                                    maxLength="1990"
+                                    minLength="6"
+                                    label="Texto (min 6 - max 1990)"
+                                    multiline
+                                    rows={10}
+                                    variant="outlined"
+                                />            
+                            </Box>
                         </Grid>)))}
                 </div>
             </div>

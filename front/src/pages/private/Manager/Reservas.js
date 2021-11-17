@@ -212,6 +212,36 @@ const Reservas = () => {
                     </Typography>
                 </Box>
             </Box>
+                <Grid item xs={12} style={{ paddingLeft:'28%' }}>              
+                    <CardHeader subheader={
+                        <Box p={1} display="flex">                                
+                            <AiOutlineInfoCircle style={{ width:'40px', height:'auto', marginRight:'10px' }} /> 
+                            <Typography variant="body2" color="textSecondary" style={{ textAlign:'left' }}>                
+                                Clique sobre uma das reservas/ pedidos na "Lista de Reservas" para visualização. <br/>
+                                Clique no botão referente a situação atual desta reserva. <br/>
+                                CLIQUE AQUI PARA SABER MAIS SOBRE AS SITUAÇÕES DE RESERVA.
+                            </Typography>
+                        </Box> }
+                        style={{ cursor:'pointer' }}
+                        onClick={()=>handleClickOpenA(<Box>
+                            <Typography variant="subtitle1" style={{ fontWeight:'bold', textAlign:'center' }}>
+                                Gerenciando Situações de Reserva
+                            </Typography><br/>
+                            <Typography variant="subtitle1" style={{ textAlign:'justify' }}>
+                                <b>PEDIDO RECEBIDO: </b>Essa é a situação inicial de uma reserva, assim que é selecionada outra situação para a reserva em questão, não será possível retroceder para esse status inicial. Sempre que um produto é reservado, a quantidade reservada é baixada do estoque.
+                            </Typography>
+                            <Typography variant="subtitle1" style={{ textAlign:'justify' }}>
+                                <b>PEDIDO CANCELADO: </b>Essa situação refere-se a uma reserva que foi cancelada pelo cliente, em contato com o vendedor ou devido a indisponibilidade de estoque/ quantidade do item desatualizada. Uma vez selecionada, não será possível reverter essa ação. Sempre que uma reserva é cancelada, a quantidade dos itens que compoem a relação de produtos selecionados, é retornada ao estoque.
+                            </Typography>
+                            <Typography variant="subtitle1" style={{ textAlign:'justify' }}>
+                                <b>PAGAMENTO CONFIRMADO: </b>O sistema não faz controle de caixa, mas permite que seja selecionada essa situação para apontar quais reservas já foram pagas pelo cliente. Assim que essa situação é selecionada, só será possível prosseguir com a retirada do pedido.
+                            </Typography>
+                            <Typography variant="subtitle1" style={{ textAlign:'justify' }}>
+                                <b>PEDIDO RETIRADO: </b>Quando o cliente recebe o produto, essa situação deve ser atualizada, ela simboliza a fase final do fluxo de situações e indica que os produtos listados já não estão mais na empresa. Essa situação não pode ser revertida.
+                            </Typography>
+                        </Box>)}
+                    />
+                </Grid>
             <Box p={1} display="flex">           
                 <Box style={{ width:'50%', textAlign:'start', paddingTop:'20px' }}>  
                     <Typography variant="subtitle1" style={{ textAlign:'left' }} >

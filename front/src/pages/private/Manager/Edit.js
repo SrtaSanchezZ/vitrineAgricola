@@ -51,7 +51,8 @@ const Edit = () => {
                         news={()=>handleStep(5)} />
                     <Box  className="conteudo">               
                         <DialogPerfil open={open} close={handleClose} img={redator} perfil={perfil} name={nome} click={()=>handleLogout() } />
-                        <HomePrivate/>
+                        <HomePrivate 
+                            news={()=>handleStep(5)} />
                     </Box>
                 </Box>
             </div>

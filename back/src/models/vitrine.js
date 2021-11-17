@@ -33,7 +33,8 @@ async function obterGrupo() {
                INNER JOIN 
                 produtos p ON g.gru_id = p.pro_grupo
                INNER JOIN 
-                vitrine v ON v.vit_pro_id = p.pro_id`
+                vitrine v ON v.vit_pro_id = p.pro_id
+                WHERE v.vit_pro_qtd > 0`
         retornoBD = await mysql.execute(sql);
 
         if(retornoBD.length > 0){
